@@ -3,7 +3,7 @@
 class Personaje:
     "Clase que representa al personaje basico del cual los demas heredan"
     def __init__(self, nombre, vida_maxima):
-        "Constructor de la clase personaje, recibe un parametro nombre, vida, esta_atacando, esta_bloqueando"
+        "Inicializa nombre, vida máxima y estados del personaje"
         self.nombre = nombre
         self.vida_maxima = vida_maxima
         self.vida = vida_maxima
@@ -11,6 +11,7 @@ class Personaje:
         self.esta_bloqueando = False
 
     def recibir_Danio(self, danio):
+        "Reduce la vida del personaje según el daño recibido"
         if (danio < 0 ): 
             print("El daño no puede ser negativo")
     
@@ -23,14 +24,18 @@ class Personaje:
             print(f"{self.nombre} recibió {danio} de daño")
 
         if self.vida == 0:
+            "Indica si el personaje sigue con vida"
             self.morir()
 
     def estoy_Vivo(self):
+        "Devuelve la vida actual del personaje"
         # return self.vida > 0
         return True
     
+
+    "Ataca a otro personaje calculando el daño"
     def mostrar_estado(self):
-        return self.vida
+        return self.vida  
 
     def atacar(self, enemigo):          
         self.esta_atacando = True
@@ -39,6 +44,7 @@ class Personaje:
 
 
     def morir(self):
+        "Se ejecuta cuando el personaje muere"
         # self.vida = 0
         print(f"{self.nombre} ha muerto!")
         return True

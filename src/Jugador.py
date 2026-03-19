@@ -12,19 +12,23 @@ class Jugador(Personaje):
         self.ataque = ataque
 
     def calcularDanio(self):
+        "Calcula el daño en base a fuerza y ataque"
         danio = self.fuerza + self.ataque
         return danio
 
     def actualizar(self):
+        "Actualiza el estado del jugador en cada turno"
         if self.vida < 0:
             self.morir()
         self.resetearEstado()
 
     def resetearEstado(self):
+        "Reinicia los estados de ataque y bloqueo"
         self.esta_atacando = False
         self.esta_bloqueando = False
 
     def mostrar_estado(self):
+        "Muestra la información completa del jugador"
         super().mostrar_estado()
         print(f"{self.nombre}: Vida = {self.vida}/{self.vida_maxima}, Fuerza={self.fuerza}, Ataque={self.ataque}")
 
