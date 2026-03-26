@@ -1,4 +1,4 @@
-from Personaje import Personaje
+from src.Personaje import Personaje
 class Jugador(Personaje):
     "Clase que representa al jugador, hereda de personaje"
     def __init__(self, nombre, fuerza, ataque):
