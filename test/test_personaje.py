@@ -46,4 +46,4 @@ class TestPersonaje(unittest.TestCase):
     def test_morir(self):
         personaje = Personaje("Alan", 0)
         personaje.morir()
-        self.assertEqual(personaje.vida, 0)
+        self.assertEqual(personaje.vida,0)

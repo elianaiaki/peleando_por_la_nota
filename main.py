@@ -1,6 +1,6 @@
 #main hecho con ia
-from Jugador import Jugador
-from Personaje import Personaje
+from src.Jugador import Jugador
+from src.Personaje import Personaje
 
 def main():
     # Crear jugadores
