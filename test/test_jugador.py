@@ -1,11 +1,8 @@
-#comando para probar el test
-#python -m unittest discover -s test
-#python -m unittest discover -s test -v miro todos los test
 import unittest
-from src.Personaje import Personaje
+from src.Jugador import Jugador
 
-class TestPersonaje(unittest.TestCase):
-
+class TestJugador(unittest.TestCase):
+    
     #personaje = Personaje(10) -- no se usa asi, acordarse de los hambitos
     #def setUp(self):
         #prepara el set de datos, con el que heremos las prueba
@@ -15,43 +12,44 @@ class TestPersonaje(unittest.TestCase):
     #CASO BASICO DE RECIBIR_DANIO
     #Test para verificar que el metodo funcione correctamente
     def test_recibir_Danio(self):
-        personaje = Personaje("Alan", 100)
-        personaje.recibir_Danio(10)
-        self.assertEqual(personaje.vida, 90)
+        jugador = Jugador("Alan", 100, 20, 15)
+        jugador.recibir_Danio(10)
+        self.assertEqual(jugador.vida, 90)
 
     #CASO LIMITE de recibir daño
     def test_recibir_Danio_exceso(self):
-        personaje = Personaje("Alan", 50)
-        personaje.recibir_Danio(60)
-        self.assertEqual(personaje.vida, 0)
+        jugador = Jugador("Alan", 50, 20, 15)
+        jugador.recibir_Danio(60)
+        self.assertEqual(jugador.vida, 0)
 
 #---------------------------------------------------------------------------------------------
 
     #CASO BASICO DE ESTOY_VIVO
     #Test para verificar que el metodo funcione correctamente
     def test_estoy_vivo(self):
-        personaje = Personaje("Alan", 100)
-        personaje.estoy_Vivo()
-        self.assertEqual(personaje.estoy_Vivo(),True)
+        jugador = Jugador("Alan", 100, 20, 15)
+        jugador.estoy_Vivo()
+        self.assertTrue(jugador.estoy_Vivo())
 
 
     #Test para verificar que el metodo funcione correctamente
     def test_mostrar_estado(self):
-        personaje = Personaje("Alan", 100)
-        estado = personaje.mostrar_estado()
-        self.assertEqual(estado, "La vida actual de Alan es 100")
+        jugador = Jugador("Alan", 100, 20, 15)
+        estado = jugador.mostrar_estado()
+        self.assertEqual(estado, "Alan: Vida = 100/100, Fuerza=20, Ataque=15")
+        #"{self.nombre}: Vida = {self.vida}/{self.vida_maxima}, Fuerza={self.fuerza}, Ataque={self.ataque}"
         #return print(f"La vida actual de {self.nombre} es {self.vida}")
 
 
     #Test para verificar que el metodo funcione correctamente
     def test_morir(self):
-        personaje = Personaje("Alan", 0)
-        personaje.morir()
-        self.assertEqual(personaje.vida, 0)
+        jugador = Jugador("Alan", 0, 20, 15)
+        jugador.morir()
+        self.assertEqual(jugador.vida, 0)
 
     #Test para verificar si bloqueo
     def test_bloqueo(self):
-        personaje = Personaje("Alan", 100)
-        self.assertFalse(personaje.esta_bloqueando)
-        personaje.bloqueo()
-        self.assertTrue(personaje.esta_bloqueando)
+        jugador = Jugador("Alan", 100, 20, 15)
+        self.assertFalse(jugador.esta_bloqueando)
+        jugador.bloqueo()
+        self.assertTrue(jugador.esta_bloqueando)

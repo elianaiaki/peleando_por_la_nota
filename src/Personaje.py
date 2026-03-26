@@ -15,7 +15,10 @@ class Personaje:
             return
     
         if self.esta_bloqueando:
+            self.bloqueo()
             print(f"{self.nombre} bloqueó el daño!")
+            self.esta_bloqueando = False
+            return False
         else:
             self.vida = self.vida - danio
             if self.vida < 0:
@@ -28,23 +31,32 @@ class Personaje:
 
     def estoy_Vivo(self):
         "Devuelve la vida actual del personaje"
-        return self.vida > 0
-    
+        if self.vida > 0:
+            print(f"Estoy vivo")
+            return True
+        else:
+            print(f"No esta vivo")
+            return False
 
     "Muestra la vida actual del personaje"
     def mostrar_estado(self):
-        return self.vida  
+        return f"La vida actual de {self.nombre} es {self.vida}"
 
     def atacar(self, enemigo):
         "Ataca a otro personaje calculando el daño"
         self.esta_atacando = True
         danio = self.calcularDanio()
         enemigo.recibir_Danio(danio)
+        print(f"{self.nombre} ataco a {enemigo.nombre} con {danio} de danio")
 
+    def bloqueo(self):
+        self.esta_bloqueando = True
+        print(f"{self.nombre} bloqueo el ataque del enemigo")
+        return True
 
     def morir(self):
         "Se ejecuta cuando el personaje muere"
         # self.vida = 0
         print(f"{self.nombre} ha muerto!")
         return True
-        
+    
