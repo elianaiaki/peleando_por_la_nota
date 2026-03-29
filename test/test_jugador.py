@@ -22,13 +22,19 @@ class TestJugador(unittest.TestCase):
         jugador.recibir_danio(60)
         self.assertEqual(jugador.vida, 0)
 
+    #CASO LIMITE:daño negativo no modifica la vida en Jugador (heredado de Personaje)
+    def test_recibir_danio_negativo(self):
+        jugador = Jugador("Alan", 100, 20, 15)
+        jugador.recibir_danio(-5)
+        self.assertEqual(jugador.vida, 100)
+
 #---------------------------------------------------------------------------------------------
 
     #CASO BASICO DE ESTOY_VIVO
     #Test para verificar que el metodo funcione correctamente
     def test_estoy_vivo(self):
         jugador = Jugador("Alan", 100, 20, 15)
-        jugador.estoy_vivo()
+        #jugador.estoy_vivo()
         self.assertTrue(jugador.estoy_vivo())
 
 
@@ -52,3 +58,8 @@ class TestJugador(unittest.TestCase):
         self.assertFalse(jugador.esta_bloqueando)
         jugador.bloqueo()
         self.assertTrue(jugador.esta_bloqueando)
+
+     # test para verificar que el daño calculado es exactamente fuerza + ataque
+    def test_calcular_danio(self):
+        jugador = Jugador("Alan", 100, 20, 15)
+        self.assertEqual(jugador.calcular_danio(), 35)

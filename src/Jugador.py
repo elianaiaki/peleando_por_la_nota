@@ -1,4 +1,5 @@
-from Personaje import Personaje
+from src.Personaje import Personaje
+
 class Jugador(Personaje):
     """Clase que representa al jugador, hereda de personaje"""
     def __init__(self, nombre, vida, fuerza, ataque):
@@ -6,7 +7,9 @@ class Jugador(Personaje):
         super().__init__(nombre, vida)
         self.fuerza = fuerza
         self.ataque = ataque
-        self.vida = vida
+        # CORRECCIÓN: Se eliminó self.vida = vida porque ya lo hace super().__init__()
+        # era una línea redundante que pisaba innecesariamente el valor
+        # self.vida = vida
 
     def calcular_danio(self):
         """Calcula el daño en base a fuerza y ataque"""

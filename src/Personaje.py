@@ -10,15 +10,18 @@ class Personaje:
 
     def recibir_danio(self, danio):
         """Reduce la vida del personaje según el daño recibido"""
-        if (danio < 0 ): 
+        if danio < 0 : 
             print("El daño no puede ser negativo")
             return
     
         if self.esta_bloqueando:
-            self.bloqueo()
+            #CORREJIII
+            #self.bloqueo() --redundante, ya sabemos que está bloqueando
+            # no tiene sentido volver a llamar al método que setea esta_bloqueando = True
             print(f"{self.nombre} bloqueó el daño!")
             self.esta_bloqueando = False
-            return False
+            return
+        
         else:
             self.vida = self.vida - danio
             if self.vida < 0:
@@ -47,6 +50,9 @@ class Personaje:
         danio = self.calcular_danio()
         enemigo.recibir_danio(danio)
         print(f"{self.nombre} ataco a {enemigo.nombre} con {danio} de danio")
+
+        # CORREJIIII: tiene que ser falso despues de pegar, por que sino queda pegando por la eternidad jajaj
+        self.esta_atacando = False
 
     def bloqueo(self):
         """Indica si el personaje bloqueo"""

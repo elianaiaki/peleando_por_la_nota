@@ -25,14 +25,32 @@ class TestPersonaje(unittest.TestCase):
         personaje.recibir_danio(60)
         self.assertEqual(personaje.vida, 0)
 
+    #CASO LIMITE  - daño exactamente igual a la vida restante
+    # verifica que la vida quede en 0 y no en negativo
+    def test_recibir_danio_exacto(self):
+        personaje = Personaje("Alan", 100)
+        personaje.recibir_danio(100)
+        self.assertEqual(personaje.vida, 0)
+ 
+    # CASO LIMITE - daño 0 no debe cambiar la vida
+    def test_recibir_danio_cero(self):
+        personaje = Personaje("Alan", 100)
+        personaje.recibir_danio(0)
+        self.assertEqual(personaje.vida, 100)
+ 
+    # CASO LIMITE: Daño negativo no modifica la vida (se ignora con print)
+    def test_recibir_danio_negativo(self):
+        personaje = Personaje("Alan", 100)
+        personaje.recibir_danio(-10)
+        self.assertEqual(personaje.vida, 100)
+
 #---------------------------------------------------------------------------------------------
 
     #CASO BASICO DE ESTOY_VIVO
     #Test para verificar que el metodo funcione correctamente
     def test_estoy_vivo(self):
         personaje = Personaje("Alan", 100)
-        personaje.estoy_vivo()
-        self.assertEqual(personaje.estoy_vivo(),True)
+        self.assertTrue(personaje.estoy_vivo())
 
 
     #Test para verificar que el metodo funcione correctamente
@@ -42,13 +60,13 @@ class TestPersonaje(unittest.TestCase):
         self.assertEqual(estado, "La vida actual de Alan es 100")
         #return print(f"La vida actual de {self.nombre} es {self.vida}")
 
-
+#---------------------------------------------------------------------------
     #Test para verificar que el metodo funcione correctamente
     def test_morir(self):
         personaje = Personaje("Alan", 0)
         personaje.morir()
         self.assertEqual(personaje.vida,0)
-
+#-----------------------------------------------------------------
     #Test para verificar si bloqueo
     def test_bloqueo(self):
         personaje = Personaje("Alan", 100)
