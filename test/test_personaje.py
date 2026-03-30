@@ -19,13 +19,13 @@ class TestPersonaje(unittest.TestCase):
         personaje.recibir_danio(10)
         self.assertEqual(personaje.vida, 90)
 
-    #CASO LIMITE de recibir daño
+    #CASO LIMITE de recibir daño en exceso
     def test_recibir_danio_exceso(self):
         personaje = Personaje("Alan", 50)
         personaje.recibir_danio(60)
         self.assertEqual(personaje.vida, 0)
 
-    #CASO LIMITE  - daño exactamente igual a la vida restante
+    #CASO BASICO daño exactamente igual a la vida restante
     # verifica que la vida quede en 0 y no en negativo
     def test_recibir_danio_exacto(self):
         personaje = Personaje("Alan", 100)
@@ -73,3 +73,4 @@ class TestPersonaje(unittest.TestCase):
         self.assertFalse(personaje.esta_bloqueando)
         personaje.bloqueo()
         self.assertTrue(personaje.esta_bloqueando)
+    

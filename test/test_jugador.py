@@ -37,6 +37,7 @@ class TestJugador(unittest.TestCase):
         #jugador.estoy_vivo()
         self.assertTrue(jugador.estoy_vivo())
 
+#------------------------------------------------------------------------------------------------------------------
 
     #Test para verificar que el metodo funcione correctamente
     def test_mostrar_estado(self):
@@ -45,6 +46,7 @@ class TestJugador(unittest.TestCase):
         self.assertEqual(estado, "Alan: Vida = 100/100, Fuerza=20, Ataque=15")
         #"{self.nombre}: Vida = {self.vida}/{self.vida_maxima}, Fuerza={self.fuerza}, Ataque={self.ataque}"
 
+#---------------------------------------------------------------------------------------------------------------------
 
     #Test para verificar que el metodo funcione correctamente
     def test_morir(self):
@@ -52,12 +54,22 @@ class TestJugador(unittest.TestCase):
         jugador.morir()
         self.assertEqual(jugador.vida, 0)
 
+#-----------------------------------------------------------------------------------------------------------------
     #Test para verificar si bloqueo
     def test_bloqueo(self):
         jugador = Jugador("Alan", 100, 20, 15)
         self.assertFalse(jugador.esta_bloqueando)
         jugador.bloqueo()
         self.assertTrue(jugador.esta_bloqueando)
+
+    # test para verificar que bloquea y no recibe daño
+    def test_bloqueo_absorbe_danio(self):
+        jugador = Jugador("Alan", 100, 20, 15)
+        jugador.bloqueo()
+        jugador.recibir_danio(50)
+        self.assertEqual(jugador.vida, 100)
+
+#------------------------------------------------------------------------------------------------------------------------
 
      # test para verificar que el daño calculado es exactamente fuerza + ataque
     def test_calcular_danio(self):
