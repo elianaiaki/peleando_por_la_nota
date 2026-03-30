@@ -1,10 +1,12 @@
 class Personaje:
     """Clase que representa al personaje basico del cual los demas heredan"""
-    def __init__(self, nombre, vida_maxima):
+    def __init__(self, nombre, vida_maxima, fuerza, ataque):
         """Inicializa nombre, vida máxima y estados del personaje"""
         self.nombre = nombre
         self.vida_maxima = vida_maxima
         self.vida = vida_maxima
+        self.fuerza = fuerza
+        self.ataque = ataque
         self.esta_atacando = False
         self.esta_bloqueando = False
 
@@ -43,6 +45,11 @@ class Personaje:
     """Muestra la vida actual del personaje"""
     def mostrar_estado(self):
         return f"La vida actual de {self.nombre} es {self.vida}"
+    
+    def calcular_danio(self):
+        """Calcula el daño en base a fuerza y ataque"""
+        danio = self.fuerza + self.ataque
+        return danio
 
     def atacar(self, enemigo):
         """Ataca a otro personaje calculando el daño"""
@@ -53,6 +60,8 @@ class Personaje:
 
         # CORREJIIII: tiene que ser falso despues de pegar, por que sino queda pegando por la eternidad jajaj
         self.esta_atacando = False
+        return danio
+    
 
     def bloqueo(self):
         """Indica si el personaje bloqueo"""

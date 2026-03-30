@@ -4,17 +4,11 @@ class Jugador(Personaje):
     """Clase que representa al jugador, hereda de personaje"""
     def __init__(self, nombre, vida, fuerza, ataque):
         """constructor de la clase jugador, recibe un parametro de nombre, vida, fuerza, ataque"""
-        super().__init__(nombre, vida)
-        self.fuerza = fuerza
-        self.ataque = ataque
+        super().__init__(nombre, vida, fuerza, ataque)
         # CORRECCIÓN: Se eliminó self.vida = vida porque ya lo hace super().__init__()
         # era una línea redundante que pisaba innecesariamente el valor
         # self.vida = vida
 
-    def calcular_danio(self):
-        """Calcula el daño en base a fuerza y ataque"""
-        danio = self.fuerza + self.ataque
-        return danio
 
     #def resetearEstado(self):
      #   "Reinicia los estados de ataque y bloqueo"
