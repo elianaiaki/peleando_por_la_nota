@@ -5,9 +5,9 @@ class TestJugador(unittest.TestCase):
     
     def setUp(self):
         """prepara el set de datos, con el que heremos las prueba"""
-        self.personaje = Jugador("Alan", 100, 20, 15)
-        self.personaje2 = Jugador("Eli", 100, 20, 15)
-        self.personaje_sin_vida = Jugador("personaje_muerto", 0, 0, 0)
+        self.jugador = Jugador("Alan", 100, 20, 15)
+        self.jugador2 = Jugador("Eli", 100, 20, 15)
+        self.jugador_sin_vida = Jugador("personaje_muerto", 0, 0, 0)
 
     #CASO BASICO DE RECIBIR_DANIO
     def test_recibir_danio(self):
@@ -17,9 +17,9 @@ class TestJugador(unittest.TestCase):
 
     #CASO LIMITE
     def test_recibir_danio_exceso(self):
-       """"""
-       self.jugador.recibir_danio(60)
-       self.assertEqual(self.jugador.vida, 0)
+       """Verifica que el jugador recibio demasiado daño"""
+       self.jugador.recibir_danio(110)
+       self.assertEqual(self.jugador_sin_vida.vida, 0)
 
     #CASO LIMITE
     def test_recibir_danio_negativo(self):
@@ -46,14 +46,14 @@ class TestJugador(unittest.TestCase):
     def test_morir(self):
        """Verifica que la funcion morir funciona correctamente"""
        self.jugador.morir()
-       self.assertEqual(self.jugador.vida, 0)
+       self.assertEqual(self.jugador_sin_vida.vida, 0)
 
 #-----------------------------------------------------------------------------------------------------------------
 
     def test_bloqueo(self):
         """Verifica que bloqueo el ataque"""
         self.assertFalse(self.jugador.esta_bloqueando)
-        self-jugador.bloqueo()
+        self.jugador.bloqueo()
         self.assertTrue(self.jugador.esta_bloqueando)
 
     # test para verificar que bloquea y no recibe daño
