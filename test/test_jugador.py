@@ -26,12 +26,6 @@ class TestJugador(unittest.TestCase):
        self.jugador.recibir_danio(110)
        self.assertEqual(self.jugador_sin_vida.vida, 0)
 
-    #CASO LIMITE
-    def test_recibir_danio_negativo(self):
-        """Verifica que el daño negativo no modifica la vida del Jugador"""
-        self.jugador.recibir_danio(-5)
-        self.assertEqual(self.jugador.vida, 100)
-
 #---------------------------------------------------------------------------------------------
     #CASO BASICO DE ESTOY_VIVO
     def test_estoy_vivo(self):

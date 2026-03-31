@@ -2,6 +2,28 @@ class Personaje:
     """Clase que representa al personaje basico del cual los demas heredan"""
     def __init__(self, nombre, vida_maxima, fuerza, ataque):
         """Inicializa nombre, vida máxima y estados del personaje"""
+
+        #Validamos el tipo de dato
+        if not isinstance(nombre, str):
+            raise TypeError("El nombre debe ser un string")
+        
+        if not isinstance(vida_maxima, (int, float)):
+            raise TypeError("La vida debe ser un número")
+        
+        if not isinstance(fuerza, (int, float)) or not isinstance(ataque, (int, float)):
+            raise TypeError("Fuerza y ataque deben ser números")
+
+        #Validamos negativos
+        if vida_maxima < 0:
+            raise ValueError("La vida no puede ser menor a 0")
+
+        if fuerza < 0:
+            raise ValueError("La fuerza no puede ser negativa")
+        
+        if ataque < 0:
+            raise ValueError("El ataque no puede ser negativo")
+
+
         self.nombre = nombre
         self.vida_maxima = vida_maxima
         self.vida = vida_maxima
@@ -12,9 +34,9 @@ class Personaje:
 
     def recibir_danio(self, danio):
         """Reduce la vida del personaje según el daño recibido"""
-        if danio < 0 : 
-            print("El daño no puede ser negativo")
-            return
+        if danio <= 0 : 
+            #validamos que el daño no es negativo
+            raise ValueError("El daño no puede ser negativo")
     
         if self.esta_bloqueando:
             #CORREJIII
@@ -34,10 +56,10 @@ class Personaje:
             self.morir()
 
     def estoy_vivo(self):
-        """Devuelve la vida actual del personaje"""
+        """Muestra la vida actual del personaje"""
         if self.vida > 0:
-            print(f"Estoy vivo")
-            return True
+           print(f"Estoy vivo")
+           return True
         else:
             print(f"No esta vivo")
             return False
@@ -71,7 +93,7 @@ class Personaje:
 
     def morir(self):
         """Se ejecuta cuando el personaje muere"""
-        # self.vida = 0
+        self.vida = 0
         print(f"{self.nombre} ha muerto!")
         return True
     

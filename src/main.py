@@ -4,8 +4,8 @@ from Personaje import Personaje
 
 def main():
     # Crear jugadores
-    jugador1 = Jugador("Jugador 1", fuerza=10, ataque=5)
-    jugador2 = Jugador("Jugador 2", fuerza=8, ataque=6)
+    jugador1 = Jugador("Jugador 1", 100, fuerza=10, ataque=5)
+    jugador2 = Jugador("Jugador 2", 100, fuerza=8, ataque=6)
 
     print("\n--- ESTADO INICIAL ---")
     jugador1.mostrar_estado()

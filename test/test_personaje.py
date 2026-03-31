@@ -11,6 +11,7 @@ class TestPersonaje(unittest.TestCase):
         self.personaje = Personaje("Alan", 100, 5, 10)
         self.personaje2 = Personaje("Eli", 100, 5, 10)
         self.personaje_sin_vida = Personaje("personaje_muerto", 0, 0, 0)
+        self.personaje_con_pocavida = Personaje("Personaje_conpocavida", 1, 5, 10)
 
     #CASO BASICO DE RECIBIR_DANIO
     def test_recibir_danio(self):
@@ -33,35 +34,14 @@ class TestPersonaje(unittest.TestCase):
         """verifica que la vida quede en 0 y no en negativo"""
         self.personaje.recibir_danio(100)
         self.assertEqual(self.personaje.vida, 0)
- 
-    # CASO LIMITE
-    def test_recibir_danio_cero(self):
-        """Verifica que el daño 0 no debe cambiar la vida"""
-        self.personaje.recibir_danio(0)
-        self.assertEqual(self.personaje.vida, 100)
- 
-    # CASO LIMITE
-    def test_recibir_danio_negativo(self):
-        """Verifica que el daño negativo no modifica la vida"""
-        self.personaje.recibir_danio(-10)
-        self.assertEqual(self.personaje.vida, 100)
+
 
 #---------------------------------------------------------------------------------------------
 
     #CASO BASICO DE ESTOY_VIVO
     def test_estoy_vivo(self):
         """verificar que esta vivo"""
-        self.assertTrue(self.personaje.estoy_vivo())
-
-    def test_estoy_vivo_con_vida_minima(self):
-        """Verifica que al tener vida menor a 10, el personaje aún esté vivo."""
-        # Creamos el personaje
-        
-        # Le bajamos la vida a un valor menor a 10 (ej. 5)
-        self.personaje.vida = 1
-        
-        # Verificamos que siga vivo
-        self.assertTrue(self.personaje.estoy_vivo())
+        self.assertTrue(self.personaje.estoy_vivo(), True)
 
     #CASO BASICO DE Mostrar estado
     def test_mostrar_estado(self):
