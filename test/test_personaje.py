@@ -18,10 +18,15 @@ class TestPersonaje(unittest.TestCase):
         self.personaje.recibir_danio(10)
         self.assertEqual(self.personaje.vida, 90)
 
+    def test_recibir_danio_cuando_ya_esta_muerto(self):
+        """Verifica que recibir daño con vida 0 no produce vida negativa"""
+        self.personaje_sin_vida.recibir_danio(50)
+        self.assertEqual(self.personaje_sin_vida.vida, 0)
+
     #CASO LIMITE de recibir daño en exceso
     def test_recibir_danio_exceso(self):
-        """Verifica que..................."""
-        self.personaje.recibir_danio(60)
+        """Verifica que el personaje recibio un daño en exceso"""
+        self.personaje.recibir_danio(110)
         self.assertEqual(self.personaje_sin_vida.vida, 0)
 
     def test_recibir_danio_exacto(self):
@@ -46,6 +51,16 @@ class TestPersonaje(unittest.TestCase):
     #CASO BASICO DE ESTOY_VIVO
     def test_estoy_vivo(self):
         """verificar que esta vivo"""
+        self.assertTrue(self.personaje.estoy_vivo())
+
+    def test_estoy_vivo_con_vida_minima(self):
+        """Verifica que al tener vida menor a 10, el personaje aún esté vivo."""
+        # Creamos el personaje
+        
+        # Le bajamos la vida a un valor menor a 10 (ej. 5)
+        self.personaje.vida = 1
+        
+        # Verificamos que siga vivo
         self.assertTrue(self.personaje.estoy_vivo())
 
     #CASO BASICO DE Mostrar estado

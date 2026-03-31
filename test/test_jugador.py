@@ -15,6 +15,11 @@ class TestJugador(unittest.TestCase):
         self.jugador.recibir_danio(10)
         self.assertEqual(self.jugador.vida, 90)
 
+    def test_recibir_danio_cuando_ya_esta_muerto(self):
+        """Verifica que recibir daño con vida 0 no produce vida negativa"""
+        self.jugador_sin_vida.recibir_danio(50)
+        self.assertEqual(self.jugador_sin_vida.vida, 0)
+
     #CASO LIMITE
     def test_recibir_danio_exceso(self):
        """Verifica que el jugador recibio demasiado daño"""
