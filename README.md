@@ -154,6 +154,53 @@ Las clases validan sus datos tanto en la creación como en las operaciones:
 
 ## 📅 Estado del proyecto
 
-Esta es la **Entrega 1** del trabajo final. En esta etapa se implementó el modelo base del dominio del juego (clases, atributos, métodos, pruebas y excepciones). Todavía no se incluye interfaz visual, integración MVC, sprites ni persistencia.
+<p>
+Esta es la <strong>Entrega 1</strong> del trabajo final. En esta etapa se implementó el modelo base del dominio del juego 
+(clases, atributos, métodos, pruebas y excepciones).
+</p>
 
+<p>
+Aún no se incluye interfaz visual, integración MVC, sprites ni persistencia.
+</p>
+
+<p>
 Las próximas entregas incorporarán la vista, el controlador y la versión jugable del juego.
+</p>
+
+<hr>
+
+<h3>🚀 Adelanto de futura entrega</h3>
+
+<h4>🎮 Sprites</h4>
+
+<div style="display: flex; justify-content: center; gap: 60px; flex-wrap: wrap;">
+
+  <div style="text-align: center;">
+    <img src="https://github.com/user-attachments/assets/95418139-344f-4f94-9890-2f2b9219ab93" width="150">
+    <p><strong>Gabriel</strong></p>
+  </div>
+
+  <div style="text-align: center;">
+    <img src="https://github.com/user-attachments/assets/22c1450b-a59f-4469-a5c8-a13a12141b08" width="150">
+    <p><strong>Eliana</strong></p>
+  </div>
+
+</div>
+
+<hr>
+
+<h4>🎵 Música</h4>
+
+<ul>
+    <li><a href="https://github.com/user-attachments/files/26414228/Cancion.de.Menu.mp3">🎧 Canción de Menú</a></li>
+    <li><a href="https://github.com/user-attachments/files/26414225/Cancion.de.Derrota.mp3">💀 Canción de Derrota</a></li>
+    <li><a href="https://github.com/user-attachments/files/26414222/Cancion.de.Victoria.mp3">🏆 Canción de Victoria</a></li>
+    <li><a href="https://github.com/user-attachments/files/26414218/Cancion.de.Pelea.mp3">⚔️ Canción de Pelea</a></li>
+</ul>
+
+<hr>
+
+<p style="font-style: italic; color: gray;">
+💡 Próximamente: interfaz gráfica, animaciones y jugabilidad completa.
+</p>
+
