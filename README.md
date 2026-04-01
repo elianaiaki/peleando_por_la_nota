@@ -70,9 +70,8 @@ Representa al combatiente controlado por el usuario. Extiende `Personaje` con in
 Representa la animación final asociada a un personaje. Encapsula el concepto de ataque definitivo que se ejecuta cuando la vida del oponente llega a 0.
 
 **Responsabilidades:**
-- Representar la animación o acción final del personaje
-- Asociar una habilidad especial al momento de la derrota del oponente
-- Permitir futuras extensiones (animaciones, efectos visuales, ataques especiales)
+- Representar la animación final del personaje
+- Asociar una animacion especial al momento de la derrota del oponente
 
 ---
 
@@ -86,7 +85,7 @@ Representa la animación final asociada a un personaje. Encapsula el concepto de
 
 **Control de vida:** La vida nunca puede ser negativa. La lógica de reducción está centralizada en `recibir_danio()` como único punto de control.
 
-**Composición (Ulti):** Se incorporó la clase `Ulti` como un objeto asociado a `Personaje`. Esto permite representar habilidades especiales o animaciones finales sin sobrecargar la lógica principal del combate. Además, facilita futuras ampliaciones del sistema sin modificar la estructura base.
+**Animacion (Ulti):** Se incorporó la clase `Ulti` como un objeto asociado a `Personaje`. Esto permite representar animaciones finales sin sobrecargar la lógica principal del combate
 
 ---
 
