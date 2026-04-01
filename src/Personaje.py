@@ -1,6 +1,8 @@
+from src.Ulti import Ulti
+
 class Personaje:
     """Clase que representa al personaje basico del cual los demas heredan"""
-    def __init__(self, nombre, vida_maxima, fuerza, ataque):
+    def __init__(self, nombre, vida_maxima, fuerza, ataque, Ulti):
         """Inicializa nombre, vida máxima y estados del personaje"""
 
         #Validamos el tipo de dato
@@ -31,6 +33,7 @@ class Personaje:
         self.ataque = ataque
         self.esta_atacando = False
         self.esta_bloqueando = False
+        self.Ulti = Ulti
 
     def recibir_danio(self, danio):
         """Reduce la vida del personaje según el daño recibido"""
@@ -94,6 +97,9 @@ class Personaje:
     def morir(self):
         """Se ejecuta cuando el personaje muere"""
         self.vida = 0
+        self.Ulti
         print(f"{self.nombre} ha muerto!")
         return True
+    
+
     

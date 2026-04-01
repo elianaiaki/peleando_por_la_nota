@@ -1,51 +1,75 @@
-#main hecho con ia
-from Jugador import Jugador
-from Personaje import Personaje
+from src.Jugador import Jugador
+from src.Personaje import Personaje
+
 
 def main():
-    # Crear jugadores
-    jugador1 = Jugador("Jugador 1", 100, fuerza=10, ataque=5)
-    jugador2 = Jugador("Jugador 2", 100, fuerza=8, ataque=6)
+    print("\n===== INICIO DE PRUEBAS =====")
 
+    # -------- CREACIÓN DE PERSONAJES --------
+    try:
+        jugador1 = Jugador("Jugador 1", 100, fuerza=10, ataque=5, Ulti="navajaso")
+        jugador2 = Jugador("Jugador 2", 100, fuerza=8, ataque=6, Ulti="bomba")
+
+        npc = Personaje("Enemigo Base", 80, fuerza=6, ataque=4, Ulti="nada")
+
+    except (TypeError, ValueError) as e:
+        print(f"Error al crear personajes: {e}")
+        return
+
+    # -------- ESTADO INICIAL --------
     print("\n--- ESTADO INICIAL ---")
-    jugador1.mostrar_estado()
-    jugador2.mostrar_estado()
+    print(jugador1.mostrar_estado())
+    print(jugador2.mostrar_estado())
+    print(npc.mostrar_estado())
 
-    # -------- ATAQUE NORMAL --------
+    # -------- ATAQUE ENTRE JUGADORES --------
     print("\n--- JUGADOR 1 ATACA A JUGADOR 2 ---")
     jugador1.atacar(jugador2)
 
-    jugador1.mostrar_estado()
-    jugador2.mostrar_estado()
+    print(jugador1.mostrar_estado())
+    print(jugador2.mostrar_estado())
+
+    # -------- ATAQUE A PERSONAJE BASE --------
+    print("\n--- JUGADOR 2 ATACA A NPC ---")
+    jugador2.atacar(npc)
+
+    print(npc.mostrar_estado())
 
     # -------- BLOQUEO --------
-    print("\n--- JUGADOR 2 BLOQUEA ---")
-    jugador2.bloqueo()
+    print("\n--- NPC BLOQUEA ---")
+    npc.bloqueo()
 
-    # Jugador 1 vuelve a atacar
-    print("\n--- JUGADOR 1 ATACA (JUGADOR 2 BLOQUEA) ---")
-    jugador1.atacar(jugador2)
+    print("\nJugador 1 ataca al NPC (bloqueando)...")
+    jugador1.atacar(npc)
 
-    jugador1.mostrar_estado()
-    jugador2.mostrar_estado()
+    print(npc.mostrar_estado())
 
-    # Resetear estados
-    #jugador1.resetearEstado()
-    #jugador2.resetearEstado()
+    # -------- COMBATE HASTA MORIR --------
+    print("\n--- COMBATE HASTA LA MUERTE (NPC) ---")
+    while npc.estoy_vivo():
+        jugador1.atacar(npc)
 
-    # -------- ATAQUE HASTA MORIR --------
-    print("\n--- ATAQUES HASTA QUE UNO MUERA ---")
-    jugador1.atacar(jugador2)
-    jugador1.atacar(jugador2)
-    jugador1.atacar(jugador2)
+    print(npc.mostrar_estado())
 
-    jugador2.mostrar_estado()
+    # -------- PRUEBA DE ERRORES --------
+    print("\n--- PRUEBA DE ERRORES ---")
 
-    # Verificar si sigue vivo
-    if not jugador2.estoy_vivo():
-        print(f"{jugador2.nombre} está muerto")
+    try:
+        jugador1.recibir_danio(-5)
+    except ValueError as e:
+        print(f"Error capturado: {e}")
 
-    print("\n--- FIN DE PRUEBA ---")
+    try:
+        jugador_fake = Jugador(123, -10, fuerza="mucho", ataque=5, Ulti="nada")
+    except (TypeError, ValueError) as e:
+        print(f"Error capturado: {e}")
+
+    try:
+        jugador1.atacar("no soy un personaje")
+    except AttributeError as e:
+        print(f"Error capturado: {e}")
+
+    print("\n===== FIN DE PRUEBAS =====")
 
 
 if __name__ == "__main__":

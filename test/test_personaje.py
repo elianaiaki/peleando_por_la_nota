@@ -8,10 +8,10 @@ class TestPersonaje(unittest.TestCase):
 
     def setUp(self):
         """prepara el set de datos, con el que heremos las prueba"""
-        self.personaje = Personaje("Alan", 100, 5, 10)
-        self.personaje2 = Personaje("Eli", 100, 5, 10)
-        self.personaje_sin_vida = Personaje("personaje_muerto", 0, 0, 0)
-        self.personaje_con_pocavida = Personaje("Personaje_conpocavida", 1, 5, 10)
+        self.personaje = Personaje("Alan", 100, 5, 10, "navajaso")
+        self.personaje2 = Personaje("Eli", 100, 5, 10, "bomba")
+        self.personaje_sin_vida = Personaje("personaje_muerto", 0, 0, 0, "nada")
+        self.personaje_con_pocavida = Personaje("Personaje_conpocavida", 1, 5, 10, "nada")
 
     #CASO BASICO DE RECIBIR_DANIO
     def test_recibir_danio(self):

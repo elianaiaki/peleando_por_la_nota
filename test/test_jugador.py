@@ -5,9 +5,9 @@ class TestJugador(unittest.TestCase):
     
     def setUp(self):
         """prepara el set de datos, con el que heremos las prueba"""
-        self.jugador = Jugador("Alan", 100, 20, 15)
-        self.jugador2 = Jugador("Eli", 100, 20, 15)
-        self.jugador_sin_vida = Jugador("personaje_muerto", 0, 0, 0)
+        self.jugador = Jugador("Alan", 100, 20, 15, "navajaso")
+        self.jugador2 = Jugador("Eli", 100, 20, 15, "bomba")
+        self.jugador_sin_vida = Jugador("personaje_muerto", 0, 0, 0, "nada")
 
     #CASO BASICO DE RECIBIR_DANIO
     def test_recibir_danio(self):
@@ -37,7 +37,7 @@ class TestJugador(unittest.TestCase):
     def test_mostrar_estado(self):
         """Verifica que el la funcion mostrar estado funciona correctamente"""
         estado = self.jugador.mostrar_estado()
-        self.assertEqual(estado, "Alan: Vida = 100/100, Fuerza=20, Ataque=15")
+        self.assertEqual(estado, "Alan: Vida = 100/100, Fuerza=20, Ataque=15, Ulti=navajaso")
         #"{self.nombre}: Vida = {self.vida}/{self.vida_maxima}, Fuerza={self.fuerza}, Ataque={self.ataque}"
 
 #---------------------------------------------------------------------------------------------------------------------
