@@ -31,10 +31,13 @@ fighting-for-the-grade/
 ├── src/
 │   ├── Personaje.py       # Clase base del combatiente
 │   ├── Jugador.py         # Clase Jugador (hereda de Personaje)
+│   ├── Ulti.py            # Habilidad especial / animación final
 │   └── main.py            # Archivo principal
+
 ├── tests/
 │   ├── test_personaje.py  # Pruebas unitarias de Personaje
 │   └── test_jugador.py    # Pruebas unitarias de Jugador
+
 ├── venv/                  # Entorno virtual (no se sube al repo)
 ├── requirements.txt       # Dependencias del proyecto
 ├── .gitignore
@@ -63,6 +66,13 @@ Representa al combatiente controlado por el usuario. Extiende `Personaje` con in
 - Definir características particulares del jugador
 - Mostrar el estado completo (vida actual/máxima, fuerza, ataque)
 
+### `Ulti`
+Representa la animación final asociada a un personaje. Encapsula el concepto de ataque definitivo que se ejecuta cuando la vida del oponente llega a 0.
+
+**Responsabilidades:**
+- Representar la animación final del personaje
+- Asociar una animacion especial al momento de la derrota del oponente
+
 ---
 
 ## 🎨 Decisiones de diseño
@@ -74,6 +84,8 @@ Representa al combatiente controlado por el usuario. Extiende `Personaje` con in
 **Estados booleanos:** Se usan `esta_atacando` y `esta_bloqueando` para representar el estado actual del personaje en el turno. Esto permite, por ejemplo, que un bloqueo activo absorba el daño entrante antes de que se reduzca la vida.
 
 **Control de vida:** La vida nunca puede ser negativa. La lógica de reducción está centralizada en `recibir_danio()` como único punto de control.
+
+**Animacion (Ulti):** Se incorporó la clase `Ulti` como un objeto asociado a `Personaje`. Esto permite representar animaciones finales sin sobrecargar la lógica principal del combate
 
 ---
 
