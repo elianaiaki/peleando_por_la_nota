@@ -1,4 +1,6 @@
 class Ulti:
     def __init__(self, nombre):
-        """La clase Ulti se usa para crear una animacion de muerte y ataque final"""
         self.nombre = nombre
+
+    def ejecutar(self, personaje): #REFACTORIZACION
+        return f"{personaje} ejecuta su ulti: {self.nombre}"

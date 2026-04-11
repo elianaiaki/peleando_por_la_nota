@@ -3,29 +3,20 @@ from modelo.Ulti import Ulti
 
 class Personaje:
     """Clase que representa al personaje basico del cual los demas heredan"""
-    def __init__(self, nombre, vida_maxima, fuerza, ataque, Ulti):
+    def __init__(self, nombre, vida_maxima, fuerza, ataque, ulti):
         """Inicializa nombre, vida máxima y estados del personaje"""
 
         #Validamos el tipo de dato
-        if not isinstance(nombre, str):
-            raise TypeError("El nombre debe ser un string")
-        
-        if not isinstance(vida_maxima, (int, float)):
-            raise TypeError("La vida debe ser un número")
-        
-        if not isinstance(fuerza, (int, float)) or not isinstance(ataque, (int, float)):
-            raise TypeError("Fuerza y ataque deben ser números")
 
-        #Validamos negativos
-        if vida_maxima < 0:
-            raise ValueError("La vida no puede ser menor a 0")
-
-        if fuerza < 0:
-            raise ValueError("La fuerza no puede ser negativa")
+        for valor in [vida_maxima, fuerza, ataque]: #REFACTORIZACION
+            if not isinstance(valor, (int, float)):
+                raise TypeError("Los valores deben ser numéricos")
+            if valor < 0:
+                raise ValueError("Los valores no pueden ser negativos")
         
-        if ataque < 0:
-            raise ValueError("El ataque no puede ser negativo")
-
+            if not isinstance(nombre, str):
+                raise TypeError("El nombre debe ser un string")
+            
 
         self.nombre = nombre
         self.vida_maxima = vida_maxima
@@ -34,7 +25,12 @@ class Personaje:
         self.ataque = ataque
         self.esta_atacando = False
         self.esta_bloqueando = False
-        self.Ulti = Ulti
+
+        if isinstance(ulti, str):
+            self.ulti = Ulti(ulti)      #Se adaptó el constructor para aceptar tanto strings como objetos Ulti, mejorando la flexibilidad sin romper los tests existentes.
+        else:
+            self.ulti = ulti            #REFACTORIZACION
+
 
     def recibir_danio(self, danio):
         """Reduce la vida del personaje según el daño recibido"""
@@ -43,30 +39,22 @@ class Personaje:
             raise ValueError("El daño no puede ser negativo")
     
         if self.esta_bloqueando:
-            #CORREJIII
-            #self.bloqueo() --redundante, ya sabemos que está bloqueando
-            # no tiene sentido volver a llamar al método que setea esta_bloqueando = True
-            print(f"{self.nombre} bloqueó el daño!")
             self.esta_bloqueando = False
-            return
+            return 0 #REFACTORIZACION
         
-        else:
-            self.vida = self.vida - danio
-            if self.vida < 0:
+
+        self.vida = self.vida - danio
+        if self.vida < 0:
                 self.vida = 0
-            print(f"{self.nombre} recibió {danio} de daño")
 
         if self.vida == 0:
             self.morir()
+        return danio #REFACTORIZACION  
 
     def estoy_vivo(self):
         """Muestra la vida actual del personaje"""
-        if self.vida > 0:
-           print(f"Estoy vivo")
-           return True
-        else:
-            print(f"No esta vivo")
-            return False
+        return self.vida > 0 #REFACTORIZACION
+
 
     """Muestra la vida actual del personaje"""
     def mostrar_estado(self):
@@ -80,13 +68,14 @@ class Personaje:
     def atacar(self, enemigo):
         """Ataca a otro personaje calculando el daño"""
         self.esta_atacando = True
-        danio = self.calcular_danio()
-        enemigo.recibir_danio(danio)
-        print(f"{self.nombre} ataco a {enemigo.nombre} con {danio} de danio")
 
-        # CORREJIIII: tiene que ser falso despues de pegar, por que sino queda pegando por la eternidad jajaj
+        danio = self.calcular_danio()
+        danio_real = enemigo.recibir_danio(danio) #REFACTORIZACION
+
+        #falso despues de pegar, por que sino queda pegando
         self.esta_atacando = False
-        return danio
+
+        return danio_real
     
 
     def bloqueo(self):
@@ -98,7 +87,6 @@ class Personaje:
     def morir(self):
         """Se ejecuta cuando el personaje muere"""
         self.vida = 0
-        self.Ulti
-        print(f"{self.nombre} ha muerto!")
-        return True
+        if self.ulti: #REFACTORIZACION
+            self.ulti.ejecutar(self.nombre)
     

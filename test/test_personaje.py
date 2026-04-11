@@ -28,7 +28,7 @@ class TestPersonaje(unittest.TestCase):
     def test_recibir_danio_exceso(self):
         """Verifica que el personaje recibio un daño en exceso"""
         self.personaje.recibir_danio(110)
-        self.assertEqual(self.personaje_sin_vida.vida, 0)
+        self.assertEqual(self.personaje.vida, 0)        #modificado
 
     def test_recibir_danio_exacto(self):
         """verifica que la vida quede en 0 y no en negativo"""
