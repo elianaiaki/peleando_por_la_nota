@@ -1,75 +1,106 @@
+import pygame
+import sys
+
+sys.path.append(".")
 from modelo.Jugador import Jugador
-from modelo.Personaje import Personaje
+from vista.jugador_grafico import JugadorGrafico
 
-def main():
-    print("\n===== INICIO DE PRUEBAS =====")
+pygame.init()
 
-    # -------- CREACIÓN DE PERSONAJES --------
-    try:
-        jugador1 = Jugador("Jugador 1", 100, fuerza=10, ataque=5, Ulti="navajaso")
-        jugador2 = Jugador("Jugador 2", 100, fuerza=8, ataque=6, Ulti="bomba")
+ANCHO, ALTO = 800, 600
+pantalla = pygame.display.set_mode((ANCHO, ALTO))
+pygame.display.set_caption("PELEANDO POR LA NOTA")
 
-        npc = Personaje("Enemigo Base", 80, fuerza=6, ataque=4, Ulti="nada")
+NEGRO  = (0, 0, 0)
+BLANCO = (255, 255, 255)
+ROJO   = (255, 0, 0)
+AZUL   = (0, 0, 255)
 
-    except (TypeError, ValueError) as e:
-        print(f"Error al crear personajes: {e}")
-        return
+# MODELO
+jugador1 = Jugador("Jugador 1", 100, 10, 5, "navajazo")
+jugador2 = Jugador("Jugador 2", 100, 8, 6, "piña")
 
-    # -------- ESTADO INICIAL --------
-    print("\n--- ESTADO INICIAL ---")
-    print(jugador1.mostrar_estado())
-    print(jugador2.mostrar_estado())
-    print(npc.mostrar_estado())
+# VISTA
+grafico1 = JugadorGrafico(100, 300, 60, 60, ROJO)
+grafico2 = JugadorGrafico(640, 300, 60, 60, AZUL)
 
-    # -------- ATAQUE ENTRE JUGADORES --------
-    print("\n--- JUGADOR 1 ATACA A JUGADOR 2 ---")
-    jugador1.atacar(jugador2)
+velocidad = 5
+reloj = pygame.time.Clock()
+fuente = pygame.font.SysFont(None, 36)
 
-    print(jugador1.mostrar_estado())
-    print(jugador2.mostrar_estado())
+cooldown_ataque = 500
+ultimo_ataque_jugador1 = 0
+ultimo_ataque_jugador2 = 0
 
-    # -------- ATAQUE A PERSONAJE BASE --------
-    print("\n--- JUGADOR 2 ATACA A NPC ---")
-    jugador2.atacar(npc)
+corriendo = True
+while corriendo:
 
-    print(npc.mostrar_estado())
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            corriendo = False
 
-    # -------- BLOQUEO --------
-    print("\n--- NPC BLOQUEA ---")
-    npc.bloqueo()
+    teclas = pygame.key.get_pressed()
+    tiempo_actual = pygame.time.get_ticks()
 
-    print("\nJugador 1 ataca al NPC (bloqueando)...")
-    jugador1.atacar(npc)
+    # MOVIMIENTO
+    if teclas[pygame.K_w]:
+        grafico1.mover(0, -velocidad)
+    if teclas[pygame.K_s]:
+        grafico1.mover(0, velocidad)
+    if teclas[pygame.K_a]:
+        grafico1.mover(-velocidad, 0)
+    if teclas[pygame.K_d]:
+        grafico1.mover(velocidad, 0)
 
-    print(npc.mostrar_estado())
+    if teclas[pygame.K_UP]:
+        grafico2.mover(0, -velocidad)
+    if teclas[pygame.K_DOWN]:
+        grafico2.mover(0, velocidad)
+    if teclas[pygame.K_LEFT]:
+        grafico2.mover(-velocidad, 0)
+    if teclas[pygame.K_RIGHT]:
+        grafico2.mover(velocidad, 0)
 
-    # -------- COMBATE HASTA MORIR --------
-    print("\n--- COMBATE HASTA LA MUERTE (NPC) ---")
-    while npc.estoy_vivo():
-        jugador1.atacar(npc)
+    # LIMITES
+    grafico1.limitar_pantalla(ANCHO, ALTO)
+    grafico2.limitar_pantalla(ANCHO, ALTO)
 
-    print(npc.mostrar_estado())
+    # COLISION
+    if grafico1.colisiona_con(grafico2):
+        texto_colision = fuente.render("COLISION!", True, BLANCO)
+        pantalla.blit(texto_colision, (350, 50))
 
-    # -------- PRUEBA DE ERRORES --------
-    print("\n--- PRUEBA DE ERRORES ---")
+        if teclas[pygame.K_f]:
+            if tiempo_actual - ultimo_ataque_jugador1 >= cooldown_ataque:
+                jugador1.atacar(jugador2)
+                ultimo_ataque_jugador1 = tiempo_actual
 
-    try:
-        jugador1.recibir_danio(-5)
-    except ValueError as e:
-        print(f"Error capturado: {e}")
+        if teclas[pygame.K_l]:
+            if tiempo_actual - ultimo_ataque_jugador2 >= cooldown_ataque:
+                jugador2.atacar(jugador1)
+                ultimo_ataque_jugador2 = tiempo_actual
 
-    try:
-        jugador_fake = Jugador(123, -10, fuerza="mucho", ataque=5, Ulti="nada")
-    except (TypeError, ValueError) as e:
-        print(f"Error capturado: {e}")
+    # BLOQUEO
+    if teclas[pygame.K_e]:
+        jugador1.bloqueo()
 
-    try:
-        jugador1.atacar("no soy un personaje")
-    except AttributeError as e:
-        print(f"Error capturado: {e}")
+    if teclas[pygame.K_k]:
+        jugador2.bloqueo()
 
-    print("\n===== FIN DE PRUEBAS =====")
+    # DIBUJO
+    pantalla.fill(NEGRO)
 
+    grafico1.dibujar(pantalla)
+    grafico2.dibujar(pantalla)
 
-if __name__ == "__main__":
-    main()
+    texto1 = fuente.render(f"J1 Vida: {jugador1.vida}", True, BLANCO)
+    texto2 = fuente.render(f"J2 Vida: {jugador2.vida}", True, BLANCO)
+
+    pantalla.blit(texto1, (10, 10))
+    pantalla.blit(texto2, (10, 50))
+
+    pygame.display.flip()
+    reloj.tick(60)
+
+pygame.quit()
+sys.exit()

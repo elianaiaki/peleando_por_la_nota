@@ -8,14 +8,14 @@ class Personaje:
 
         #Validamos el tipo de dato
 
-        for valor in [vida_maxima, fuerza, ataque]: #REFACTORIZACION
+        if not isinstance(nombre, str):
+            raise TypeError("El nombre debe ser un string")
+
+        for valor in [vida_maxima, fuerza, ataque]: # refactorizacion 
             if not isinstance(valor, (int, float)):
                 raise TypeError("Los valores deben ser numéricos")
             if valor < 0:
                 raise ValueError("Los valores no pueden ser negativos")
-        
-            if not isinstance(nombre, str):
-                raise TypeError("El nombre debe ser un string")
             
 
         self.nombre = nombre
