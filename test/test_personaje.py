@@ -2,7 +2,7 @@
 #python -m unittest discover -s test
 #python -m unittest discover -s test -v miro todos los test
 import unittest
-from src.Personaje import Personaje
+from modelo.Personaje import Personaje
 
 class TestPersonaje(unittest.TestCase):
 
