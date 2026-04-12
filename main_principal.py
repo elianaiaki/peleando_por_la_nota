@@ -41,8 +41,16 @@ while corriendo:
 
     teclas = pygame.key.get_pressed()
     tiempo_actual = pygame.time.get_ticks()
+<<<<<<< HEAD
 
     # MOVIMIENTO
+=======
+    
+    # MOVIMIENTO JUGADOR 1
+    pos_anterior_1 = grafico1.rect.copy()
+   
+
+>>>>>>> 25e0d54 (Agregue los test faltante y la actualizacion del README.md)
     if teclas[pygame.K_w]:
         grafico1.mover(0, -velocidad)
     if teclas[pygame.K_s]:
@@ -61,6 +69,13 @@ while corriendo:
     if teclas[pygame.K_RIGHT]:
         grafico2.mover(velocidad, 0)
 
+<<<<<<< HEAD
+=======
+    # evitar que atraviese al otro
+    if grafico2.colisiona_con(grafico1):
+        grafico2.rect = pos_anterior_2
+
+>>>>>>> 25e0d54 (Agregue los test faltante y la actualizacion del README.md)
     # LIMITES
     grafico1.limitar_pantalla(ANCHO, ALTO)
     grafico2.limitar_pantalla(ANCHO, ALTO)

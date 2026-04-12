@@ -80,7 +80,11 @@ class Personaje:
 
     def bloqueo(self):
         """Indica si el personaje bloqueo"""
+<<<<<<< HEAD
         self.esta_bloqueando = True         #REFACTORIZACION
+=======
+        self.esta_bloqueando = True  #REFACTORIZACION
+>>>>>>> 25e0d54 (Agregue los test faltante y la actualizacion del README.md)
         return True
 
     def morir(self):
