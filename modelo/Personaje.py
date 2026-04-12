@@ -80,8 +80,7 @@ class Personaje:
 
     def bloqueo(self):
         """Indica si el personaje bloqueo"""
-        self.esta_bloqueando = True
-        print(f"{self.nombre} bloqueo el ataque del enemigo")
+        self.esta_bloqueando = True         #REFACTORIZACION
         return True
 
     def morir(self):
