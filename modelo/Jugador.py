@@ -8,6 +8,4 @@ class Jugador(Personaje):
         super().__init__(nombre, vida, fuerza, ataque, ulti)
 
     def mostrar_estado(self):
-        """Muestra la información completa del jugador"""
-        super().mostrar_estado()
         return f"{self.nombre}: Vida = {self.vida}/{self.vida_maxima}, Fuerza={self.fuerza}, Ataque={self.ataque}, Ulti={self.ulti.nombre}"
