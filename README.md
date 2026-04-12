@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🥊 Fighting for the Grade
 
 📖 Descripción del juego
