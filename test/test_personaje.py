@@ -1,6 +1,8 @@
 #comando para probar el test
 #python -m unittest discover -s test
 #python -m unittest discover -s test -v miro todos los test
+# python -m unittest test.test_personaje -v para probar solo el test_personaje.py
+
 import unittest
 from modelo.Personaje import Personaje
 
@@ -11,7 +13,6 @@ class TestPersonaje(unittest.TestCase):
         self.personaje = Personaje("Alan", 100, 5, 10, "navajaso")
         self.personaje2 = Personaje("Eli", 100, 5, 10, "bomba")
         self.personaje_sin_vida = Personaje("personaje_muerto", 0, 0, 0, "nada")
-        self.personaje_con_pocavida = Personaje("Personaje_conpocavida", 1, 5, 10, "nada")
 
     #CASO BASICO DE RECIBIR_DANIO
     def test_recibir_danio(self):
@@ -55,7 +56,8 @@ class TestPersonaje(unittest.TestCase):
     def test_morir(self):
         """verifica que el metodo morir funcione correctamente"""
         self.personaje.morir()
-        self.assertEqual(self.personaje_sin_vida.vida,0)
+        self.assertEqual(self.personaje.vida, 0)
+        self.assertFalse(self.personaje.estoy_vivo())
 #-----------------------------------------------------------------
     #CASO BASICO de bloquear
     def test_sin_bloqueo(self):

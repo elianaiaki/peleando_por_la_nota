@@ -69,23 +69,28 @@ while corriendo:
     if grafico1.colisiona_con(grafico2):
         texto_colision = fuente.render("COLISION!", True, BLANCO)
         pantalla.blit(texto_colision, (350, 50))
+        print("COLISIONANDO")
 
         if teclas[pygame.K_f]:
             if tiempo_actual - ultimo_ataque_jugador1 >= cooldown_ataque:
                 jugador1.atacar(jugador2)
                 ultimo_ataque_jugador1 = tiempo_actual
+                print("atacando a jugador2")
 
         if teclas[pygame.K_l]:
             if tiempo_actual - ultimo_ataque_jugador2 >= cooldown_ataque:
                 jugador2.atacar(jugador1)
                 ultimo_ataque_jugador2 = tiempo_actual
+                print("atacando a jugador1")
 
     # BLOQUEO
     if teclas[pygame.K_e]:
         jugador1.bloqueo()
+        print("jugador1 bloquea")
 
     if teclas[pygame.K_k]:
         jugador2.bloqueo()
+        print("jugador2 bloquea")
 
     # DIBUJO
     pantalla.fill(NEGRO)

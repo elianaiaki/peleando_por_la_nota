@@ -34,7 +34,7 @@ class Personaje:
 
     def recibir_danio(self, danio):
         """Reduce la vida del personaje según el daño recibido"""
-        if danio <= 0 : 
+        if danio < 0 : 
             #validamos que el daño no es negativo
             raise ValueError("El daño no puede ser negativo")
     
