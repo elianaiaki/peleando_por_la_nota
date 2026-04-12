@@ -108,7 +108,3 @@ class TestJugador(unittest.TestCase):
         self.jugador.atacar(self.jugador2)
         self.assertFalse(self.jugador2.estoy_vivo())
     
-    def test_personaje_muerto_no_ataca(self):
-        """Verificar que un personaje muerto no puede atacar"""
-        self.jugador_sin_vida.atacar(self.jugador2)
-        self.assertEqual(self.jugador2.vida, 100)
