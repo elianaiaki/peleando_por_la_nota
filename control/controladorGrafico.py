@@ -11,6 +11,7 @@ class controladorGrafico:
     def dibujar(self, jugador1, jugador2, grafico1, grafico2):
         self.pantalla.fill((0,0,0))
 
+        # Dibujar personajes
         grafico1.dibujar(self.pantalla)
         grafico2.dibujar(self.pantalla)
 
@@ -25,3 +26,5 @@ class controladorGrafico:
         if grafico1.colisiona_con(grafico2):
             texto = self.fuente.render("¡COLISIÓN!", True, (255,255,255))
             self.pantalla.blit(texto, (300, 80))
+
+    #def animacion_ulti(self, jugador1, jugador2, grafico1, grafico2):

@@ -95,7 +95,12 @@ class TestPersonaje(unittest.TestCase):
         """Verificar que el ataque reduce la vida del oponente correctamente"""
         self.personaje.atacar(self.personaje2)
         self.assertEqual(self.personaje2.vida, 85)
-    
+
+    def test_atacar_muerto_no_ataca(self):
+        """Verifica que el personaje muerto no ataca al personaje vivo"""
+        self.personaje_sin_vida.atacar(self.personaje2)
+        self.assertEqual(self.personaje2.vida, 100)
+
     def test_atacar_a_personaje_muerto(self):
         """Verificar que atacar a un personaje muerto no cambia su vida"""
         self.personaje.atacar(self.personaje_sin_vida)

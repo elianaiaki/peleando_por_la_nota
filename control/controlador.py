@@ -3,10 +3,6 @@ import pygame
 class Controlador:
 
     def __init__(self, jugador1, jugador2, ancho, alto):
-        """
-        El controlador recibe los jugadores gráficos
-        y los límites de la pantalla.
-        """
 
         self.jugador1 = jugador1
         self.jugador2 = jugador2
@@ -18,62 +14,13 @@ class Controlador:
 
         self.corriendo = True
 
+    # =====================================
+    # JUGADOR 1
+    # =====================================
 
-    def procesar_eventos(self):
-        """
-        Procesa eventos discretos:
-        cerrar ventana, ataques y bloqueos.
-        """
+    def controlar_jugador1(self, teclas):
 
-        for evento in pygame.event.get():
-
-            # Cerrar juego
-            if evento.type == pygame.QUIT:
-                self.corriendo = False
-
-
-            # Teclas presionadas UNA vez
-            if evento.type == pygame.KEYDOWN:
-
-                # -----------------------------
-                # ATAQUES
-                # -----------------------------
-
-                if evento.key == pygame.K_f:
-
-                    # Solo ataca si colisionan
-                    if self.jugador1.colisiona_con(self.jugador2):
-                        self.jugador1.atacar_a(self.jugador2)
-
-                elif evento.key == pygame.K_l:
-
-                    if self.jugador2.colisiona_con(self.jugador1):
-                        self.jugador2.atacar_a(self.jugador1)
-
-
-                # -----------------------------
-                # BLOQUEOS
-                # -----------------------------
-
-                elif evento.key == pygame.K_e:
-                    self.jugador1.modelo.bloqueo()
-
-                elif evento.key == pygame.K_k:
-                    self.jugador2.modelo.bloqueo()
-
-
-
-    def procesar_teclas(self):
-        """
-        Procesa movimiento continuo.
-        """
-
-        teclas = pygame.key.get_pressed()
-
-        # -----------------------------
-        # MOVIMIENTO JUGADOR 1
-        # -----------------------------
-
+        # Movimiento
         if teclas[pygame.K_w]:
             self.jugador1.mover("arriba", self.velocidad, self.ancho, self.alto)
 
@@ -87,10 +34,23 @@ class Controlador:
             self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
 
 
-        # -----------------------------
-        # MOVIMIENTO JUGADOR 2
-        # -----------------------------
+    def acciones_jugador1(self, evento):
+        # Ataque
+        if evento.key == pygame.K_f:
 
+            if self.jugador1.colisiona_con(self.jugador2):
+                self.jugador1.atacar_a(self.jugador2)
+
+        # Bloqueo
+        elif evento.key == pygame.K_e:
+            self.jugador1.modelo.bloqueo()
+
+    # =====================================
+    # JUGADOR 2
+    # =====================================
+
+    def controlar_jugador2(self, teclas):
+        # Movimiento
         if teclas[pygame.K_UP]:
             self.jugador2.mover("arriba", self.velocidad, self.ancho, self.alto)
 
@@ -102,3 +62,41 @@ class Controlador:
 
         if teclas[pygame.K_RIGHT]:
             self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto)
+
+
+    def acciones_jugador2(self, evento):
+        # Ataque
+        if evento.key == pygame.K_l:
+
+            if self.jugador2.colisiona_con(self.jugador1):
+                self.jugador2.atacar_a(self.jugador1)
+
+        # Bloqueo
+        elif evento.key == pygame.K_k:
+            self.jugador2.modelo.bloqueo()
+
+    # =====================================
+    # EVENTOS
+    # =====================================
+
+    def procesar_eventos(self):
+        for evento in pygame.event.get():
+
+            if evento.type == pygame.QUIT:
+                self.corriendo = False
+
+
+            if evento.type == pygame.KEYDOWN:
+
+                self.acciones_jugador1(evento)
+                self.acciones_jugador2(evento)
+
+    # =====================================
+    # TECLAS
+    # =====================================
+    def procesar_teclas(self):
+
+        teclas = pygame.key.get_pressed()
+
+        self.controlar_jugador1(teclas)
+        self.controlar_jugador2(teclas)

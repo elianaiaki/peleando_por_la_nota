@@ -25,11 +25,8 @@ class Personaje:
         self.ataque = ataque
         self.esta_atacando = False
         self.esta_bloqueando = False
+        self.ulti = ulti
 
-        if isinstance(ulti, str):
-            self.ulti = Ulti(ulti)      #Se adaptó el constructor para aceptar tanto strings como objetos Ulti, mejorando la flexibilidad sin romper los tests existentes.
-        else:
-            self.ulti = ulti            #REFACTORIZACION
 
 
     def recibir_danio(self, danio):
@@ -69,14 +66,23 @@ class Personaje:
         """Ataca a otro personaje calculando el daño"""
         self.esta_atacando = True
 
-        danio = self.calcular_danio()
-        danio_real = enemigo.recibir_danio(danio) #REFACTORIZACION
+        """Si esta vivo ataca"""
+        if self.vida > 0:
 
-        #falso despues de pegar, por que sino queda pegando
-        self.esta_atacando = False
+            danio = self.calcular_danio()
+            danio_real = enemigo.recibir_danio(danio) #REFACTORIZACION
 
-        return danio_real
+            #falso despues de pegar, por que sino queda pegando
+            self.esta_atacando = False
+            return danio_real
+            """Si no esta vivo no ataca"""
+        else:
+            return 0
     
+    def atacar_con_ulti(self, enemigo):
+        if self.vida < 10:
+            self.ulti.ejecutar(self.nombre)
+
 
     def bloqueo(self):
         """Indica si el personaje bloqueo"""
@@ -86,6 +92,7 @@ class Personaje:
     def morir(self):
         """Se ejecuta cuando el personaje muere"""
         self.vida = 0
-        if self.ulti: #REFACTORIZACION
-            self.ulti.ejecutar(self.nombre)
+        self.ulti.activar()
+
+    
     
