@@ -67,11 +67,17 @@ while controlador.corriendo:
     # -----------------------------
     # ACTIVAR ULTIS
     # -----------------------------
-    if jugador1.ulti.activa and not ulti1.activa:
-        ulti1.activar(grafico1.rect.x, grafico1.rect.y)
+    # if jugador1.ulti.activa and not ulti1.activa:
+    #     ulti1.activar(grafico1.rect.x, grafico1.rect.y)
 
-    if jugador2.ulti.activa and not ulti2.activa:
-        ulti2.activar(grafico2.rect.x, grafico2.rect.y)
+    # if jugador2.ulti.activa and not ulti2.activa:
+    #     ulti2.activar(grafico2.rect.x, grafico2.rect.y)
+
+    if jugador1.ulti.activa and not GraficosUlti1.activa:
+        GraficosUlti1.activar(grafico1.rect.x, grafico1.rect.y)
+
+    if jugador2.ulti.activa and not GraficosUlti2.activa:
+        GraficosUlti2.activar(grafico2.rect.x, grafico2.rect.y)
 
     # Actualizar ulti
     GraficosUlti1.actualizar(800)
