@@ -6,33 +6,22 @@ class Controlador:
 
         self.jugador1 = jugador1
         self.jugador2 = jugador2
-
         self.ancho = ancho
         self.alto = alto
-
         self.velocidad = 5
-
         self.corriendo = True
 
-    # =====================================
     # JUGADOR 1
-    # =====================================
-
     def controlar_jugador1(self, teclas):
-
         # Movimiento
         if teclas[pygame.K_w]:
             self.jugador1.mover("arriba", self.velocidad, self.ancho, self.alto)
-
         if teclas[pygame.K_s]:
             self.jugador1.mover("abajo", self.velocidad, self.ancho, self.alto)
-
         if teclas[pygame.K_a]:
             self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto)
-
         if teclas[pygame.K_d]:
             self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
-
 
     def acciones_jugador1(self, evento):
         # Ataque
@@ -46,23 +35,17 @@ class Controlador:
             self.jugador1.modelo.bloqueo()
 
     # =====================================
-    # JUGADOR 2
-    # =====================================
-
+       # JUGADOR 2
     def controlar_jugador2(self, teclas):
         # Movimiento
         if teclas[pygame.K_UP]:
             self.jugador2.mover("arriba", self.velocidad, self.ancho, self.alto)
-
         if teclas[pygame.K_DOWN]:
             self.jugador2.mover("abajo", self.velocidad, self.ancho, self.alto)
-
         if teclas[pygame.K_LEFT]:
             self.jugador2.mover("izquierda", self.velocidad, self.ancho, self.alto)
-
         if teclas[pygame.K_RIGHT]:
             self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto)
-
 
     def acciones_jugador2(self, evento):
         # Ataque
@@ -77,14 +60,11 @@ class Controlador:
 
     # =====================================
     # EVENTOS
-    # =====================================
-
     def procesar_eventos(self):
         for evento in pygame.event.get():
 
             if evento.type == pygame.QUIT:
                 self.corriendo = False
-
 
             if evento.type == pygame.KEYDOWN:
 
@@ -100,3 +80,5 @@ class Controlador:
 
         self.controlar_jugador1(teclas)
         self.controlar_jugador2(teclas)
+
+        

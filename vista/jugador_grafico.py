@@ -1,10 +1,9 @@
 import pygame
 
+
 class JugadorGrafico:
-    # def __init__(self, x, y, ancho, alto, color,modelo):
     def __init__(self, x, y, color,modelo):
         """ Inicializa el jugador gráfico. """
-        # self.rect = pygame.Rect(x, y, ancho, alto)
         self.rect = pygame.Rect(x, y, 60,60)
         self.color = color
         self.modelo = modelo
@@ -12,11 +11,6 @@ class JugadorGrafico:
     def dibujar(self, pantalla):
         """ Dibuja el jugador en la pantalla. """
         pygame.draw.rect(pantalla, self.color, self.rect)
-
-    
-    # def mover(self, dx, dy):
-    #     self.rect.x += dx
-    #     self.rect.y += dy
 
     def mover(self, direccion, cantidad, ANCHO, ALTO):
         """
@@ -50,6 +44,6 @@ class JugadorGrafico:
 
     def atacar_a(self, otro):
         """ Lógica de ataque: Si están colisionando, el jugador ataca al otro. """
-        #distancia = self.rect.centerx - otro.rect.centerx
-        #if abs(distancia) <= self.modelo.alcance:
         self.modelo.atacar(otro.modelo)
+
+        

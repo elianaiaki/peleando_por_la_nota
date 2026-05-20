@@ -8,10 +8,14 @@ class controladorGrafico:
         self.jugador1 = jugador1
         self.jugador2 = jugador2
 
-    def dibujar(self, jugador1, jugador2, grafico1, grafico2):
-        self.pantalla.fill((0,0,0))
+    def dibujar(self, jugador1, jugador2, grafico1, grafico2, fondo=None):
+            # Fondo: imagen o color negro si no hay imagen
+        if fondo is not None:
+            self.pantalla.blit(fondo, (0, 0))
+        else:
+            self.pantalla.fill((0, 0, 0))
 
-        # Dibujar personajes
+        # Dibujar jugadores
         grafico1.dibujar(self.pantalla)
         grafico2.dibujar(self.pantalla)
 

@@ -2,7 +2,6 @@ import unittest
 from modelo.Jugador import Jugador
 
 class TestJugador(unittest.TestCase):
-    
 #---------------------------------------------------------------------------------------------
     def setUp(self):
         """prepara el set de datos, con el que heremos las prueba"""
@@ -10,7 +9,6 @@ class TestJugador(unittest.TestCase):
         self.jugador2 = Jugador("Eli", 100, 20, 15, "bomba")
         self.jugador_sin_vida = Jugador("personaje_muerto", 0, 0, 0, "nada")
 #---------------------------------------------------------------------------------------------
-
     #CASO BASICO DE RECIBIR_DANIO
     def test_recibir_danio(self):
         """Verifica que la funcion recibir daño funciona correctamenet"""
@@ -27,7 +25,6 @@ class TestJugador(unittest.TestCase):
        """Verifica que el jugador recibio demasiado daño"""
        self.jugador.recibir_danio(110)
        self.assertEqual(self.jugador.vida, 0)
-
     
     def test_recibir_danio_0(self):
         """Verifica que recibir daño 0 no cambia la vida"""
@@ -44,15 +41,12 @@ class TestJugador(unittest.TestCase):
     def test_estoy_vivo(self):
         """verificar que esta vivo"""
         self.assertTrue(self.jugador.estoy_vivo())
-
 #------------------------------------------------------------------------------------------------------------------
-
     def test_mostrar_estado(self):
         """Verifica que el la funcion mostrar estado funciona correctamente"""
         estado = self.jugador.mostrar_estado()
         self.assertEqual(estado, "Alan: Vida = 100/100, Fuerza=20, Ataque=15, Ulti=navajaso")
         #"{self.nombre}: Vida = {self.vida}/{self.vida_maxima}, Fuerza={self.fuerza}, Ataque={self.ataque}"
-
 #---------------------------------------------------------------------------------------------------------------------
 
     def test_morir(self):
@@ -61,10 +55,7 @@ class TestJugador(unittest.TestCase):
        self.assertEqual(self.jugador.vida, 0)
        self.assertFalse(self.jugador.estoy_vivo())
     
-
-
 #-----------------------------------------------------------------------------------------------------------------
-
     def test_bloqueo(self):
         """Verifica que bloqueo el ataque"""
         self.assertFalse(self.jugador.esta_bloqueando)
@@ -77,14 +68,12 @@ class TestJugador(unittest.TestCase):
         self.jugador.bloqueo()
         self.jugador.recibir_danio(50)
         self.assertEqual(self.jugador.vida, 100)
-
 #------------------------------------------------------------------------------------------------------------------------
 
      # test para verificar que el daño calculado es exactamente fuerza + ataque
     def test_calcular_danio(self):
         """Verificar que el daño calculado es exactamente fuerza + ataque"""
         self.assertEqual(self.jugador.calcular_danio(), 35)
-
 #------------------------------------------------------------------------------------------------------------------------
     def test_atacar(self):
         """Verificar que el ataque reduce la vida del oponente correctamente"""

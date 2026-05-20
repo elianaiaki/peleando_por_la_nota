@@ -1,11 +1,13 @@
 from modelo.Personaje import Personaje
-from modelo.Ulti import Ulti
+#from modelo.Ulti import Ulti
 
 class Jugador(Personaje):
     """Clase que representa al jugador, hereda de personaje"""
-    def __init__(self, nombre, vida, fuerza, ataque, ulti):
+    def __init__(self, nombre, vida, fuerza, ataque):
         """constructor de la clase jugador, recibe un parametro de nombre, vida, fuerza, ataque"""
-        super().__init__(nombre, vida, fuerza, ataque, ulti)
+        super().__init__(nombre, vida, fuerza, ataque)
 
     def mostrar_estado(self):
-        return f"{self.nombre}: Vida = {self.vida}/{self.vida_maxima}, Fuerza={self.fuerza}, Ataque={self.ataque}, Ulti={self.ulti.nombre}"
+        return f"{self.nombre}: Vida = {self.vida}/{self.vida_maxima}, Fuerza={self.fuerza}, Ataque={self.ataque}"
+    
+    
