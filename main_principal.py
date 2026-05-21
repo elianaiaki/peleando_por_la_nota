@@ -15,7 +15,7 @@ pygame.init()
 pygame.mixer.init()  # <<-- INICIALIZA EL SISTEMA DE SONIDO
 try:
     
-    pygame.mixer.music.load("recursos/")  # ruta al archivo
+    pygame.mixer.music.load("recursos/Musica/Cancion.de.Pelea.mp3")  # ruta al archivo
     pygame.mixer.music.set_volume(0.1)  # volumen entre 0.0 y 1.0
     pygame.mixer.music.play(-1)  # -1 significa repetir en bucle infinito
     print("Música de fondo cargada y en reproducción")
@@ -50,14 +50,17 @@ fuente = pygame.font.SysFont(None, 36) # Fuente para mostrar texto en pantalla
 #ulti1 = Ulti("navajazo")
 #ulti2 = Ulti("piña")
 
-jugador1 = Jugador("Jugador 1", 100, 10, 5) #ulti1
-jugador2 = Jugador("Jugador 2", 100, 8, 6)  #lti2)
+jugador1 = Jugador("Eliana", 100, 10, 5) #ulti1
+jugador2 = Jugador("Gabriel", 100, 8, 6)  #lti2)
 
 # -----------------------------
 # VISTA (con vínculo al modelo)
 # -----------------------------
-grafico1 = JugadorGrafico(100, 300, ROJO, jugador1)
-grafico2 = JugadorGrafico(400, 300, AZUL, jugador2)
+muerte1 = pygame.image.load("recursos/eliana/eliana_derrotada.png") #sprite eliana
+muerte2 = pygame.image.load("recursos/gabriel/gabriel_derrotado.png")# sprite gaby
+
+grafico1 = JugadorGrafico(100, 300, ROJO, jugador1, muerte1)
+grafico2 = JugadorGrafico(400, 300, AZUL, jugador2, muerte2)
 
 controladorGrafico = controladorGrafico(pantalla, fuente, jugador1, jugador2)
 

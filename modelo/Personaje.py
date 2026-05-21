@@ -21,6 +21,7 @@ class Personaje:
         self.ataque = ataque
         self.esta_atacando = False
         self.esta_bloqueando = False
+        self.estado = "vivo"
         #self.ulti = ulti
 
     def recibir_danio(self, danio):
@@ -77,7 +78,9 @@ class Personaje:
 
     def morir(self):
         """Se ejecuta cuando el personaje muere"""
-        self.vida = 0
+        if self.vida <= 0:
+            self.vida = 0
+            self.estado = "muerto"
         #self.ulti.activar()
 
         

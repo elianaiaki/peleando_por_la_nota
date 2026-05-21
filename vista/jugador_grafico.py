@@ -2,11 +2,13 @@ import pygame
 
 
 class JugadorGrafico:
-    def __init__(self, x, y, color,modelo):
+    def __init__(self, x, y, color, modelo, imagen_derrota):
         """ Inicializa el jugador gráfico. """
         self.rect = pygame.Rect(x, y, 60,60)
         self.color = color
         self.modelo = modelo
+
+        self.imagen_derrota = imagen_derrota
 
     def dibujar(self, pantalla):
         """ Dibuja el jugador en la pantalla. """
