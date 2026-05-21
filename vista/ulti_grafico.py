@@ -2,7 +2,7 @@ import pygame
 
 class ultiGraficos:
     def __init__(self, x, y, color, modelo, ancho_pantalla):
-        self.rect = pygame.Rect(x, y, 200, 200)
+        self.rect = pygame.Rect(x, y, 80, 80)
         self.color = color
         self.modelo = modelo  # Objeto Ulti
         self.activa = False
