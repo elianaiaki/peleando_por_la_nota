@@ -1,4 +1,5 @@
 import pygame
+from vista.sprite_jugador import SpriteJugador
 
 
 class JugadorGrafico:
@@ -10,9 +11,16 @@ class JugadorGrafico:
 
         self.imagen_derrota = imagen_derrota
 
+        self.sprite = SpriteJugador(250, 250)
+
     def dibujar(self, pantalla):
         """ Dibuja el jugador en la pantalla. """
-        pygame.draw.rect(pantalla, self.color, self.rect)
+        if self.sprite.imagen_actual:
+            imagen = self.sprite.imagen_actual
+            imagen_rect = imagen.get_rect(center= self.rect.center)
+            pantalla.blit(imagen, imagen_rect.topleft)
+        else:
+            pygame.draw.rect(pantalla, self.color, self.rect)
 
     def mover(self, direccion, cantidad, ANCHO, ALTO):
         """
@@ -48,4 +56,12 @@ class JugadorGrafico:
         """ Lógica de ataque: Si están colisionando, el jugador ataca al otro. """
         self.modelo.atacar(otro.modelo)
 
-        
+    def actualizar_direccion(self, enemigo):
+        mirando_derecha = self.rect.centerx < enemigo.rect.centerx
+        nueva_direccion = "derecha" if mirando_derecha else "izquierda"
+        if nueva_direccion != self.direccion_actual:
+            self.direccion_actual = nueva_direccion
+            for lista_nombre in ["quieto", "caminar", "atacar", "bloquear", "bloquear_caminando", "muriendo", "muerto", "golpeado"]:
+                lista = getattr(self.sprite, lista_nombre)
+                for i in range(len(lista)):
+                    lista[i]= pygame.transform.flip(lista[i], True, False)

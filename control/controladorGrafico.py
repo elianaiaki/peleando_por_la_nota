@@ -18,7 +18,7 @@ class controladorGrafico:
         
 
     def dibujar(self, jugador1, jugador2, grafico1, grafico2, fondo=None):
-            # Fondo: imagen o color negro si no hay imagen
+        # Fondo: color negro si no hay imagen
         if fondo is not None:
             self.pantalla.blit(fondo, (0, 0))
         else:
