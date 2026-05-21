@@ -10,18 +10,9 @@ from vista.jugador_grafico import JugadorGrafico
 
 from control.controlador import Controlador
 from control.controladorGrafico import controladorGrafico
+from control.controladorMusica import ControladorMusica
 
 pygame.init()
-pygame.mixer.init()  # <<-- INICIALIZA EL SISTEMA DE SONIDO
-try:
-    
-    pygame.mixer.music.load("recursos/Musica/Cancion.de.Pelea.mp3")  # ruta al archivo
-    pygame.mixer.music.set_volume(0.1)  # volumen entre 0.0 y 1.0
-    pygame.mixer.music.play(-1)  # -1 significa repetir en bucle infinito
-    print("Música de fondo cargada y en reproducción")
-except Exception as e:
-    print(f"Error al cargar música: {e}")
-
 
 # -----------------------------
 # CONFIGURACIÓN
@@ -72,6 +63,9 @@ controladorGrafico = controladorGrafico(pantalla, fuente, jugador1, jugador2)
 # -----------------------------
 controlador = Controlador(grafico1, grafico2, ANCHO, ALTO)
 
+musica = ControladorMusica()
+musica.cambiar(ControladorMusica.PELEA)  # Empieza con música de pelea
+
 reloj = pygame.time.Clock()
 
 # -----------------------------
@@ -101,6 +95,12 @@ while controlador.corriendo:
 
     #GraficosUlti1.dibujar(pantalla)
     #GraficosUlti2.dibujar(pantalla)
+
+    # ---- LÓGICA DE MÚSICA: DERROTA ----
+    if not jugador2.estoy_vivo():
+        musica.cambiar(ControladorMusica.DERROTA)   # jugador1 ganó
+    elif not jugador1.estoy_vivo():
+        musica.cambiar(ControladorMusica.DERROTA)    # jugador1 perdió
 
     pygame.display.flip()
     reloj.tick(60)

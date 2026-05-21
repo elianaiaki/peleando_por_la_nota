@@ -92,6 +92,6 @@ class controladorGrafico:
 
             # Va alejando la cámara poco a poco
             if self.zoom > 1:
-                self.zoom -= 0.005
+                self.zoom -= 0.002
                 
     #def animacion_ulti(self, jugador1, jugador2, grafico1, grafico2):
