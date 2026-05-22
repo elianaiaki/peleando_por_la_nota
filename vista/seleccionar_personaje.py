@@ -8,7 +8,7 @@ def seleccionar_personajes(pantalla, ancho, alto):
     blanco = (255, 255, 255)
 
     # Fondo
-    ruta = os.path.join("recursos", "menu.jpg")
+    ruta = os.path.join("recursos", "menu.png")
     imagen_original = pygame.image.load(ruta).convert()
     fondo = pygame.transform.scale(imagen_original, (ancho, alto))
 
