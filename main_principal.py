@@ -12,6 +12,7 @@ from vista.sprite_jugador import SpriteJugador
 from control.controlador import Controlador
 from control.controladorGrafico import controladorGrafico
 from control.controladorMusica import ControladorMusica
+from vista.seleccionar_personaje import seleccionar_personajes
 
 pygame.init()
 
@@ -41,7 +42,7 @@ fuente = pygame.font.SysFont(None, 36) # Fuente para mostrar texto en pantalla
 
 #ulti1 = Ulti("navajazo")
 #ulti2 = Ulti("piña")
-
+jugador1, jugador2 = seleccionar_personajes(pantalla, ANCHO, ALTO)
 jugador1 = Jugador("eliana", 100, 10, 5) #ulti1
 jugador2 = Jugador("alan", 100, 8, 6)  #lti2)
 
