@@ -14,15 +14,24 @@ class Controlador:
     # JUGADOR 1
     def controlar_jugador1(self, teclas):
         # Movimiento
-        if teclas[pygame.K_w]:
-            self.jugador1.mover("arriba", self.velocidad, self.ancho, self.alto)
-        if teclas[pygame.K_s]:
-            self.jugador1.mover("abajo", self.velocidad, self.ancho, self.alto)
-        if teclas[pygame.K_a]:
-            self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto)
-        if teclas[pygame.K_d]:
-            self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
+        # if teclas[pygame.K_w]:
+        #     self.jugador1.mover("arriba", self.velocidad, self.ancho, self.alto)
+        # if teclas[pygame.K_s]:
+        #     self.jugador1.mover("abajo", self.velocidad, self.ancho, self.alto)
+        # if teclas[pygame.K_a]:
+        #     self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto)
+        # if teclas[pygame.K_d]:
+        #     self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
 
+        if teclas[pygame.K_a]:
+
+            self.jugador1.sprite.mirar_derecha = False
+            self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto)
+
+        if teclas[pygame.K_d]:
+
+            self.jugador1.sprite.mirar_derecha = True
+            self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
     def acciones_jugador1(self, evento):
         # Ataque
         if evento.key == pygame.K_f:
@@ -38,15 +47,24 @@ class Controlador:
        # JUGADOR 2
     def controlar_jugador2(self, teclas):
         # Movimiento
-        if teclas[pygame.K_UP]:
-            self.jugador2.mover("arriba", self.velocidad, self.ancho, self.alto)
-        if teclas[pygame.K_DOWN]:
-            self.jugador2.mover("abajo", self.velocidad, self.ancho, self.alto)
-        if teclas[pygame.K_LEFT]:
-            self.jugador2.mover("izquierda", self.velocidad, self.ancho, self.alto)
-        if teclas[pygame.K_RIGHT]:
-            self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto)
+        # if teclas[pygame.K_UP]:
+        #     self.jugador2.mover("arriba", self.velocidad, self.ancho, self.alto)
+        # if teclas[pygame.K_DOWN]:
+        #     self.jugador2.mover("abajo", self.velocidad, self.ancho, self.alto)
+        # if teclas[pygame.K_LEFT]:
+        #     self.jugador2.mover("izquierda", self.velocidad, self.ancho, self.alto)
+        # if teclas[pygame.K_RIGHT]:
+        #     self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto)
 
+        if teclas[pygame.K_LEFT]:
+
+            self.jugador2.sprite.mirar_derecha = False
+            self.jugador2.mover("izquierda", self.velocidad, self.ancho, self.alto)
+
+        if teclas[pygame.K_RIGHT]:
+
+            self.jugador2.sprite.mirar_derecha = True
+            self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto)
     def acciones_jugador2(self, evento):
         # Ataque
         if evento.key == pygame.K_l:

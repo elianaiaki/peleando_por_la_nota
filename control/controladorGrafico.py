@@ -8,6 +8,9 @@ class controladorGrafico:
         self.jugador1 = jugador1
         self.jugador2 = jugador2
 
+        self.jug1 = jugador1
+        self.jug2 = jugador2
+
         # ANIMACIÓN MUERTE
         self.animacion_muerte = False
         self.alpha = 0
@@ -28,12 +31,12 @@ class controladorGrafico:
         grafico1.dibujar(self.pantalla)
         grafico2.dibujar(self.pantalla)
 
-        # Estado de jugadores
-        estado1 = self.fuente.render(jugador1.mostrar_estado(), True, (255,255,255))
-        estado2 = self.fuente.render(jugador2.mostrar_estado(), True, (255,255,255))
+        # # Estado de jugadores
+        # estado1 = self.fuente.render(jugador1.mostrar_estado(), True, (255,255,255))
+        # estado2 = self.fuente.render(jugador2.mostrar_estado(), True, (255,255,255))
 
-        self.pantalla.blit(estado1, (10, 10))
-        self.pantalla.blit(estado2, (10, 40))
+        # self.pantalla.blit(estado1, (10, 10))
+        # self.pantalla.blit(estado2, (10, 40))
 
         # Colisión (visual)
         if grafico1.colisiona_con(grafico2):
@@ -95,3 +98,48 @@ class controladorGrafico:
                 self.zoom -= 0.002
                 
     #def animacion_ulti(self, jugador1, jugador2, grafico1, grafico2):
+
+    def dibujar_barras_vida(self,pantalla,vida_maxima):
+        """Metodo que dibuja la barra de vida ,con el nombre y la vida del jugador.
+        recibe por parametros la pantalla_principal, y la vida maxima ."""
+        FUENTE = pygame.font.SysFont("Arial", 18)#define la fuente y el tamanio
+        ancho = 100 #para el rectangulo de la barra
+        alto = 10#para el rectangulo de la barra
+        
+        # Colores
+        rojo = (255, 0, 0)
+        verde = (0, 255, 0)
+        negro = (0, 0, 0)
+        blanco = (255, 255, 255)
+
+        # Posiciones de las barras
+        x_jugador1 = 20 #posicion en el ancho de la pantalla
+        y_jugador1 = 20 #ALTURA EN PANTALLA
+        x_jugador2 = 630 #posicion del lado derecho de la pantalla
+        y_jugador2 = 20 #ALTURA
+
+        # Jugador 1
+        porcentaje_j1 = max(0, self.jug1.vida / vida_maxima) #calculo del porcentaje de vida que le queda al jugador1
+        ancho_vida_j1 = int(ancho * porcentaje_j1) #determina cuanto va a ocupar de ancho en la barra dependiendo el porcentaje
+        """
+        pygame.draw.rect(...) = dibuja un rectangulo en una pantalla, con un color y una posicion especifica.
+        pantalla= es el lugar donde se va a dibujar.
+        color (negro,rojo,verde)= es el color que va a tener el rectangulo.
+        (x,y,ancho,alto)= indica la posicion y el tamanio del rectangulo
+        """
+        pygame.draw.rect(pantalla, negro, (x_jugador1 - 1, y_jugador1 - 1, ancho + 2, alto + 2))  # va a dar un Borde color negro alrededor de la barra roja
+        pygame.draw.rect(pantalla, rojo, (x_jugador1, y_jugador1, ancho, alto))  # Fondo rojo,va a representar la vida maxima
+        pygame.draw.rect(pantalla, verde, (x_jugador1, y_jugador1, ancho_vida_j1, alto))  # barra verde,Vida restante o actual del jugador
+        
+        texto_j1 = FUENTE.render(f"{self.jug1.nombre}:{self.jug1.vida}/{vida_maxima}", True, blanco)#guarda en una variable los datos del personaje que apareceran por pantalla.
+        pantalla.blit(texto_j1, (x_jugador1 + ancho // 2 - texto_j1.get_width() // 2, y_jugador1 + alto + 5)) #muestra el texto en pantalla y lo centra sobre la barra | .get_width() obtiene el ancho del texto, para centrarlo.
+
+        # Jugador 2
+        porcentaje_j2 = max(0, self.jug2.vida / vida_maxima)#calculo del porcentaje de vida que tiene
+        ancho_vida_j2 = int(ancho * porcentaje_j2) #determina cuanto va a ocupar de ancho en la barra dependiendo el porcentaje
+        pygame.draw.rect(pantalla, negro, (x_jugador2 - 1, y_jugador2 - 1, ancho + 2, alto + 2))  # Borde
+        pygame.draw.rect(pantalla, rojo, (x_jugador2, y_jugador2, ancho, alto))  # Fondo rojo
+        pygame.draw.rect(pantalla, verde, (x_jugador2, y_jugador2, ancho_vida_j2, alto))  # Vida restante
+        
+        texto_j2 = FUENTE.render(f"{self.jug2.nombre}:{self.jug2.vida}/{vida_maxima}", True, blanco)
+        pantalla.blit(texto_j2, (x_jugador2 + ancho // 2 - texto_j2.get_width() // 2, y_jugador2 + alto + 5))

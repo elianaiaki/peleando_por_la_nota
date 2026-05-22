@@ -6,29 +6,29 @@ class SpriteJugador(pygame.sprite.Sprite):
     def __init__(self, ancho, alto):
         super().__init__()
 
+
         # ANIMACIONES
         self.quieto = []
-        self.caminar = []
+        self.caminar1= []
+        self.caminar2 = []
         self.atacar = []
-        self.bloquear = []
-        self.bloquear_caminando = []
+        self.bloquear00 = []
+        self.bloquear01 = []
+        self.bloquear02 = []
         self.muriendo = []
         self.muerto = []
         self.golpeado = []
 
-        # DIRECCIONES
-        self.izquierda_caminando = []
-        self.derecha_caminando = []
+        # # DIRECCIONES
+        # self.izquierda_caminando = []
+        # self.derecha_caminando = []
 
         self.ancho = ancho
         self.alto = alto
-
         self.imagen_actual = None
-
         self.contador_frame = 0
         self.indice_frame = 0
         self.velocidad_animacion = 10
-
         self.estado = "quieto"
 
     def cargar_imagenes(self, ruta, ancho_sprite, alto_sprite, columnas, tipo_animacion, escala=2.5, mirar_derecha=True):
@@ -37,7 +37,7 @@ class SpriteJugador(pygame.sprite.Sprite):
              raise FileNotFoundError(
                  f"No se encontró el sprite: {ruta}"
              )
-
+        print(f"\nCargando: {ruta}")
         imagen = pygame.image.load(ruta).convert_alpha()
 
         for col in range(columnas):
@@ -57,6 +57,10 @@ class SpriteJugador(pygame.sprite.Sprite):
                 )
             )
 
+            print(f"Frame {col} cargado para animación '{tipo_animacion}'")
+            print(f" - Tamaño original: ({ancho_sprite}, {alto_sprite})")
+            print(f" - Tamaño escalado: ({frame.get_width()}, {frame.get_height()})")
+            print(f" - Mirar derecha: {mirar_derecha}")
 
             # Girar sprite
             if not mirar_derecha:
@@ -67,16 +71,18 @@ class SpriteJugador(pygame.sprite.Sprite):
                 self.quieto.append(frame)
 
             elif tipo_animacion == "caminar":
-                self.caminar.append(frame)
-
-                self.izquierda_caminando.append(frame)
-                self.derecha_caminando.append(frame)
+                self.caminar0.append(frame)
+                self.caminar2.append(frame)
+                self.caminar1.append(frame)
 
             elif tipo_animacion == "atacar":
                 self.atacar.append(frame)
 
             elif tipo_animacion == "bloquear":
-                self.bloquear.append(frame)
+                self.bloquear00.append(frame)
+                self.bloquear01.append(frame)
+                self.bloquear02.append(frame)
+
 
             elif tipo_animacion == "muriendo":
                 self.muriendo.append(frame)
@@ -84,75 +90,160 @@ class SpriteJugador(pygame.sprite.Sprite):
             elif tipo_animacion == "muerto":
                 self.muerto.append(frame)
 
-    def actualizar(self, caminando=False, atacando=False, bloqueando=False, muriendo=False):
+    # def actualizar(self, caminando=False, atacando=False, bloqueando=False, muriendo=False):
 
-        # --------------------------------
-        # SI YA ESTA MUERTO
-        # --------------------------------
+    #     # --------------------------------
+    #     # SI YA ESTA MUERTO
+    #     # --------------------------------
+    #     if self.estado == "muerto":
+
+    #         # frame fijo final
+    #         if len(self.muerto) > 0:
+    #             self.imagen_actual = self.muerto[0]
+
+    #         return True
+
+    #     # --------------------------------
+    #     # CONTADOR DE VELOCIDAD
+    #     # --------------------------------
+    #     self.contador_frame += 1
+
+    #     # --------------------------------
+    #     # ELEGIR ANIMACION
+    #     # --------------------------------
+
+    #     if muriendo:
+
+    #         self.estado = "muriendo"
+    #         lista = self.muriendo
+
+    #     elif atacando:
+
+    #         self.estado = "atacar"
+    #         lista = self.atacar
+
+    #     elif bloqueando:
+
+    #         self.estado = "bloquear"
+    #         lista = self.bloquear
+
+    #     elif caminando:
+
+    #         self.estado = "caminar"
+    #         lista = self.caminar
+
+    #     else:
+
+    #         self.estado = "quieto"
+    #         lista = self.quieto
+
+    #     # --------------------------------
+    #     # VALIDAR QUE HAYA FRAMES
+    #     # --------------------------------
+    #     if len(lista) == 0:
+    #         return False
+
+    #     # --------------------------------
+    #     # CAMBIAR FRAME
+    #     # --------------------------------
+    #     if self.contador_frame >= self.velocidad_animacion:
+
+    #         self.indice_frame += 1
+    #         self.contador_frame = 0
+
+    #         # --------------------------------
+    #         # TERMINO LA ANIMACION
+    #         # --------------------------------
+    #         if self.indice_frame >= len(lista):
+
+    #             # MUERTE
+    #             if muriendo:
+
+    #                 self.estado = "muerto"
+
+    #                 if len(self.muerto) > 0:
+    #                     self.imagen_actual = self.muerto[0]
+
+    #                 return True
+
+    #             # ATAQUE / BLOQUEO
+    #             elif atacando or bloqueando:
+
+    #                 self.indice_frame = 0
+    #                 return True
+
+    #             # CAMINAR / QUIETO
+    #             else:
+
+    #                 self.indice_frame = 0
+
+    #     # --------------------------------
+    #     # FRAME ACTUAL
+    #     # --------------------------------
+    #     self.imagen_actual = lista[self.indice_frame]
+
+    #     return False
+
+    def actualizar(
+    self,
+    caminando=False,
+    atacando=False,
+    bloquear=False,
+    muriendo=False):
+
+        # Si ya murió completamente
         if self.estado == "muerto":
-
-            # frame fijo final
             if len(self.muerto) > 0:
                 self.imagen_actual = self.muerto[0]
-
             return True
 
-        # --------------------------------
-        # CONTADOR DE VELOCIDAD
-        # --------------------------------
         self.contador_frame += 1
 
-        # --------------------------------
-        # ELEGIR ANIMACION
-        # --------------------------------
-
+        # =========================
+        # ELEGIR ANIMACIÓN
+        # =========================
         if muriendo:
-
-            self.estado = "muriendo"
             lista = self.muriendo
 
         elif atacando:
-
-            self.estado = "atacar"
             lista = self.atacar
 
-        elif bloqueando:
-
-            self.estado = "bloquear"
-            lista = self.bloquear
+        elif bloquear:
+            # Elegí una de las listas de bloqueo
+            lista = self.bloquear00
 
         elif caminando:
+            # Dependiendo dirección
+            if self.direccion == 0:
+                lista = self.caminar0
 
-            self.estado = "caminar"
-            lista = self.caminar
+            elif self.direccion == 1:
+                lista = self.caminar1
+
+            elif self.direccion == 2:
+                lista = self.caminar2
 
         else:
-
-            self.estado = "quieto"
             lista = self.quieto
 
-        # --------------------------------
-        # VALIDAR QUE HAYA FRAMES
-        # --------------------------------
+        # =========================
+        # SI NO HAY FRAMES
+        # =========================
         if len(lista) == 0:
             return False
 
-        # --------------------------------
-        # CAMBIAR FRAME
-        # --------------------------------
+        # =========================
+        # CONTROL DE FRAMES
+        # =========================
         if self.contador_frame >= self.velocidad_animacion:
 
             self.indice_frame += 1
-            self.contador_frame = 0
 
-            # --------------------------------
-            # TERMINO LA ANIMACION
-            # --------------------------------
+            # TERMINÓ LA ANIMACIÓN
             if self.indice_frame >= len(lista):
 
-                # MUERTE
                 if muriendo:
-
+                    self.indice_frame = len(lista) - 1
                     self.estado = "muerto"
 
                     if len(self.muerto) > 0:
@@ -160,20 +251,23 @@ class SpriteJugador(pygame.sprite.Sprite):
 
                     return True
 
-                # ATAQUE / BLOQUEO
-                elif atacando or bloqueando:
-
+                elif atacando or bloquear:
                     self.indice_frame = 0
+                    self.contador_frame = 0
                     return True
 
-                # CAMINAR / QUIETO
                 else:
-
                     self.indice_frame = 0
 
-        # --------------------------------
-        # FRAME ACTUAL
-        # --------------------------------
+            self.contador_frame = 0
+
+        # Seguridad
+        if self.indice_frame >= len(lista):
+            self.indice_frame = 0
+
+        # =========================
+        # ACTUALIZAR IMAGEN
+        # =========================
         self.imagen_actual = lista[self.indice_frame]
 
         return False

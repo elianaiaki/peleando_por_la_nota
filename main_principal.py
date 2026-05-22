@@ -48,8 +48,8 @@ jugador2 = Jugador("alan", 100, 8, 6)  #lti2)
 # -----------------------------
 # VISTA (con vínculo al modelo)
 # -----------------------------
-muerte1 = pygame.image.load("recursos/eliana/eliana_derrotada.png") #sprite eliana
-muerte2 = pygame.image.load("recursos/gabriel/gabriel_derrotado.png")# sprite gaby
+muerte1 = pygame.image.load("recursos/eliana/derrota.png") #sprite eliana
+muerte2 = pygame.image.load("recursos/alan/derrota.png")# sprite alan
 
 
 # cargar imágenes
@@ -63,11 +63,13 @@ grafico2 = JugadorGrafico(400, 300, AZUL, jugador2, muerte2)
 # CARGAR SPRITES
 # -----------------------------
 columnas_alan = {
-    "quieto": 1,
-    "caminar": 8,
+    "quieto": 5,
+    "caminar01": 8,
+    "caminar02": 8,
     "atacar": 7,
-    "bloquear": 1,
-    "bloquear_caminando": 8,
+    "bloquear00": 1,
+    "bloquear01": 8,
+    "bloquear02": 8,
     "muriendo": 6,
     "muerto": 1,
     "golpeado": 3
@@ -96,11 +98,13 @@ columnas_gabo = {
 }
 
 columnas_eliana = {
-    "quieto": 1,
-    "caminar": 8,
+    "quieto":10,
+    "caminar01": 8,
+    "caminar02": 8,
     "atacar": 7,
-    "bloquear": 1,
-    "bloquear_caminando": 8,
+    "bloquear00": 1,
+    "bloquear01": 8,
+    "bloquear02": 8,
     "muriendo": 7,
     "muerto": 1,
     "golpeado": 3
@@ -120,35 +124,39 @@ columnas_yiyo = {
 #rutas de los sprites
 sprites_config = {
     "alan": {
-        "quieto":    ("recursos/alan/alanbase_bloquear.png",   150, 150, columnas_alan["quieto"], 2.5),
-        "caminar":    ("recursos/alan/alanbase_caminar.png",   150, 150, columnas_alan["caminar"], 2.5),
-        "atacar":  ("recursos/alan/alanbase_atacar.png", 150, 150, columnas_alan["atacar"], 2.5),
-        "bloquear":  ("recursos/alan/alanbase_bloquear_idle.png", 150, 150, columnas_alan["bloquear"], 2.5),
-        "bloquear_caminando":   ("recursos/alan/alanbase_bloquear_caminando.png",  150, 150, columnas_alan["bloquear_caminando"], 2.5),
-        "muriendo":  ("recursos/alan/alanbasea_caida.png", 150, 150, columnas_alan["muriendo"], 2.5),
-        "muerto": ("recursos/alan/alanbase_muerte.png", 150, 150, columnas_alan["muerto"], 2.5),
-        "golpeado": ("recursos/alan/alanbase_recibir_golpe.png", 150, 150, columnas_alan["golpeado"], 2.5)
+        "quieto":    ("recursos/alan/quieto.png", 512, 512, columnas_alan["quieto"], 2.5),
+        "caminar01":    ("recursos/alan/caminar01.png",   512, 512, columnas_alan["caminar01"], 2.5),
+        "caminar02":    ("recursos/alan/caminar02.png",   512, 512, columnas_alan["caminar02"], 2.5),
+        "atacar":  ("recursos/alan/atacar.png", 512, 512, columnas_alan["atacar"], 2.5),
+        "bloquear00":  ("recursos/alan/bloquear00.png", 512, 512, columnas_alan["bloquear00"], 2.5),
+        "bloquear01":  ("recursos/alan/bloquear01.png", 512, 512, columnas_alan["bloquear01"], 2.5),
+        "bloquear02":  ("recursos/alan/bloquear02.png", 512, 512, columnas_alan["bloquear02"], 2.5),
+        "muriendo":  ("recursos/alan/muriendo.png", 512, 512, columnas_alan["muriendo"], 2.5),
+        "muerto": ("recursos/alan/muerto.png", 512, 512, columnas_alan["muerto"], 2.5),
+        "golpeado": ("recursos/alan/golpeado.png", 512, 512, columnas_alan["golpeado"], 2.5)
     },
     "eliana": {
-        "quieto":    ("recursos/eliana/elianabase_bloquear.png",   150, 150, columnas_alan["quieto"], 2.5),
-        "caminar":    ("recursos/eliana/elianabase_caminar.png",   150, 150, columnas_alan["caminar"], 2.5),
-        "atacar":  ("recursos/eliana/elianabase_atacar.png", 150, 150, columnas_alan["atacar"], 2.5),
-        "bloquear":  ("recursos/eliana/elianabase_bloquear.png", 150, 150, columnas_alan["bloquear"], 2.5),
-        "bloquear_caminando":   ("recursos/eliana/elianabase_caminar.png",  150, 150, columnas_alan["bloquear_caminando"], 2.5),
-        "muriendo":  ("recursos/eliana/elianabase_caida.png", 150, 150, columnas_alan["muriendo"], 2.5),
-        "muerto": ("recursos/eliana/elianabase_muerte.png", 150, 150, columnas_alan["muerto"], 2.5),
-        "golpeado": ("recursos/eliana/elianabase_recibir_golpe.png", 150, 150, columnas_alan["golpeado"], 2.5)
-    },
-    "gabo": {
-        "quieto":    ("recursos/gabo/gabonase_bloquear.png",   150, 150, columnas_alan["quieto"], 2.5),
-        "caminar":    ("recursos/gabo/gabonase_caminar_adelante.png",   150, 150, columnas_alan["caminar"], 2.5),
-        "atacar":  ("recursos/gabo/gabonase_atacar.png", 150, 150, columnas_alan["atacar"], 2.5),
-        "bloquear":  ("recursos/gabo/gabonase_bloquear.png", 150, 150, columnas_alan["bloquear"], 2.5),
-        "bloquear_caminando":   ("recursos/gabo/gabo_caminar_cubriendose_ADELANTE.png",  150, 150, columnas_alan["bloquear_caminando"], 2.5),
-        "muriendo":  ("recursos/gabo/gabonase_caida.png", 150, 150, columnas_alan["muriendo"], 2.5),
-        "muerto": ("recursos/gabo/gabonase_muerte.png", 150, 150, columnas_alan["muerto"], 2.5),
-        "golpeado": ("recursos/gabo/gabonase_recibir_golpe.png", 150, 150, columnas_alan["golpeado"], 2.5)
-    },
+        "quieto":    ("recursos/eliana/quieto.png",   512, 512, columnas_eliana["quieto"], 2.5),
+        "caminar01":    ("recursos/eliana/caminar01.png",   512, 512, columnas_eliana["caminar01"], 2.5),
+        "caminar02":    ("recursos/eliana/caminar02.png",   512, 512, columnas_eliana["caminar02"], 2.5),
+        "atacar":  ("recursos/eliana/atacar.png", 512, 512, columnas_eliana["atacar"], 2.5),
+        "bloquear00":  ("recursos/eliana/bloquear00.png", 512, 512, columnas_eliana["bloquear00"], 2.5),
+        "bloquear01":  ("recursos/eliana/bloquear01.png", 512, 512, columnas_eliana["bloquear01"], 2.5),
+        "bloquear02":  ("recursos/eliana/bloquear02.png", 512, 512, columnas_eliana["bloquear02"], 2.5),
+        "muriendo":  ("recursos/eliana/muriendo.png", 512, 512, columnas_eliana["muriendo"], 2.5),
+        "muerto": ("recursos/eliana/muerto.png", 512, 512, columnas_eliana["muerto"], 2.5),
+        "golpeado": ("recursos/eliana/golpeado.png", 512, 512, columnas_eliana["golpeado"], 2.5)
+    }
+    # "gabo": {
+    #     "quieto":    ("recursos/gabo/gabonase_bloquear.png",   150, 150, columnas_alan["quieto"], 2.5),
+    #     "caminar":    ("recursos/gabo/gabonase_caminar_adelante.png",   150, 150, columnas_alan["caminar"], 2.5),
+    #     "atacar":  ("recursos/gabo/gabonase_atacar.png", 150, 150, columnas_alan["atacar"], 2.5),
+    #     "bloquear":  ("recursos/gabo/gabonase_bloquear.png", 150, 150, columnas_alan["bloquear"], 2.5),
+    #     "bloquear_caminando":   ("recursos/gabo/gabo_caminar_cubriendose_ADELANTE.png",  150, 150, columnas_alan["bloquear_caminando"], 2.5),
+    #     "muriendo":  ("recursos/gabo/gabonase_caida.png", 150, 150, columnas_alan["muriendo"], 2.5),
+    #     "muerto": ("recursos/gabo/gabonase_muerte.png", 150, 150, columnas_alan["muerto"], 2.5),
+    #     "golpeado": ("recursos/gabo/gabonase_recibir_golpe.png", 150, 150, columnas_alan["golpeado"], 2.5)
+    # },
 }
 
 # for jugadores in [jugador1, jugador2]:
@@ -194,6 +202,7 @@ while controlador.corriendo:
     controlador.procesar_eventos()
     # Movimiento
     controlador.procesar_teclas()
+
     # -----------------------------
     # ACTIVAR ULTIS
     # -----------------------------
@@ -210,6 +219,11 @@ while controlador.corriendo:
 
     # Dibujado
     controladorGrafico.dibujar(jugador1, jugador2, grafico1, grafico2, fondo=escenario)
+    controladorGrafico.dibujar_barras_vida(pantalla, 100)
+    grafico1.sprite.actualizar()
+    grafico2.sprite.actualizar()
+    # jugador1.actualizar_direccion(jugador2)
+    # jugador2.actualizar_direccion(jugador1)
 
     #GraficosUlti1.dibujar(pantalla)
     #GraficosUlti2.dibujar(pantalla)

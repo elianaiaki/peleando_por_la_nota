@@ -8,10 +8,26 @@ class JugadorGrafico:
         self.rect = pygame.Rect(x, y, 60,60)
         self.color = color
         self.modelo = modelo
-
+        self.direccion_actual = "derecha"  # Por defecto mirando a la derecha
+        self.modelo.esta_caminando = False  # Agregamos atributo para saber si camina
         self.imagen_derrota = imagen_derrota
-
         self.sprite = SpriteJugador(250, 250)
+        # ALTURA_PISO representa el nivel del suelo (ALTO - 110)
+        ALTURA_PISO = y  # y será el valor del suelo al inicializar
+
+        # if nombre == "Alan":
+        #     self.rect = pygame.Rect(x, 0, 80, 140)
+        # elif nombre == "Eliana":
+        #     self.rect = pygame.Rect(x, 0, 100, 140)
+        # elif nombre == "Gabriel":
+        #     self.rect = pygame.Rect(x, 0, 80, 140)
+        # elif nombre == "Gabo":
+        #     self.rect = pygame.Rect(x, 0, 80, 140)
+        # elif nombre == "Yiyo":
+        #     self.rect = pygame.Rect(x, 0, 80, 140)
+        # else:
+        #     self.rect = pygame.Rect(x, 0, 100, 100)  # Por defecto
+
 
     def dibujar(self, pantalla):
         """ Dibuja el jugador en la pantalla. """
@@ -22,7 +38,11 @@ class JugadorGrafico:
         else:
             pygame.draw.rect(pantalla, self.color, self.rect)
 
-    def mover(self, direccion, cantidad, ANCHO, ALTO):
+    def mover(self, direccion, cantidad, ANCHO, ALTO, enemigo=None):
+
+        # alannn
+        original = self.rect.copy()  # Guardamos la posición original antes de movernos
+        # ---
         """
         Mueve el personaje en una dirección dada.
 
@@ -48,6 +68,45 @@ class JugadorGrafico:
         if self.rect.bottom > ALTO:
             self.rect.bottom = ALTO
 
+        # ALANNNNNNNN
+
+         # Actualizamos hit-box secundaria
+            self.col_rect.center = self.rect.center
+
+            # Si hay enemigo y colisionamos, lo empujamos
+            if enemigo and self.col_rect.colliderect(enemigo.col_rect):
+                desplazamiento = self.rect.x - original.x  # cuanto intentamos movernos
+                enemigo.rect.x += desplazamiento  # empujamos al enemigo en la misma dirección
+
+                # Prevenir que el enemigo salga de pantalla
+                if enemigo.rect.left < 0:
+                    enemigo.rect.left = 0
+                if enemigo.rect.right > ANCHO:
+                    enemigo.rect.right = ANCHO
+
+                # También mover su col_rect/ actualizar hitbox
+                enemigo.col_rect.center = enemigo.rect.center
+                
+                # Verificar si todavía colisionan después del empuje
+                if self.col_rect.colliderect(enemigo.col_rect):
+                    # Si se sigue superponiendo, alinear los bordes
+                    self.rect = original
+                    # Actualizar hitbox del jugador
+                    self.col_rect.center = self.rect.center
+                    # Resetear velocidad en X para evitar que se siga moviendo en esa dirección
+                    self.vel_x = 0
+
+    # def dibujar(self, pantalla):
+        
+    #     if self.sprite.imagen_actual:
+    #         imagen = self.sprite.imagen_actual
+    #         imagen_rect = imagen.get_rect(center=self.rect.center)
+    #         pantalla.blit(imagen, imagen_rect.topleft)
+
+    #     else:
+    #         pygame.draw.rect(pantalla, self.color, self.rect)
+
+
     def colisiona_con(self, otro):
         """ Verifica si este jugador colisiona con otro jugador. """
         return self.rect.colliderect(otro.rect)
@@ -56,12 +115,36 @@ class JugadorGrafico:
         """ Lógica de ataque: Si están colisionando, el jugador ataca al otro. """
         self.modelo.atacar(otro.modelo)
 
-    def actualizar_direccion(self, enemigo):
-        mirando_derecha = self.rect.centerx < enemigo.rect.centerx
+    # def actualizar_direccion(self, enemigo):
+    #     mirando_derecha = self.rect.centerx < enemigo.rect.centerx
+    #     nueva_direccion = "derecha" if mirando_derecha else "izquierda"
+    #     if nueva_direccion != self.direccion_actual:
+    #         self.direccion_actual = nueva_direccion
+    #         for lista_nombre in [  "quieto","caminar01","caminar02","atacar","bloquear00","bloquear01","bloquear02","muriendo","muerto","golpeado"]:
+    #             lista = getattr(self.sprite, lista_nombre)
+    #             for i in range(len(lista)):
+    #                 lista[i]= pygame.transform.flip(lista[i], True, False)
+
+    def actualizar_direccion(self, rival):
+        mirando_derecha = self.rect.centerx < rival.rect.centerx
         nueva_direccion = "derecha" if mirando_derecha else "izquierda"
+
         if nueva_direccion != self.direccion_actual:
             self.direccion_actual = nueva_direccion
-            for lista_nombre in ["quieto", "caminar", "atacar", "bloquear", "bloquear_caminando", "muriendo", "muerto", "golpeado"]:
+
+            # Voltea todos los frames cargados de cada animación
+            for lista_nombre in [
+                "quieto",
+                "caminar01",
+                "caminar02",
+                "atacar",
+                "bloquear00",
+                "bloquear01",
+                "bloquear02",
+                "muriendo",
+                "muerto",
+                "golpeado"
+            ]:
                 lista = getattr(self.sprite, lista_nombre)
                 for i in range(len(lista)):
-                    lista[i]= pygame.transform.flip(lista[i], True, False)
+                    lista[i] = pygame.transform.flip(lista[i], True, False)
