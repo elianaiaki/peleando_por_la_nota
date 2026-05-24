@@ -5,7 +5,19 @@ from vista.sprite_jugador import SpriteJugador
 class JugadorGrafico:
     def __init__(self, x, y, color, modelo, imagen_derrota):
         """ Inicializa el jugador gráfico. """
-        self.rect = pygame.Rect(x, y, 60,60)
+        # self.rect = pygame.Rect(x, y, 60,60)
+        self.rect = pygame.Rect(x, y, 60, 60)
+
+        self.col_rect = pygame.Rect(
+            self.rect.x,
+            self.rect.y,
+            40,
+            60
+        )
+
+        self.col_rect.center = self.rect.center
+
+        self.vel_x = 0
         self.color = color
         self.modelo = modelo
         self.direccion_actual = "derecha"  # Por defecto mirando a la derecha
@@ -16,6 +28,7 @@ class JugadorGrafico:
         ALTURA_PISO = y  # y será el valor del suelo al inicializar
 
         self.estado = "quieto"  # Estado inicial
+        self.movimiento = "adelante"
 
         # if nombre == "Alan":
         #     self.rect = pygame.Rect(x, 0, 80, 140)
@@ -40,7 +53,15 @@ class JugadorGrafico:
         else:
             pygame.draw.rect(pantalla, self.color, self.rect)
 
-    def mover(self, direccion, cantidad, ANCHO, ALTO, enemigo=None):
+    # def mover(self, direccion, cantidad, ANCHO, ALTO, enemigo=None):
+    def mover(self,
+    direccion,
+    cantidad,
+    ANCHO,
+    ALTO,
+    enemigo=None,
+    paredes=[]
+    ):
 
         # alannn
         original = self.rect.copy()  # Guardamos la posición original antes de movernos
@@ -52,14 +73,34 @@ class JugadorGrafico:
         cantidad: desplazamiento en píxeles.
         ANCHO, ALTO: límites de la pantalla para evitar salir.
         """
-        if direccion == "arriba":
-            self.rect.y -= cantidad
-        elif direccion == "abajo":
-            self.rect.y += cantidad
-        elif direccion == "izquierda":
+        # if direccion == "arriba":
+        #     self.rect.y -= cantidad
+        # elif direccion == "abajo":
+        #     self.rect.y += cantidad
+        # elif direccion == "izquierda":
+        #     self.rect.x -= cantidad
+        # elif direccion == "derecha":
+        #     self.rect.x += cantidad
+
+        if direccion == "izquierda":
+
             self.rect.x -= cantidad
+
+            # Si mira a la derecha y va a la izquierda = retrocede
+            if self.direccion_actual == "derecha":
+                self.movimiento = "atras"
+            else:
+                self.movimiento = "adelante"
+
         elif direccion == "derecha":
+
             self.rect.x += cantidad
+
+            # Si mira a la derecha y va a la derecha = avanza
+            if self.direccion_actual == "derecha":
+                self.movimiento = "adelante"
+            else:
+                self.movimiento = "atras"
     
         if self.rect.left < 0:
             self.rect.left = 0
@@ -70,6 +111,16 @@ class JugadorGrafico:
         if self.rect.bottom > ALTO:
             self.rect.bottom = ALTO
 
+        # -----------------------------------
+        # COLISIONES CON PAREDES
+        # -----------------------------------
+        for pared in paredes:
+
+            if self.rect.colliderect(pared):
+
+                self.rect = original
+                break
+
         # ALANNNNNNNN
 
          # Actualizamos hit-box secundaria
@@ -78,8 +129,24 @@ class JugadorGrafico:
             # Si hay enemigo y colisionamos, lo empujamos
             if enemigo and self.col_rect.colliderect(enemigo.col_rect):
                 desplazamiento = self.rect.x - original.x  # cuanto intentamos movernos
-                enemigo.rect.x += desplazamiento  # empujamos al enemigo en la misma dirección
+                # enemigo.rect.x += desplazamiento  # empujamos al enemigo en la misma dirección
+                enemigo_original = enemigo.rect.copy()
 
+                enemigo.rect.x += desplazamiento
+
+                # -----------------------------------
+                # COLISIONES ENEMIGO VS PAREDES
+                # -----------------------------------
+                for pared in paredes:
+
+                    if enemigo.rect.colliderect(pared):
+
+                        enemigo.rect = enemigo_original
+
+                        # también cancelar movimiento propio
+                        self.rect = original
+
+                        return
                 # Prevenir que el enemigo salga de pantalla
                 if enemigo.rect.left < 0:
                     enemigo.rect.left = 0
@@ -150,3 +217,23 @@ class JugadorGrafico:
                 lista = getattr(self.sprite, lista_nombre)
                 for i in range(len(lista)):
                     lista[i] = pygame.transform.flip(lista[i], True, False)
+
+    def obtener_hitbox_ataque(self):
+
+        if self.direccion_actual == "derecha":
+
+            return pygame.Rect(
+                self.rect.right - 20,
+                self.rect.y + 20,
+                70,
+                80
+            )
+
+        else:
+
+            return pygame.Rect(
+                self.rect.left - 50,
+                self.rect.y + 20,
+                70,
+                80
+            )

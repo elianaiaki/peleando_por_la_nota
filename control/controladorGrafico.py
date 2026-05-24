@@ -44,11 +44,11 @@ class controladorGrafico:
         # self.pantalla.blit(estado2, (10, 40))
 
         # Colisión (visual)
-        for i in range(len(graficos)):
-            for j in range(i + 1, len(graficos)):
-                if graficos[i].colisiona_con(graficos[j]):
-                    texto = self.fuente.render("¡COLISIÓN!", True, (255,255,255))
-                    self.pantalla.blit(texto, (300, 80))
+        # for i in range(len(graficos)):
+        #     for j in range(i + 1, len(graficos)):
+        #         if graficos[i].colisiona_con(graficos[j]):
+        #             texto = self.fuente.render("¡COLISIÓN!", True, (255,255,255))
+        #             self.pantalla.blit(texto, (300, 80))
 
         # ------------------------------------------------------------------------------------------------------
         # Animación de muerte

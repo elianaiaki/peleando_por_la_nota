@@ -2,14 +2,21 @@ import pygame
 
 class Controlador:
 
-    def __init__(self, jugador1, jugador2, ancho, alto):
-
+    # def __init__(self, jugador1, jugador2, ancho, alto):
+    def __init__(self,
+    jugador1,
+    jugador2,
+    ancho,
+    alto,
+    paredes
+    ):
         self.jugador1 = jugador1
         self.jugador2 = jugador2
         self.ancho = ancho
         self.alto = alto
         self.velocidad = 5
         self.corriendo = True
+        self.paredes = paredes
 
     # JUGADOR 1
     # def controlar_jugador1(self, teclas):
@@ -54,7 +61,9 @@ class Controlador:
                     "izquierda",
                     self.velocidad,
                     self.ancho,
-                    self.alto
+                    self.alto,
+                    self.jugador2,
+                    self.paredes
                 )
 
                 moviendo = True
@@ -63,11 +72,20 @@ class Controlador:
 
                 self.jugador1.estado = "caminar"
 
+                # self.jugador1.mover(
+                #     "derecha",
+                #     self.velocidad,
+                #     self.ancho,
+                #     self.alto
+                # )
+
                 self.jugador1.mover(
                     "derecha",
                     self.velocidad,
                     self.ancho,
-                    self.alto
+                    self.alto,
+                    self.jugador2,
+                    self.paredes
                 )
 
                 moviendo = True
@@ -87,14 +105,35 @@ class Controlador:
 
             self.jugador1.estado = "atacar"
 
-            if self.jugador1.colisiona_con(self.jugador2):
+            # # if self.jugador1.colisiona_con(self.jugador2):
+            # if self.jugador1.obtener_hitbox_ataque().colliderect(
+            #         self.jugador2.rect
+            #     ):
 
-                self.jugador1.atacar_a(self.jugador2)
+            #     self.jugador1.atacar_a(self.jugador2)
 
-                self.jugador2.estado = "golpeado"
+            #     self.jugador2.estado = "golpeado"
 
-                if not self.jugador2.modelo.estoy_vivo():
-                    self.jugador2.estado = "muriendo"
+            #     if not self.jugador2.modelo.estoy_vivo():
+            #         self.jugador2.estado = "muriendo"
+
+            if self.jugador1.obtener_hitbox_ataque().colliderect(
+        self.jugador2.rect
+    ):
+
+                # SI ESTA BLOQUEANDO NO RECIBE DAÑO
+                if self.jugador2.estado == "bloquear":
+
+                    print("ATAQUE BLOQUEADO")
+
+                else:
+
+                    self.jugador1.atacar_a(self.jugador2)
+
+                    self.jugador2.estado = "golpeado"
+
+                    if not self.jugador2.modelo.estoy_vivo():
+                        self.jugador2.estado = "muriendo"
 
         # Bloqueo
         # elif evento.key == pygame.K_e:
@@ -145,25 +184,44 @@ class Controlador:
 
             self.jugador2.estado = "caminar"
 
+            # self.jugador2.mover(
+            #     "izquierda",
+            #     self.velocidad,
+            #     self.ancho,
+            #     self.alto
+            # )
             self.jugador2.mover(
                 "izquierda",
                 self.velocidad,
                 self.ancho,
-                self.alto
+                self.alto,
+                self.jugador1,
+                self.paredes
             )
 
+            
             moviendo = True
 
         if teclas[pygame.K_RIGHT]:
 
             self.jugador2.estado = "caminar"
 
+            # self.jugador2.mover(
+            #     "derecha",
+            #     self.velocidad,
+            #     self.ancho,
+            #     self.alto
+            # )
+
             self.jugador2.mover(
                 "derecha",
                 self.velocidad,
                 self.ancho,
-                self.alto
+                self.alto,
+                self.jugador1,
+                self.paredes
             )
+            
 
             moviendo = True
 
@@ -171,34 +229,35 @@ class Controlador:
             self.jugador2.estado = "quieto"
 
     def acciones_jugador2(self, evento):
-        # # Ataque
-        # if evento.key == pygame.K_l:
 
-        #     if self.jugador2.colisiona_con(self.jugador1):
-        #         self.jugador2.atacar_a(self.jugador1)
-
-        # # Bloqueo
-        # elif evento.key == pygame.K_k:
-        #     self.jugador2.modelo.bloqueo()
-
-         if evento.key == pygame.K_l:
+        # ATAQUE
+        if evento.key == pygame.K_l:
 
             self.jugador2.estado = "atacar"
 
-            if self.jugador2.colisiona_con(self.jugador1):
+            if self.jugador2.obtener_hitbox_ataque().colliderect(
+                self.jugador1.rect
+            ):
 
-                self.jugador2.atacar_a(self.jugador1)
+                if self.jugador1.estado == "bloquear":
 
-                self.jugador2.estado = "golpeado"
+                    print("ATAQUE BLOQUEADO")
 
-                if not self.jugador2.modelo.estoy_vivo():
-                    self.jugador2.estado = "muriendo"
+                else:
 
-            elif evento.key == pygame.K_k:
+                    self.jugador2.atacar_a(self.jugador1)
 
-                self.jugador2.estado = "bloquear"
+                    self.jugador1.estado = "golpeado"
 
-                self.jugador2.modelo.bloqueo()
+                    if not self.jugador1.modelo.estoy_vivo():
+                        self.jugador1.estado = "muriendo"
+
+        # BLOQUEO
+        elif evento.key == pygame.K_k:
+
+            self.jugador2.estado = "bloquear"
+
+            self.jugador2.modelo.bloqueo()
 
     # =====================================
     # EVENTOS

@@ -459,7 +459,7 @@ class SpriteJugador(pygame.sprite.Sprite):
     #     # -------------------------
     #     self.imagen_actual = lista[self.indice_frame]
 
-    def actualizar(self, estado="quieto"):
+    def actualizar(self, estado="quieto", movimiento = "adelante"):
         animacion_terminada = False
 
         # ---------------------------------
@@ -478,8 +478,16 @@ class SpriteJugador(pygame.sprite.Sprite):
         if estado == "quieto":
             lista = self.quieto
 
+        # elif estado == "caminar":
+        #     lista = self.caminar01
         elif estado == "caminar":
-            lista = self.caminar01
+
+            if movimiento == "adelante":
+                lista = self.caminar01
+
+            else:
+                lista = self.caminar02
+        
 
         elif estado == "atacar":
             lista = self.atacar
@@ -503,7 +511,7 @@ class SpriteJugador(pygame.sprite.Sprite):
         # VALIDAR
         # ---------------------------------
         if len(lista) == 0:
-            return
+            return False
 
         # ---------------------------------
         # ASEGURAR ÍNDICE VÁLIDO

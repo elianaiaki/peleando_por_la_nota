@@ -118,6 +118,7 @@ sprites_config = {
     }
 }
 
+
 # -----------------------------
 # CREAR GRÁFICOS
 # -----------------------------
@@ -146,7 +147,12 @@ for i, jugador in enumerate(jugadores):
         imagen_derrota
     )
 
+    # graficos.append(grafico)
     graficos.append(grafico)
+
+    # jugador 2 empieza mirando izquierda
+    if i == 1:
+        grafico.direccion_actual = "izquierda"
 
 # -----------------------------
 # CARGAR SPRITES
@@ -211,6 +217,16 @@ for i, (grafico, jugador) in enumerate(
             grafico.sprite.quieto[0]
         )
 
+
+# -----------------------------
+# PAREDES
+# -----------------------------
+paredes = [
+    # pared izquierda
+    pygame.Rect(0, 0, 160, ALTO),
+    # pared derecha
+    pygame.Rect(ANCHO - 170, 0, 30, ALTO)
+]
 # -----------------------------
 # CONTROLADORES
 # -----------------------------
@@ -219,11 +235,19 @@ controlador_grafico = controladorGrafico(
     fuente
 )
 
+# controlador = Controlador(
+#     graficos[0],
+#     graficos[1],
+#     ANCHO,
+#     ALTO
+# )
+
 controlador = Controlador(
     graficos[0],
     graficos[1],
     ANCHO,
-    ALTO
+    ALTO,
+    paredes
 )
 
 # -----------------------------
@@ -245,8 +269,14 @@ while controlador.corriendo:
     # Eventos
     controlador.procesar_eventos()
 
+    # # Movimiento
+    # controlador.procesar_teclas()
+
     # Movimiento
     controlador.procesar_teclas()
+
+    graficos[0].actualizar_direccion(graficos[1])
+    graficos[1].actualizar_direccion(graficos[0])
 
     # Dibujar
     controlador_grafico.dibujar(
@@ -267,8 +297,11 @@ while controlador.corriendo:
     #     grafico.sprite.actualizar()
     for grafico in graficos:
         # grafico.sprite.actualizar(grafico.estado)
-        termino = grafico.sprite.actualizar(grafico.estado)
-
+        # termino = grafico.sprite.actualizar(grafico.estado)
+        termino = grafico.sprite.actualizar(
+            grafico.estado,
+            grafico.movimiento
+        )
         if termino:
 
                 if grafico.estado == "atacar":
@@ -290,6 +323,17 @@ while controlador.corriendo:
     elif not jugadores[1].estoy_vivo():
         musica.cambiar(ControladorMusica.DERROTA)
 
+
+    # # -----------------------------
+    #     # DIBUJAR PAREDES
+    #     # -----------------------------
+    #     for pared in paredes:
+    #         pygame.draw.rect(
+    #             pantalla,
+    #             (255, 0, 0),
+    #             pared,
+    #             2
+    #         )
     pygame.display.flip()
 
     reloj.tick(60)
