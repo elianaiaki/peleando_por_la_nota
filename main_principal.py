@@ -27,6 +27,9 @@ NEGRO  = (0, 0, 0)     # Color de fondo
 BLANCO = (255, 255, 255) # Color de texto
 ROJO   = (255, 0, 0)   # Color del jugador 1
 AZUL   = (0, 0, 255)    # Color del jugador 2
+VERDE = (0, 255, 0)    # Color de jugador 3
+AMARILLO = (255, 255, 0) # Color de jugador 4
+VIOLETA = (238, 130, 238) # Color de jugador 5
 
 # -----------------------------
 # ESCENARIO / FONDO
@@ -42,15 +45,21 @@ fuente = pygame.font.SysFont(None, 36) # Fuente para mostrar texto en pantalla
 
 #ulti1 = Ulti("navajazo")
 #ulti2 = Ulti("piña")
-jugador1, jugador2 = seleccionar_personajes(pantalla, ANCHO, ALTO)
-jugador1 = Jugador("eliana", 100, 10, 5) #ulti1
-jugador2 = Jugador("alan", 100, 8, 6)  #lti2)
+# jugador1, jugador2 = seleccionar_personajes(pantalla, ANCHO, ALTO)
+# jugador1 = Jugador("eliana", 100, 10, 5) #ulti1
+# jugador2 = Jugador("alan", 100, 8, 6)  #lti2)
+# jugador3 = Jugador("gabriel", 120, 12, 4)
+# jugador4 = Jugador("gabo", 80, 15, 3)
+# jugador5 = Jugador("yiyo", 90, 11, 5)
 
 # -----------------------------
 # VISTA (con vínculo al modelo)
 # -----------------------------
 muerte1 = pygame.image.load("recursos/eliana/derrota.png") #sprite eliana
 muerte2 = pygame.image.load("recursos/alan/derrota.png")# sprite alan
+muerte3 = pygame.image.load("recursos/gabriel/derrota.png") 
+muerte4 = pygame.image.load("recursos/gabo/derrota.png") 
+muerte5 = pygame.image.load("recursos/yiyo/derrota.png")
 
 
 # cargar imágenes
@@ -59,12 +68,15 @@ muerte2 = pygame.image.load("recursos/alan/derrota.png")# sprite alan
 
 grafico1 = JugadorGrafico(100, 300, ROJO, jugador1, muerte1)
 grafico2 = JugadorGrafico(400, 300, AZUL, jugador2, muerte2)
+grafico3 = JugadorGrafico(600, 300, VERDE, jugador3, muerte3)
+grafico4 = JugadorGrafico(200, 300, AMARILLO, jugador4, muerte4)
+grafico5 = JugadorGrafico(500, 300, VIOLETA, jugador5, muerte5)
 
 # -----------------------------
 # CARGAR SPRITES
 # -----------------------------
 columnas_alan = {
-    "quieto": 5,
+    "quieto": 12,
     "caminar01": 8,
     "caminar02": 8,
     "atacar": 7,
@@ -76,30 +88,8 @@ columnas_alan = {
     "golpeado": 3
 }
 
-columnas_gabriel = {
-    "quieto": 1,
-    "caminar": 8,
-    "atacar": 7,
-    "bloquear": 1,
-    "bloquear_caminando": 8,
-    "muriendo": 6,
-    "muerto": 1,
-    "golpeado": 3
-}
-
-columnas_gabo = {
-    "quieto": 1,
-    "caminar": 8,
-    "atacar": 8,
-    "bloquear": 1,
-    "bloquear_caminando": 8,
-    "muriendo": 6,
-    "muerto": 1,
-    "golpeado": 3
-}
-
 columnas_eliana = {
-    "quieto":10,
+    "quieto":12,
     "caminar01": 8,
     "caminar02": 8,
     "atacar": 7,
@@ -111,13 +101,41 @@ columnas_eliana = {
     "golpeado": 3
 }
 
-columnas_yiyo = {
-    "quieto": 1,
-    "caminar": 8,
+columnas_gabriel = {
+    "quieto":12,
+    "caminar01": 8,
+    "caminar02": 8,
     "atacar": 7,
-    "bloquear": 1,
-    "bloquear_caminando": 8,
+    "bloquear00": 1,
+    "bloquear01": 8,
+    "bloquear02": 8,
     "muriendo": 6,
+    "muerto": 1,
+    "golpeado": 3
+}
+
+columnas_gabo = {
+    "quieto":12,
+    "caminar01": 8,
+    "caminar02": 8,
+    "atacar": 8,
+    "bloquear00": 1,
+    "bloquear01": 8,
+    "bloquear02": 8,
+    "muriendo": 6,
+    "muerto": 1,
+    "golpeado": 3
+}
+
+columnas_yiyo = {
+    "quieto":12,
+    "caminar01": 8,
+    "caminar02": 8,
+    "atacar": 7,
+    "bloquear00": 1,
+    "bloquear01": 8,
+    "bloquear02": 8,
+    "muriendo": 7,
     "muerto": 1,
     "golpeado": 3
 }
@@ -147,17 +165,43 @@ sprites_config = {
         "muriendo":  ("recursos/eliana/muriendo.png", 512, 512, columnas_eliana["muriendo"], 2.5),
         "muerto": ("recursos/eliana/muerto.png", 512, 512, columnas_eliana["muerto"], 2.5),
         "golpeado": ("recursos/eliana/golpeado.png", 512, 512, columnas_eliana["golpeado"], 2.5)
+    },
+    "gabriel": {
+        "quieto":    ("recursos/gabriel/quieto.png",   512, 512, columnas_gabriel["quieto"], 2.5),
+        "caminar01":    ("recursos/gabriel/caminar01.png",   512, 512, columnas_gabriel["caminar01"], 2.5),
+        "caminar02":    ("recursos/gabriel/caminar02.png",   512, 512, columnas_gabriel["caminar02"], 2.5),
+        "atacar":  ("recursos/gabriel/atacar.png", 512, 512, columnas_gabriel["atacar"], 2.5),
+        "bloquear00":  ("recursos/gabriel/bloquear00.png", 512, 512, columnas_gabriel["bloquear00"], 2.5),
+        "bloquear01":  ("recursos/gabriel/bloquear01.png", 512, 512, columnas_gabriel["bloquear01"], 2.5),
+        "bloquear02":  ("recursos/gabriel/bloquear02.png", 512, 512, columnas_gabriel["bloquear02"], 2.5),
+        "muriendo":  ("recursos/gabriel/muriendo.png", 512, 512, columnas_gabriel["muriendo"], 2.5),
+        "muerto": ("recursos/gabriel/muerto.png", 512, 512, columnas_gabriel["muerto"], 2.5),
+        "golpeado": ("recursos/gabriel/golpeado.png", 512, 512, columnas_gabriel["golpeado"], 2.5)
+    },
+    "gabo": {
+        "quieto":    ("recursos/gabo/quieto.png",   512, 512, columnas_gabo["quieto"], 2.5),
+        "caminar01":    ("recursos/gabo/caminar01.png",   512, 512, columnas_gabo["caminar01"], 2.5),
+        "caminar02":    ("recursos/gabo/caminar02.png",   512, 512, columnas_gabo["caminar02"], 2.5),
+        "atacar":  ("recursos/gabo/atacar.png", 512, 512, columnas_gabo["atacar"], 2.5),
+        "bloquear00":  ("recursos/gabo/bloquear00.png", 512, 512, columnas_gabo["bloquear00"], 2.5),
+        "bloquear01":  ("recursos/gabo/bloquear01.png", 512, 512, columnas_gabo["bloquear01"], 2.5),
+        "bloquear02":  ("recursos/gabo/bloquear02.png", 512, 512, columnas_gabo["bloquear02"], 2.5),
+        "muriendo":  ("recursos/gabo/muriendo.png", 512, 512, columnas_gabo["muriendo"], 2.5),
+        "muerto": ("recursos/gabo/muerto.png", 512, 512, columnas_gabo["muerto"], 2.5),
+        "golpeado": ("recursos/gabo/golpeado.png", 512, 512, columnas_gabo["golpeado"], 2.5)
+    },
+    "yiyo": {
+        "quieto":    ("recursos/eliana/quieto.png",   512, 512, columnas_yiyo["quieto"], 2.5),
+        "caminar01":    ("recursos/yiyo/caminar01.png",   512, 512, columnas_yiyo["caminar01"], 2.5),
+        "caminar02":    ("recursos/yiyo/caminar02.png",   512, 512, columnas_yiyo["caminar02"], 2.5),
+        "atacar":  ("recursos/yiyo/atacar.png", 512, 512, columnas_yiyo["atacar"], 2.5),
+        "bloquear00":  ("recursos/yiyo/bloquear00.png", 512, 512, columnas_yiyo["bloquear00"], 2.5),
+        "bloquear01":  ("recursos/yiyo/bloquear01.png", 512, 512, columnas_yiyo["bloquear01"], 2.5),
+        "bloquear02":  ("recursos/yiyo/bloquear02.png", 512, 512, columnas_yiyo["bloquear02"], 2.5),
+        "muriendo":  ("recursos/yiyo/muriendo.png", 512, 512, columnas_yiyo["muriendo"], 2.5),
+        "muerto": ("recursos/yiyo/muerto.png", 512, 512, columnas_yiyo["muerto"], 2.5),
+        "golpeado": ("recursos/yiyo/golpeado.png", 512, 512, columnas_yiyo["golpeado"], 2.5)
     }
-    # "gabo": {
-    #     "quieto":    ("recursos/gabo/gabonase_bloquear.png",   150, 150, columnas_alan["quieto"], 2.5),
-    #     "caminar":    ("recursos/gabo/gabonase_caminar_adelante.png",   150, 150, columnas_alan["caminar"], 2.5),
-    #     "atacar":  ("recursos/gabo/gabonase_atacar.png", 150, 150, columnas_alan["atacar"], 2.5),
-    #     "bloquear":  ("recursos/gabo/gabonase_bloquear.png", 150, 150, columnas_alan["bloquear"], 2.5),
-    #     "bloquear_caminando":   ("recursos/gabo/gabo_caminar_cubriendose_ADELANTE.png",  150, 150, columnas_alan["bloquear_caminando"], 2.5),
-    #     "muriendo":  ("recursos/gabo/gabonase_caida.png", 150, 150, columnas_alan["muriendo"], 2.5),
-    #     "muerto": ("recursos/gabo/gabonase_muerte.png", 150, 150, columnas_alan["muerto"], 2.5),
-    #     "golpeado": ("recursos/gabo/gabonase_recibir_golpe.png", 150, 150, columnas_alan["golpeado"], 2.5)
-    # },
 }
 
 # for jugadores in [jugador1, jugador2]:
@@ -168,7 +212,7 @@ sprites_config = {
 #     if jugadores.sprite.quieto:
 #         jugadores.sprite.imagen_actual = jugadores.sprite.quieto[0]
 
-for grafico, jugadores in [(grafico1, jugador1), (grafico2, jugador2)]:
+for grafico, jugadores in [(grafico1, jugador1), (grafico2, jugador2), (grafico3, jugador3), (grafico4, jugador4), (grafico5, jugador5)]:
 
     nombre = jugadores.nombre
     animaciones = sprites_config[jugadores.nombre]
@@ -180,7 +224,8 @@ for grafico, jugadores in [(grafico1, jugador1), (grafico2, jugador2)]:
     if grafico.sprite.quieto:
         grafico.sprite.imagen_actual = grafico.sprite.quieto[0]
 
-controladorGrafico = controladorGrafico(pantalla, fuente, jugador1, jugador2)
+# controladorGrafico = controladorGrafico(pantalla, fuente, jugador1, jugador2)
+controladorGrafico = controladorGrafico(pantalla, fuente)
 
 #GraficosUlti1 = ultiGraficos(150, 300, (0,255,0), ulti1, 800)
 #GraficosUlti2 = ultiGraficos(150, 300, (235,226,0), ulti2, 800)
@@ -219,10 +264,23 @@ while controlador.corriendo:
     #GraficosUlti2.actualizar(800)
 
     # Dibujado
-    controladorGrafico.dibujar(jugador1, jugador2, grafico1, grafico2, fondo=escenario)
-    controladorGrafico.dibujar_barras_vida(pantalla, 100)
-    grafico1.sprite.actualizar()
-    grafico2.sprite.actualizar()
+    # controladorGrafico.dibujar(jugador1, jugador2, grafico1, grafico2, fondo=escenario)
+    controladorGrafico.dibujar(
+        [jugador1, jugador2, jugador3, jugador4, jugador5],
+        [grafico1, grafico2, grafico3, grafico4, grafico5],
+        fondo=escenario
+    )
+
+    controladorGrafico.dibujar_barras_vida(
+    pantalla,
+    [jugador1, jugador2, jugador3, jugador4, jugador5],
+    100
+    )
+    # controladorGrafico.dibujar_barras_vida(pantalla, 100)
+    # grafico1.sprite.actualizar()
+    # grafico2.sprite.actualizar()
+    for grafico in [grafico1, grafico2, grafico3, grafico4, grafico5]:
+        grafico.sprite.actualizar()
     # jugador1.actualizar_direccion(jugador2)
     # jugador2.actualizar_direccion(jugador1)
 

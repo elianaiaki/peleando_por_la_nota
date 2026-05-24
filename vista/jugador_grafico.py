@@ -15,6 +15,8 @@ class JugadorGrafico:
         # ALTURA_PISO representa el nivel del suelo (ALTO - 110)
         ALTURA_PISO = y  # y será el valor del suelo al inicializar
 
+        self.estado = "quieto"  # Estado inicial
+
         # if nombre == "Alan":
         #     self.rect = pygame.Rect(x, 0, 80, 140)
         # elif nombre == "Eliana":

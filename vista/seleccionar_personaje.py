@@ -16,9 +16,9 @@ def seleccionar_personajes(pantalla, ancho, alto):
     opciones = {
         "eliana": Jugador("eliana", 100, 10, 5),
         "alan": Jugador("alan", 100, 8, 6),
-        "gabriel": Jugador("gabriel", 120, 12, 4),
-        "gabo": Jugador("gabo", 80, 15, 3),
-        "yiyo": Jugador("yiyo", 90, 11, 5)
+        "gabriel": Jugador("gabriel", 100, 12, 4),
+        "gabo": Jugador("gabo", 100, 15, 3),
+        "yiyo": Jugador("yiyo", 100, 11, 5)
     }
 
     # Cargar imágenes

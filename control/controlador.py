@@ -12,7 +12,7 @@ class Controlador:
         self.corriendo = True
 
     # JUGADOR 1
-    def controlar_jugador1(self, teclas):
+    # def controlar_jugador1(self, teclas):
         # Movimiento
         # if teclas[pygame.K_w]:
         #     self.jugador1.mover("arriba", self.velocidad, self.ancho, self.alto)
@@ -23,58 +23,182 @@ class Controlador:
         # if teclas[pygame.K_d]:
         #     self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
 
-        if teclas[pygame.K_a]:
+        # if teclas[pygame.K_a]:
 
-            self.jugador1.sprite.mirar_derecha = False
-            self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto)
+        #     self.jugador1.sprite.mirar_derecha = False
+        #     self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto)
 
-        if teclas[pygame.K_d]:
+        # if teclas[pygame.K_d]:
 
-            self.jugador1.sprite.mirar_derecha = True
-            self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
+        #     self.jugador1.sprite.mirar_derecha = True
+        #     self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
+
+    def controlar_jugador1(self, teclas):
+
+            if self.jugador1.estado in [
+                "atacar",
+                "bloquear",
+                "golpeado",
+                "muriendo",
+                "muerto"
+            ]:
+                return
+            
+            moviendo = False
+
+            if teclas[pygame.K_a]:
+
+                self.jugador1.estado = "caminar"
+
+                self.jugador1.mover(
+                    "izquierda",
+                    self.velocidad,
+                    self.ancho,
+                    self.alto
+                )
+
+                moviendo = True
+
+            if teclas[pygame.K_d]:
+
+                self.jugador1.estado = "caminar"
+
+                self.jugador1.mover(
+                    "derecha",
+                    self.velocidad,
+                    self.ancho,
+                    self.alto
+                )
+
+                moviendo = True
+
+            if not moviendo:
+                self.jugador1.estado = "quieto"
+
+
     def acciones_jugador1(self, evento):
         # Ataque
+        # if evento.key == pygame.K_f:
+
+        #     if self.jugador1.colisiona_con(self.jugador2):
+        #         self.jugador1.atacar_a(self.jugador2)
+
         if evento.key == pygame.K_f:
 
+            self.jugador1.estado = "atacar"
+
             if self.jugador1.colisiona_con(self.jugador2):
+
                 self.jugador1.atacar_a(self.jugador2)
 
-        # Bloqueo
-        elif evento.key == pygame.K_e:
-            self.jugador1.modelo.bloqueo()
+                self.jugador2.estado = "golpeado"
 
+                if not self.jugador2.modelo.estoy_vivo():
+                    self.jugador2.estado = "muriendo"
+
+        # Bloqueo
+        # elif evento.key == pygame.K_e:
+        #     self.jugador1.modelo.bloqueo()
+
+        elif evento.key == pygame.K_e:
+
+            self.jugador1.estado = "bloquear"
+
+            self.jugador1.modelo.bloqueo()
     # =====================================
        # JUGADOR 2
-    def controlar_jugador2(self, teclas):
-        # Movimiento
-        # if teclas[pygame.K_UP]:
-        #     self.jugador2.mover("arriba", self.velocidad, self.ancho, self.alto)
-        # if teclas[pygame.K_DOWN]:
-        #     self.jugador2.mover("abajo", self.velocidad, self.ancho, self.alto)
-        # if teclas[pygame.K_LEFT]:
-        #     self.jugador2.mover("izquierda", self.velocidad, self.ancho, self.alto)
-        # if teclas[pygame.K_RIGHT]:
-        #     self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto)
+    # def controlar_jugador2(self, teclas):
+    #     # Movimiento
+    #     # if teclas[pygame.K_UP]:
+    #     #     self.jugador2.mover("arriba", self.velocidad, self.ancho, self.alto)
+    #     # if teclas[pygame.K_DOWN]:
+    #     #     self.jugador2.mover("abajo", self.velocidad, self.ancho, self.alto)
+    #     # if teclas[pygame.K_LEFT]:
+    #     #     self.jugador2.mover("izquierda", self.velocidad, self.ancho, self.alto)
+    #     # if teclas[pygame.K_RIGHT]:
+    #     #     self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto)
 
+    #     if teclas[pygame.K_LEFT]:
+
+    #         self.jugador2.sprite.mirar_derecha = False
+    #         self.jugador2.mover("izquierda", self.velocidad, self.ancho, self.alto)
+
+    #     if teclas[pygame.K_RIGHT]:
+
+    #         self.jugador2.sprite.mirar_derecha = True
+    #         self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto)
+
+    def controlar_jugador2(self, teclas):
+
+        if self.jugador2.estado in [
+                "atacar",
+                "bloquear",
+                "golpeado",
+                "muriendo",
+                "muerto"
+            ]:
+                return
+            
+        moviendo = False
+         
         if teclas[pygame.K_LEFT]:
 
-            self.jugador2.sprite.mirar_derecha = False
-            self.jugador2.mover("izquierda", self.velocidad, self.ancho, self.alto)
+            self.jugador2.estado = "caminar"
+
+            self.jugador2.mover(
+                "izquierda",
+                self.velocidad,
+                self.ancho,
+                self.alto
+            )
+
+            moviendo = True
 
         if teclas[pygame.K_RIGHT]:
 
-            self.jugador2.sprite.mirar_derecha = True
-            self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto)
+            self.jugador2.estado = "caminar"
+
+            self.jugador2.mover(
+                "derecha",
+                self.velocidad,
+                self.ancho,
+                self.alto
+            )
+
+            moviendo = True
+
+        if not moviendo:
+            self.jugador2.estado = "quieto"
+
     def acciones_jugador2(self, evento):
-        # Ataque
-        if evento.key == pygame.K_l:
+        # # Ataque
+        # if evento.key == pygame.K_l:
+
+        #     if self.jugador2.colisiona_con(self.jugador1):
+        #         self.jugador2.atacar_a(self.jugador1)
+
+        # # Bloqueo
+        # elif evento.key == pygame.K_k:
+        #     self.jugador2.modelo.bloqueo()
+
+         if evento.key == pygame.K_l:
+
+            self.jugador2.estado = "atacar"
 
             if self.jugador2.colisiona_con(self.jugador1):
+
                 self.jugador2.atacar_a(self.jugador1)
 
-        # Bloqueo
-        elif evento.key == pygame.K_k:
-            self.jugador2.modelo.bloqueo()
+                self.jugador2.estado = "golpeado"
+
+                if not self.jugador2.modelo.estoy_vivo():
+                    self.jugador2.estado = "muriendo"
+
+            elif evento.key == pygame.K_k:
+
+                self.jugador2.estado = "bloquear"
+
+                self.jugador2.modelo.bloqueo()
 
     # =====================================
     # EVENTOS
