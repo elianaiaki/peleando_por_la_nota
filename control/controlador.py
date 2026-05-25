@@ -44,7 +44,7 @@ class Controlador:
 
             if self.jugador1.estado in [
                 "atacar",
-                "bloquear",
+            #    "bloquear", // Comente esto por que me di cuenta que provocaba un retraso en la animacion de bloqueo.
                 "golpeado",
                 "muriendo",
                 "muerto"
@@ -52,6 +52,18 @@ class Controlador:
                 return
             
             moviendo = False
+
+            # BLOQUEO   // aca añadi alunas cositas tanto en jugador 1 como en 2
+            if teclas[pygame.K_e]:
+
+                self.jugador1.modelo.esta_bloqueando = True
+                self.jugador1.estado = "bloquear"
+
+                return
+
+            else:
+
+                self.jugador1.modelo.esta_bloqueando = False
 
             if teclas[pygame.K_a]:
 
@@ -139,11 +151,12 @@ class Controlador:
         # elif evento.key == pygame.K_e:
         #     self.jugador1.modelo.bloqueo()
 
-        elif evento.key == pygame.K_e:
+        # elif evento.key == pygame.K_e:
 
-            self.jugador1.estado = "bloquear"
+        #     self.jugador1.estado = "bloquear"
 
-            self.jugador1.modelo.bloqueo()
+        #     self.jugador1.modelo.bloqueo()
+
     # =====================================
        # JUGADOR 2
     # def controlar_jugador2(self, teclas):
@@ -177,8 +190,20 @@ class Controlador:
                 "muerto"
             ]:
                 return
-            
+        
         moviendo = False
+        
+        # BLOQUEO
+        if teclas[pygame.K_k]:
+
+            self.jugador2.modelo.esta_bloqueando = True
+            self.jugador2.estado = "bloquear"
+
+            return
+
+        else:
+
+            self.jugador2.modelo.esta_bloqueando = False
          
         if teclas[pygame.K_LEFT]:
 
@@ -253,11 +278,11 @@ class Controlador:
                         self.jugador1.estado = "muriendo"
 
         # BLOQUEO
-        elif evento.key == pygame.K_k:
+        # elif evento.key == pygame.K_k:
 
-            self.jugador2.estado = "bloquear"
+        #     self.jugador2.estado = "bloquear"
 
-            self.jugador2.modelo.bloqueo()
+        #     self.jugador2.modelo.bloqueo()
 
     # =====================================
     # EVENTOS

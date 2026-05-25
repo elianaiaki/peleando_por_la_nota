@@ -30,7 +30,7 @@ class Personaje:
             raise ValueError("El daño no puede ser negativo")
     
         if self.esta_bloqueando:
-            self.esta_bloqueando = False
+        #     self.esta_bloqueando = False   // Esto hacia que el boton bloquear se seleccionara una sola vez.
             return 0
         
         self.vida = self.vida - danio

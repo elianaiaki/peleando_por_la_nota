@@ -492,8 +492,20 @@ class SpriteJugador(pygame.sprite.Sprite):
         elif estado == "atacar":
             lista = self.atacar
 
+
         elif estado == "bloquear":
-            lista = self.bloquear01
+
+            if movimiento == "bloquear00":
+                lista = self.bloquear00
+
+            elif movimiento == "bloquear01":
+                lista = self.bloquear01
+
+            elif movimiento == "bloquear02":
+                lista = self.bloquear02
+
+            else:
+                lista = self.bloquear00
 
         elif estado == "muriendo":
             lista = self.muriendo
