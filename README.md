@@ -1,203 +1,259 @@
-<h1>🥊 Fighting for the Grade</h1>
+# Fighting for the Grade
 
-<h2>📖 Descripción del juego</h2>
-<p>
-Fighting for the Grade (<i>Peleando por la nota</i>) es un juego de pelea uno contra uno (1 vs 1) inspirado en <i>Urban Champion</i> (Nintendo, 1984), con modificaciones en su mecánica central.
-</p>
+Un juego de pelea 1 vs 1 desarrollado en Python con Pygame, inspirado en Urban Champion (Nintendo, 1984), con mecánicas de combate directo basadas en daño y defensa.
 
-<p>
-A diferencia del original, esta versión elimina el sistema de empuje y lo reemplaza por un sistema de combate directo basado en <b>daño y defensa por turnos</b>. Dos jugadores se enfrentan en combate directo: el objetivo es reducir la vida del oponente a cero antes de ser derrotado.
-</p>
+---
 
-<hr>
+## Tabla de contenidos
 
-<h2>⚔️ Mecánica principal</h2>
-<ul>
-  <li>Dos personajes se enfrentan en un escenario.</li>
-  <li>Cada uno posee una <b>barra de vida</b>.</li>
-  <li>En cada turno, un jugador ataca y el otro decide si bloquear.</li>
-  <li>El combate termina cuando la vida de uno llega a cero.</li>
-</ul>
+- [Descripción](#descripción)
+- [Mecánica principal](#mecánica-principal)
+- [Controles](#controles)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Arquitectura MVC](#arquitectura-mvc)
+- [Módulos del sistema](#módulos-del-sistema)
+- [Sistema de animaciones](#sistema-de-animaciones)
+- [Selección de personajes](#selección-de-personajes)
+- [Pruebas](#pruebas)
+- [Instalación y ejecución](#instalación-y-ejecución)
+- [Estado del proyecto](#estado-del-proyecto)
+- [Equipo](#equipo)
 
-<hr>
+---
 
-<h2>👥 Integrantes</h2>
-<table>
-<tr><th>Nombre</th><th>Apellido</th></tr>
-<tr><td>Eliana Jaqueline</td><td>Salvo Austin</td></tr>
-<tr><td>Diego Gabriel</td><td>Ponce</td></tr>
-<tr><td>Alan</td><td>Walker</td></tr>
-</table>
+## Descripción
 
-<hr>
+**Fighting for the Grade** reinterpreta la fórmula original de Urban Champion eliminando el sistema de empuje y reemplazándolo por combate directo. Dos jugadores eligen su personaje, se enfrentan en un escenario con paredes, barras de vida y música dinámica: el objetivo es reducir la vida del oponente a cero antes de ser derrotado.
 
-<h2>🗂️ Estructura del proyecto</h2>
+---
 
-<pre>
+## Mecánica principal
+
+Cada jugador posee una barra de vida. En cada frame, uno puede atacar y el otro decidir si bloquear o recibir el daño. El combate finaliza cuando la vida de un jugador llega a cero, desencadenando una animación de derrota con efecto de fade a negro y zoom.
+
+- Daño calculado como `fuerza + ataque`
+- El bloqueo anula completamente el daño recibido en ese turno
+- Estados de ataque y bloqueo representados con booleanos
+- Control centralizado del daño en `recibir_danio()`
+- Colisiones entre jugadores: empuje físico con resolución contra paredes
+- Música dinámica sincronizada con el estado del juego (menú, pelea, derrota)
+
+---
+
+## Controles
+
+| Acción   | Jugador 1 | Jugador 2 |
+|----------|-----------|-----------|
+| Mover    | `A` / `D` | ← / →     |
+| Atacar   | `F`       | `L`       |
+| Bloquear | `E`       | `K`       |
+
+> Mientras un personaje está atacando, siendo golpeado o muriendo, no puede moverse hasta que la animación correspondiente termine.
+
+---
+
+## Estructura del proyecto
+
+```
 peleando_por_la_nota/
-├── controlador/
-│   └── controlador.py        (placeholder sin lógica aún)
+├── control/
+│   ├── controlador.py          # Lógica de eventos, teclas y colisiones
+│   ├── controladorGrafico.py   # Renderizado, barras de vida y animación de muerte
+│   └── controladorMusica.py    # Gestión de banda sonora por estado
 ├── modelo/
-│   ├── Jugador.py
-│   ├── Personaje.py
-│   └── Util.py
+│   ├── Personaje.py            # Clase base: vida, daño, ataque, bloqueo
+│   ├── Jugador.py              # Hereda de Personaje, representa al usuario
+│   └── Ulti.py                 # Habilidad definitiva (a uso futuro)
 ├── recursos/
-│   ├── Musica/
-│   └── Sonidos/
+│   ├── Musica/                 # Canciones de menú, pelea, victoria y derrota
+│   ├── Sonidos/
+│   └── <personaje>/            # Sprites por estado para cada luchador
 ├── test/
 │   ├── __init__.py
 │   ├── test_jugador.py
 │   └── test_personaje.py
 ├── vista/
-│   └── jugador_grafico.py
-├── venv/
-├── .gitignore
-├── main_principal.py
+│   ├── jugador_grafico.py      # Representación visual y física del jugador
+│   ├── sprite_jugador.py       # Motor de animaciones por estados
+│   ├── seleccionar_personaje.py# Interfaz de selección de personaje
+│   └── ulti_grafico.py         # Representación visual de la Ulti (a uso futuro)
 ├── main.py
-├── README.md
-└── requirements.txt
-</pre>
+├── main_principal.py
+├── requirements.txt
+└── README.md
+```
 
-<p><b>Nota:</b> La estructura fue reorganizada para comenzar la migración a arquitectura MVC.</p>
+---
 
-<hr>
+## Arquitectura MVC
 
-<h2>🧱 Entidades principales</h2>
+El proyecto sigue el patrón **Modelo–Vista–Controlador**:
 
-<h3>Personaje</h3>
-<ul>
-  <li>Gestiona la vida</li>
-  <li>Recibe daño (sin valores negativos)</li>
-  <li>Ataca y bloquea</li>
-  <li>Calcula daño (fuerza + ataque)</li>
-  <li>Determina si está vivo</li>
-</ul>
+| Capa | Responsabilidad |
+|---|---|
+| **Modelo** (`modelo/`) | Lógica pura del combate: vida, daño, estados. Sin `print()` ni dependencias gráficas. |
+| **Vista** (`vista/`) | Renderizado de personajes, animaciones, menú de selección y efectos visuales. |
+| **Controlador** (`control/`) | Puente entre modelo y vista: procesa entradas del teclado, detecta colisiones y coordina el dibujado. |
 
-<h3>Jugador</h3>
-<ul>
-  <li>Hereda de Personaje</li>
-  <li>Representa al usuario</li>
-  <li>Muestra estado completo</li>
-</ul>
+---
 
-<h3>Ulti</h3>
-<p>
-Representa la animación final al morir. No afecta la lógica del combate.
-</p>
+## Módulos del sistema
 
-<hr>
+### `Personaje.py` — Clase base
 
-<h2>🎨 Decisiones de diseño</h2>
+Gestiona toda la lógica fundamental de los combatientes:
 
-<ul>
-  <li><b>Herencia:</b> reutilización mediante Personaje → Jugador</li>
-  <li><b>Daño:</b> calculado como fuerza + ataque</li>
-  <li><b>Estados:</b> uso de booleanos para ataque y bloqueo</li>
-  <li><b>Control de vida:</b> centralizado en recibir_danio()</li>
-  <li><b>Separación MVC:</b> sin print() en el modelo</li>
-  <li><b>Ulti:</b> encapsula comportamiento con ejecutar()</li>
-</ul>
+- Validación estricta en `__init__`: tipos (`TypeError`) y valores negativos (`ValueError`)
+- `recibir_danio(danio)`: retorna 0 si está bloqueando; reduce vida y llama a `morir()` si llega a 0
+- `calcular_danio()`: retorna `fuerza + ataque`
+- `atacar(enemigo)`: verifica que el atacante esté vivo, aplica el daño y retorna el daño real infligido
+- `estoy_vivo()`: retorna booleano
+- `morir()`: fija vida en 0 y cambia el estado a `"muerto"`
 
-<p><b>Importante:</b> El controlador actualmente no tiene lógica funcional, es solo preparación para MVC.</p>
+### `Jugador.py` — Usuario jugable
 
-<hr>
+Hereda de `Personaje` sin redefinir la lógica de combate. Agrega `mostrar_estado()`, que devuelve una cadena formateada con nombre, vida actual/máxima, fuerza y ataque.
 
-<h2>🔄 Refactorizaciones</h2>
+### `Controlador.py` — Lógica de entrada
 
-<table>
-<tr><th>Elemento</th><th>Cambio</th></tr>
-<tr><td>__init__</td><td>Validaciones con bucle</td></tr>
-<tr><td>recibir_danio()</td><td>Sin print, retorna 0 al bloquear</td></tr>
-<tr><td>estoy_vivo()</td><td>Solo retorna booleano</td></tr>
-<tr><td>morir()</td><td>Ejecuta ulti</td></tr>
-<tr><td>atacar()</td><td>Retorna daño real</td></tr>
-<tr><td>Ulti</td><td>Agrega ejecutar()</td></tr>
-</table>
+- Procesa teclas presionadas frame a frame (`procesar_teclas`)
+- Procesa eventos únicos como ataques (`procesar_eventos`)
+- Bloquea el movimiento si el jugador está en estado `"atacar"`, `"golpeado"`, `"muriendo"` o `"muerto"`
+- Detecta impacto con hitbox dinámica (`obtener_hitbox_ataque`) antes de aplicar daño
+- Coordina la interacción **ataque vs. bloqueo**: si el defensor está en estado `"bloquear"`, el ataque no surte efecto
 
-<hr>
+### `ControladorGrafico.py` — Renderizado
 
-<h2>🖥️ Vista en Pygame</h2>
-<ul>
-  <li>Rectángulos de colores (rojo y azul)</li>
-  <li>Texto con vida</li>
-  <li>Fondo negro</li>
-  <li>Movimiento, colisiones y acciones básicas</li>
-</ul>
+- Dibuja escenario, sprites y barras de vida en cada frame
+- Barras de vida: tres capas (borde negro, fondo rojo, barra verde proporcional) con nombre y puntos exactos
+- **Animación de muerte**: fade a negro progresivo (`alpha += 3` por frame hasta 255), seguido de la imagen de derrota del perdedor con zoom inicial de `2.0` que se reduce gradualmente hasta `1.0`
 
-<hr>
+### `ControladorMusica.py` — Audio dinámico
 
-<h2>🎮 Controles</h2>
+Centraliza la reproducción con `pygame.mixer`. Cambia de pista automáticamente según el estado del juego:
 
-<table>
-<tr><th>Acción</th><th>Jugador 1</th><th>Jugador 2</th></tr>
-<tr><td>Mover</td><td>W A S D</td><td>Flechas</td></tr>
-<tr><td>Atacar</td><td>F</td><td>L</td></tr>
-<tr><td>Bloquear</td><td>E</td><td>K</td></tr>
-</table>
+| Estado  | Comportamiento |
+|---------|---------------|
+| `menu`  | Loop infinito  |
+| `pelea` | Loop infinito  |
+| `victoria` | Una sola vez |
+| `derrota`  | Una sola vez |
 
-<hr>
+Evita reinicios innecesarios: si el nuevo estado es igual al actual, no interrumpe la pista. Incluye manejo de errores con `try/except` para que el juego no se cierre por archivos de audio faltantes.
 
-<h2>🧪 Pruebas</h2>
-<p>Se utilizan pruebas unitarias con unittest para validar el modelo de forma independiente.</p>
+### `JugadorGrafico.py` — Vista física del jugador
 
-<ul>
-  <li>Daño normal, exceso y exacto</li>
-  <li>Bloqueo</li>
-  <li>Ataques</li>
-  <li>Muerte</li>
-</ul>
+- Mantiene dos rectángulos: `rect` (60×60, visual) y `col_rect` (40×60, colisiones entre jugadores)
+- `mover()`: guarda posición previa, aplica movimiento, revierte si hay colisión con pared o borde; si empuja al enemigo contra una pared, cancela el movimiento de ambos
+- `actualizar_direccion(rival)`: voltea todos los frames de animación con `pygame.transform.flip` si el jugador cambia de orientación
+- `obtener_hitbox_ataque()`: genera un `pygame.Rect` de 70×80 px hacia adelante del jugador según su dirección actual
 
-<hr>
+---
 
-<h2>⚠️ Excepciones</h2>
+## Sistema de animaciones
 
-<ul>
-  <li>TypeError: tipos inválidos</li>
-  <li>ValueError: valores negativos</li>
-  <li>Validación de daño negativo</li>
-  <li>Ulti acepta string u objeto</li>
-</ul>
+`SpriteJugador` carga hojas de sprites (512×512 px por frame) y las segmenta con `imagen.subsurface()`. Controla el ritmo con un contador interno (`velocidad_animacion = 8` frames por cuadro).
 
-<hr>
+**Estados de animación disponibles:**
 
-<h2>🚀 Ejecución</h2>
+| Estado      | Descripción                            |
+|-------------|----------------------------------------|
+| `quieto`    | Idle                                   |
+| `caminar01` | Caminata hacia adelante                |
+| `caminar02` | Caminata hacia atrás                   |
+| `atacar`    | Golpe                                  |
+| `bloquear00/01/02` | Tres fases del bloqueo          |
+| `golpeado`  | Recibir impacto                        |
+| `muriendo`  | Animación de derrota                   |
+| `muerto`    | Frame final estático                   |
 
-<pre>
+Cuando una animación de acción única (`atacar`, `golpeado`, `muriendo`) termina, `actualizar()` devuelve `True` y el bucle principal en `main.py` retorna el estado del jugador a `"quieto"`.
+
+---
+
+## Selección de personajes
+
+Antes del combate, ambos jugadores eligen su luchador en una pantalla de selección con fondo de menú e imágenes de 150×150 px. La selección se realiza con clic del ratón sobre el retrato.
+
+**Personajes disponibles:**
+
+| Nombre  | Vida | Fuerza | Ataque |
+|---------|------|--------|--------|
+| Eliana  | 100  | 10     | 5      |
+| Alan    | 100  | 8      | 6      |
+| Gabriel | 100  | 12     | 4      |
+| Gabo    | 100  | 15     | 3      |
+| Yiyo    | 100  | 11     | 5      |
+
+---
+
+## Pruebas
+
+Las pruebas unitarias utilizan `unittest` y validan el modelo de forma independiente de la vista y el controlador.
+
+```bash
+python -m unittest discover test/
+```
+
+**Casos cubiertos:**
+
+- Daño normal, exacto y excedente
+- Bloqueo de daño
+- Lógica de ataque
+- Condición de muerte
+
+**Excepciones contempladas:**
+
+- `TypeError` para tipos inválidos en nombre y estadísticas
+- `ValueError` para valores negativos
+- Validación de daño negativo en `recibir_danio()`
+- `Ulti` acepta string u objeto como parámetro
+
+---
+
+## Instalación y ejecución
+
+```bash
+# 1. Clonar el repositorio
 git clone https://github.com/tu-usuario/fighting-for-the-grade.git
 cd fighting-for-the-grade
 
+# 2. Crear entorno virtual
 python -m venv venv
-venv\Scripts\activate
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # macOS / Linux
 
+# 3. Instalar dependencias
 pip install -r requirements.txt
 
+# 4. Ejecutar el juego
 python main_principal.py
-</pre>
+```
 
-<hr>
+---
 
-<h2>🧪 Tests</h2>
+## Estado del proyecto
 
-<pre>
-python -m unittest discover test/
-</pre>
+| Entrega   | Estado      |
+|-----------|-------------|
+| Entrega 1 | ✅ Completa  |
+| Entrega 2 | ✅ Completa  |
+| Entrega 3 | ✅ Completa  |
+| Entrega 4 | ✅ Completa  |
 
-<hr>
+### Próximamente
 
-<h2>📅 Estado</h2>
+- Sprites completos para todos los personajes
+- Sistema de Ulti funcional integrado al combate
+- Controlador MVC completo
+- Efectos de sonido adicionales
 
-<table>
-<tr><th>Entrega</th><th>Estado</th></tr>
-<tr><td>Entrega 1</td><td>Completa</td></tr>
-<tr><td>Entrega 2</td><td>Completa</td></tr>
-</table>
+---
 
-<hr>
+## Equipo
 
-<h2>🚀 Próximamente</h2>
-<ul>
-  <li>Sprites</li>
-  <li>Animaciones</li>
-  <li>Sonido</li>
-  <li>Controlador completo (MVC)</li>
-</ul>
+| Nombre           | Apellido     |
+|------------------|--------------|
+| Eliana Jaqueline | Salvo Austin |
+| Diego Gabriel    | Ponce        |
+| Alan             | Walker       |
