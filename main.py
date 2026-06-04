@@ -8,6 +8,7 @@ from control.controlador import Controlador
 from control.controladorGrafico import controladorGrafico
 from control.controladorMusica import ControladorMusica
 from vista.seleccionar_personaje import seleccionar_personajes
+from control.controladorSonido import ControladorSonido
 
 pygame.init()
 
@@ -26,7 +27,7 @@ AZUL = (0, 0, 255)
 # ESCENARIO
 # -----------------------------
 escenario = pygame.image.load(
-    "recursos/escenario03.png"
+    "recursos/escenario_5.png"
 ).convert()
 
 escenario = pygame.transform.scale(
@@ -242,12 +243,16 @@ controlador_grafico = controladorGrafico(
 #     ALTO
 # )
 
+#controlador de sonidos
+sonidos = ControladorSonido()
+
 controlador = Controlador(
     graficos[0],
     graficos[1],
     ANCHO,
     ALTO,
-    paredes
+    paredes,
+    sonidos  # esto es lo único nuevo acá
 )
 
 # -----------------------------

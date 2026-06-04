@@ -39,11 +39,11 @@ def seleccionar_personajes(pantalla, ancho, alto):
         imagenes[nombre] = imagen
 
     seleccionado = []
+    # Lista de personajes bloqueados, se llena cuando el jugador 1 elige
+    bloqueados = []
 
     while len(seleccionado) < 2:
-
         pantalla.blit(fondo, (0, 0))
-
         texto = fuente.render(
             f"Selecciona el personaje para el Jugador {len(seleccionado)+1}",
             True,
@@ -53,7 +53,6 @@ def seleccionar_personajes(pantalla, ancho, alto):
         pantalla.blit(texto, (150, 50))
 
         botones = []
-
         for i, personaje in enumerate(opciones.values()):
 
             # FILA DE ARRIBA (3 personajes)
@@ -67,11 +66,20 @@ def seleccionar_personajes(pantalla, ancho, alto):
                 y = 350
 
             rect = pygame.Rect(x, y, 150, 150)
-
             botones.append((rect, personaje))
 
-            # Dibujar imagen
-            pantalla.blit(imagenes[personaje.nombre], (rect.x, rect.y))
+
+            if personaje.nombre in bloqueados:
+                # Si está bloqueado, lo dibujamos oscurecido y con un texto encima
+                imagen_oscura = imagenes[personaje.nombre].copy()
+                imagen_oscura.set_alpha(80)  # ← transparencia para que se vea gris
+                pantalla.blit(imagen_oscura, (rect.x, rect.y))
+                texto_bloqueado = fuente.render("NO DISP.", True, (255, 0, 0))
+                pantalla.blit(texto_bloqueado, (rect.x + 20, rect.y + 60))
+            else:
+                # Si no está bloqueado, se dibuja normal
+                pantalla.blit(imagenes[personaje.nombre], (rect.x, rect.y))
+
 
             # # Opcional: borde
             # pygame.draw.rect(pantalla, blanco, rect, 3)
@@ -85,13 +93,12 @@ def seleccionar_personajes(pantalla, ancho, alto):
                 exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-
                 pos = pygame.mouse.get_pos()
-
                 for rect, personaje in botones:
-
-                    if rect.collidepoint(pos):
-
+                # Solo permite seleccionar si no está bloqueado
+                    if rect.collidepoint(pos) and personaje.nombre not in bloqueados:
                         seleccionado.append(personaje)
+                        # Bloquea el personaje para que el siguiente jugador no lo pueda elegir
+                        bloqueados.append(personaje.nombre) 
 
     return seleccionado[0], seleccionado[1]

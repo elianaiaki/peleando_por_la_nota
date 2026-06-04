@@ -13,3 +13,6 @@ class Ulti:
 
     def ejecutar_ulti(self, personaje):
         return f"{personaje} ejecuta su ulti: {self.nombre}"
+    
+
+    

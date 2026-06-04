@@ -16,7 +16,8 @@ class ControladorMusica:
         "derrota":  "recursos/Musica/Cancion.de.Derrota.mp3",
     }
 
-    def __init__(self, volumen=0.1):
+    # def __init__(self, volumen=0.1):
+    def __init__(self,volumen=0.1):
         self.estado_actual = None
         self.volumen = volumen
 
