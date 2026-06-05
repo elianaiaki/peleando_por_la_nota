@@ -118,8 +118,8 @@ class Controlador:
 
         if teclas[pygame.K_RIGHT]:
 
-            self.jugador1.estado = "caminar"
-            self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto, self.jugador1, self.paredes)
+            self.jugador2.estado = "caminar"
+            self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto, self.jugador1, self.paredes)
             moviendo = True
 
         if not moviendo and not teclas[pygame.K_e]:

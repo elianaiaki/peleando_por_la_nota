@@ -14,13 +14,18 @@ class controladorGrafico:
     def __init__(self, pantalla, fuente):
         self.pantalla = pantalla
         self.fuente = fuente
+
         # ANIMACIÓN MUERTE
         self.animacion_muerte = False
         self.alpha = 0
         self.zoom = 2.0
-
         self.superficie_negra = pygame.Surface((800, 600))
         self.superficie_negra.fill((0, 0, 0))
+
+        # FASE FESTEJO
+        self.fase_festejo = False
+        self.ganador_grafico = None   # JugadorGrafico del ganador
+        self.perdedor_grafico = None  # JugadorGrafico del perdedor
         
 
     def dibujar(self, jugadores, graficos, fondo=None):

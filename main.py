@@ -27,7 +27,7 @@ AZUL = (0, 0, 255)
 # ESCENARIO
 # -----------------------------
 escenario = pygame.image.load(
-    "recursos/escenario_5.png"
+    "recursos/escenario_1.png"
 ).convert()
 
 escenario = pygame.transform.scale(
