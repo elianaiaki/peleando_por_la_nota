@@ -1,53 +1,56 @@
 import pygame
+import os
 
 def menu_Ia(pantalla, ancho, alto):
+    """
+    Menú de modo historia con imágenes de botones y fondo,
+    igual al menú principal.
+    """
 
-    fuente = pygame.font.SysFont("Arial", 40)
+    # Cargar fondo
+    ruta = os.path.join("recursos", "menu03.png")
+    imagen = pygame.image.load(ruta).convert()
+    fondo = pygame.transform.scale(imagen, (ancho, alto))
+
+    # Cargar imágenes de botones
+    img_nueva    = pygame.image.load("recursos/nuevaPartida.png").convert_alpha()
+    img_continuar = pygame.image.load("recursos/continuarPartida.png").convert_alpha()
+    img_volver   = pygame.image.load("recursos/volver.png").convert_alpha()
+
+    # Escalar botones
+    img_nueva     = pygame.transform.scale(img_nueva,     (400, 25))
+    img_continuar = pygame.transform.scale(img_continuar, (400, 25))
+    img_volver    = pygame.transform.scale(img_volver,    (100, 23))
+
+    # Posiciones de los botones
+    rect_nueva     = pygame.Rect(150, 430, 500, 25)
+    rect_continuar = pygame.Rect(150, 460, 500, 25)
+    rect_volver    = pygame.Rect(350, 500, 100, 15)
 
     while True:
+        # Dibujar fondo
+        pantalla.blit(fondo, (0, 0))
 
-        pantalla.fill((0, 0, 0))
-
-        nueva = pygame.Rect(250, 150, 300, 60)
-        continuar = pygame.Rect(250, 250, 300, 60)
-        volver = pygame.Rect(250, 350, 300, 60)
-
-        pygame.draw.rect(pantalla, (80,80,80), nueva)
-        pygame.draw.rect(pantalla, (80,80,80), continuar)
-        pygame.draw.rect(pantalla, (80,80,80), volver)
-
-        pantalla.blit(
-            fuente.render("Nueva Partida", True, (255,255,255)),
-            (270,165)
-        )
-
-        pantalla.blit(
-            fuente.render("Continuar", True, (255,255,255)),
-            (310,265)
-        )
-
-        pantalla.blit(
-            fuente.render("Volver", True, (255,255,255)),
-            (330,365)
-        )
+        # Dibujar botones
+        pantalla.blit(img_nueva,     (rect_nueva.x,     rect_nueva.y))
+        pantalla.blit(img_continuar, (rect_continuar.x, rect_continuar.y))
+        pantalla.blit(img_volver,    (rect_volver.x,    rect_volver.y))
 
         pygame.display.flip()
 
         for evento in pygame.event.get():
-
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 exit()
 
             if evento.type == pygame.MOUSEBUTTONDOWN:
-
                 pos = pygame.mouse.get_pos()
 
-                if nueva.collidepoint(pos):
+                if rect_nueva.collidepoint(pos):
                     return "nueva"
 
-                if continuar.collidepoint(pos):
+                if rect_continuar.collidepoint(pos):
                     return "continuar"
 
-                if volver.collidepoint(pos):
+                if rect_volver.collidepoint(pos):
                     return "volver"

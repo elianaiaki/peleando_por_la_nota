@@ -29,27 +29,6 @@ class Controlador:
         # Guardamos el controlador de sonidos para usarlo en los golpes
         self.sonidos = controlador_sonidos
 
-    # JUGADOR 1
-    # def controlar_jugador1(self, teclas):
-        # Movimiento
-        # if teclas[pygame.K_w]:
-        #     self.jugador1.mover("arriba", self.velocidad, self.ancho, self.alto)
-        # if teclas[pygame.K_s]:
-        #     self.jugador1.mover("abajo", self.velocidad, self.ancho, self.alto)
-        # if teclas[pygame.K_a]:
-        #     self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto)
-        # if teclas[pygame.K_d]:
-        #     self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
-
-        # if teclas[pygame.K_a]:
-
-        #     self.jugador1.sprite.mirar_derecha = False
-        #     self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto)
-
-        # if teclas[pygame.K_d]:
-
-        #     self.jugador1.sprite.mirar_derecha = True
-        #     self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto)
 
     def controlar_jugador1(self, teclas):
             

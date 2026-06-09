@@ -403,66 +403,6 @@ class SpriteJugador(pygame.sprite.Sprite):
     # ======================================================
     # ACTUALIZAR ANIMACIÓN
     # ======================================================
-    # def actualizar(
-    #     self,
-    #     estado="quieto"
-    # ):
-
-    #     self.estado = estado
-
-    #     # -------------------------
-    #     # ELEGIR LISTA
-    #     # -------------------------
-
-    #     print(self.estado)
-    #     if estado == "quieto":
-    #         lista = self.quieto
-
-    #     elif estado == "caminar":
-    #         lista = self.caminar01
-
-    #     elif estado == "atacar":
-    #         lista = self.atacar
-
-    #     elif estado == "bloquear":
-    #         lista = self.bloquear01
-
-    #     elif estado == "muriendo":
-    #         lista = self.muriendo
-
-    #     elif estado == "muerto":
-    #         lista = self.muerto
-
-    #     elif estado == "golpeado":
-    #         lista = self.golpeado
-
-    #     else:
-    #         lista = self.quieto
-
-    #     # -------------------------
-    #     # VALIDAR
-    #     # -------------------------
-    #     if len(lista) == 0:
-    #         return
-
-    #     # -------------------------
-    #     # CONTROL FPS
-    #     # -------------------------
-    #     self.contador_frame += 1
-
-    #     if self.contador_frame >= self.velocidad_animacion:
-
-    #         self.contador_frame = 0
-
-    #         self.indice_frame += 1
-
-    #         if self.indice_frame >= len(lista):
-    #             self.indice_frame = 0
-
-    #     # -------------------------
-    #     # FRAME ACTUAL
-    #     # -------------------------
-    #     self.imagen_actual = lista[self.indice_frame]
 
     def actualizar(self, estado="quieto", movimiento = "adelante"):
         animacion_terminada = False

@@ -31,19 +31,6 @@ class JugadorGrafico:
         self.estado = "quieto"  # Estado inicial
         self.movimiento = "adelante"
 
-        # if nombre == "Alan":
-        #     self.rect = pygame.Rect(x, 0, 80, 140)
-        # elif nombre == "Eliana":
-        #     self.rect = pygame.Rect(x, 0, 100, 140)
-        # elif nombre == "Gabriel":
-        #     self.rect = pygame.Rect(x, 0, 80, 140)
-        # elif nombre == "Gabo":
-        #     self.rect = pygame.Rect(x, 0, 80, 140)
-        # elif nombre == "Yiyo":
-        #     self.rect = pygame.Rect(x, 0, 80, 140)
-        # else:
-        #     self.rect = pygame.Rect(x, 0, 100, 100)  # Por defecto
-
 
     def dibujar(self, pantalla):
         """ Dibuja el jugador en la pantalla. """
@@ -74,14 +61,6 @@ class JugadorGrafico:
         cantidad: desplazamiento en píxeles.
         ANCHO, ALTO: límites de la pantalla para evitar salir.
         """
-        # if direccion == "arriba":
-        #     self.rect.y -= cantidad
-        # elif direccion == "abajo":
-        #     self.rect.y += cantidad
-        # elif direccion == "izquierda":
-        #     self.rect.x -= cantidad
-        # elif direccion == "derecha":
-        #     self.rect.x += cantidad
 
         if direccion == "izquierda":
 
@@ -166,17 +145,6 @@ class JugadorGrafico:
                     # Resetear velocidad en X para evitar que se siga moviendo en esa dirección
                     self.vel_x = 0
 
-    # def dibujar(self, pantalla):
-        
-    #     if self.sprite.imagen_actual:
-    #         imagen = self.sprite.imagen_actual
-    #         imagen_rect = imagen.get_rect(center=self.rect.center)
-    #         pantalla.blit(imagen, imagen_rect.topleft)
-
-    #     else:
-    #         pygame.draw.rect(pantalla, self.color, self.rect)
-
-
     def colisiona_con(self, otro):
         """ Verifica si este jugador colisiona con otro jugador. """
         return self.rect.colliderect(otro.rect)
@@ -184,16 +152,6 @@ class JugadorGrafico:
     def atacar_a(self, otro):
         """ Lógica de ataque: Si están colisionando, el jugador ataca al otro. """
         self.modelo.atacar(otro.modelo)
-
-    # def actualizar_direccion(self, enemigo):
-    #     mirando_derecha = self.rect.centerx < enemigo.rect.centerx
-    #     nueva_direccion = "derecha" if mirando_derecha else "izquierda"
-    #     if nueva_direccion != self.direccion_actual:
-    #         self.direccion_actual = nueva_direccion
-    #         for lista_nombre in [  "quieto","caminar01","caminar02","atacar","bloquear00","bloquear01","bloquear02","muriendo","muerto","golpeado"]:
-    #             lista = getattr(self.sprite, lista_nombre)
-    #             for i in range(len(lista)):
-    #                 lista[i]= pygame.transform.flip(lista[i], True, False)
 
     def actualizar_direccion(self, rival):
         mirando_derecha = self.rect.centerx < rival.rect.centerx

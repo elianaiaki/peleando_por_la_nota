@@ -190,7 +190,7 @@ graficos = []
 for i, jugador in enumerate(jugadores):
 
     x, y = posiciones[i]
-    
+
     if jugador.nombre == "profe" : 
         y -= 20
 
@@ -362,6 +362,10 @@ while controlador.corriendo:
                 )
 
                 controlador_grafico = controladorGrafico(pantalla, fuente)
+                imagen_derrota = pygame.image.load(
+                    f"recursos/{jugador2.nombre}/derrota.png"
+                ).convert_alpha()
+
 
             else:
                 print("GANASTE EL JUEGO")
