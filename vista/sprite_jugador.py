@@ -328,6 +328,11 @@ class SpriteJugador(pygame.sprite.Sprite):
         escala=2.5,
         mirar_derecha=True
     ):
+    
+        print("\n==============================")
+        print("CARGANDO SPRITESHEET")
+        print("==============================")
+        print(f"Ruta: {ruta}")
 
         if not os.path.isfile(ruta):
             raise FileNotFoundError(

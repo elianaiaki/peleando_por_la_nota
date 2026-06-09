@@ -7,6 +7,7 @@ class JugadorGrafico:
         """ Inicializa el jugador gráfico. """
         # self.rect = pygame.Rect(x, y, 60,60)
         self.rect = pygame.Rect(x, y, 60, 60)
+        #self.rect1 = pygame.Rect(x, y, 60, 60)
 
         self.col_rect = pygame.Rect(
             self.rect.x,

@@ -3,12 +3,17 @@ import sys
 
 sys.path.append(".")
 
+from modelo import Jugador
+from modelo.fabricaEnemigo import FabricaEnemigos
 from vista.jugador_grafico import JugadorGrafico
 from control.controlador import Controlador
 from control.controladorGrafico import controladorGrafico
 from control.controladorMusica import ControladorMusica
-from vista.seleccionar_personaje import seleccionar_personajes
-from control.controladorSonido import ControladorSonido
+from control.controladorJuego import ControladorJuego
+from control.controladorSonido import ControladorSonido  # ← agregado
+from vista.menuPrincipal import menu_principal
+from vista.menuIa import menu_Ia
+from vista.menu1vs1 import menu_1vs1
 
 pygame.init()
 
@@ -27,7 +32,7 @@ AZUL = (0, 0, 255)
 # ESCENARIO
 # -----------------------------
 escenario = pygame.image.load(
-    "recursos/escenario_1.png"
+    "recursos/escenario_5.png"
 ).convert()
 
 escenario = pygame.transform.scale(
@@ -38,15 +43,53 @@ escenario = pygame.transform.scale(
 fuente = pygame.font.SysFont(None, 36)
 
 # -----------------------------
-# SELECCIÓN DE PERSONAJES
+# MENÚ PRINCIPAL
 # -----------------------------
-jugador1, jugador2 = seleccionar_personajes(
+modo = menu_principal(
     pantalla,
     ANCHO,
     ALTO
 )
 
-jugadores = [jugador1, jugador2]
+# -----------------------------
+# MODO 1 VS 1
+# -----------------------------
+if modo == "1vs1":
+
+    jugador1, jugador2 = menu_1vs1(
+        pantalla,
+        ANCHO,
+        ALTO
+    )
+
+    jugadores = [jugador1, jugador2]
+
+# -----------------------------
+# MODO HISTORIA
+# -----------------------------
+elif modo == "historia":
+
+    from vista.menuIa import menu_Ia
+
+    controlador_juego = ControladorJuego()
+
+    opcion = menu_Ia(
+        pantalla,
+        ANCHO,
+        ALTO
+    )
+
+    if opcion == "nueva":
+        controlador_juego.nueva_partida()
+
+    elif opcion == "continuar":
+        if not controlador_juego.continuar_partida():
+            controlador_juego.nueva_partida()
+
+    jugador1 = controlador_juego.jugador
+    jugador2 = controlador_juego.enemigo
+
+    jugadores = [jugador1, jugador2]
 
 # -----------------------------
 # CONFIG SPRITES
@@ -54,71 +97,83 @@ jugadores = [jugador1, jugador2]
 sprites_config = {
 
     "alan": {
-        "quieto": ("recursos/alan/quieto.png", 512, 512, 12, 1.0),
-        "caminar01": ("recursos/alan/caminar01.png", 512, 512, 8, 1.0),
-        "caminar02": ("recursos/alan/caminar02.png", 512, 512, 8, 1.0),
-        "atacar": ("recursos/alan/atacar.png", 512, 512, 7, 1.0),
-        "bloquear00": ("recursos/alan/bloquear00.png", 512, 512, 1, 1.0),
-        "bloquear01": ("recursos/alan/bloquear01.png", 512, 512, 8, 1.0),
-        "bloquear02": ("recursos/alan/bloquear02.png", 512, 512, 8, 1.0),
-        "muriendo": ("recursos/alan/muriendo.png", 512, 512, 6, 1.0),
-        "muerto": ("recursos/alan/muerto.png", 512, 512, 1, 1.0),
-        "golpeado": ("recursos/alan/golpeado.png", 512, 512, 3, 1.0)
+        "quieto":     ("recursos/alan/quieto.png",     512, 512, 12, 1.0),
+        "caminar01":  ("recursos/alan/caminar01.png",  512, 512,  8, 1.0),
+        "caminar02":  ("recursos/alan/caminar02.png",  512, 512,  8, 1.0),
+        "atacar":     ("recursos/alan/atacar.png",     512, 512,  7, 1.0),
+        "bloquear00": ("recursos/alan/bloquear00.png", 512, 512,  1, 1.0),
+        "bloquear01": ("recursos/alan/bloquear01.png", 512, 512,  8, 1.0),
+        "bloquear02": ("recursos/alan/bloquear02.png", 512, 512,  8, 1.0),
+        "muriendo":   ("recursos/alan/muriendo.png",   512, 512,  6, 1.0),
+        "muerto":     ("recursos/alan/muerto.png",     512, 512,  1, 1.0),
+        "golpeado":   ("recursos/alan/golpeado.png",   512, 512,  3, 1.0)
     },
 
     "eliana": {
-        "quieto": ("recursos/eliana/quieto.png", 512, 512, 12, 1.0),
-        "caminar01": ("recursos/eliana/caminar01.png", 512, 512, 8, 1.0),
-        "caminar02": ("recursos/eliana/caminar02.png", 512, 512, 8, 1.0),
-        "atacar": ("recursos/eliana/atacar.png", 512, 512, 7, 1.0),
-        "bloquear00": ("recursos/eliana/bloquear00.png", 512, 512, 1, 1.0),
-        "bloquear01": ("recursos/eliana/bloquear01.png", 512, 512, 8, 1.0),
-        "bloquear02": ("recursos/eliana/bloquear02.png", 512, 512, 8, 1.0),
-        "muriendo": ("recursos/eliana/muriendo.png", 512, 512, 7, 1.0),
-        "muerto": ("recursos/eliana/muerto.png", 512, 512, 1, 1.0),
-        "golpeado": ("recursos/eliana/golpeado.png", 512, 512, 3, 1.0)
+        "quieto":     ("recursos/eliana/quieto.png",     512, 512, 12, 1.0),
+        "caminar01":  ("recursos/eliana/caminar01.png",  512, 512,  8, 1.0),
+        "caminar02":  ("recursos/eliana/caminar02.png",  512, 512,  8, 1.0),
+        "atacar":     ("recursos/eliana/atacar.png",     512, 512,  7, 1.0),
+        "bloquear00": ("recursos/eliana/bloquear00.png", 512, 512,  1, 1.0),
+        "bloquear01": ("recursos/eliana/bloquear01.png", 512, 512,  8, 1.0),
+        "bloquear02": ("recursos/eliana/bloquear02.png", 512, 512,  8, 1.0),
+        "muriendo":   ("recursos/eliana/muriendo.png",   512, 512,  7, 1.0),
+        "muerto":     ("recursos/eliana/muerto.png",     512, 512,  1, 1.0),
+        "golpeado":   ("recursos/eliana/golpeado.png",   512, 512,  3, 1.0)
     },
 
     "gabriel": {
-        "quieto": ("recursos/gabriel/quieto.png", 512, 512, 12, 1.0),
-        "caminar01": ("recursos/gabriel/caminar01.png", 512, 512, 8, 1.0),
-        "caminar02": ("recursos/gabriel/caminar02.png", 512, 512, 8, 1.0),
-        "atacar": ("recursos/gabriel/atacar.png", 512, 512, 7, 1.0),
-        "bloquear00": ("recursos/gabriel/bloquear00.png", 512, 512, 1, 1.0),
-        "bloquear01": ("recursos/gabriel/bloquear01.png", 512, 512, 8, 1.0),
-        "bloquear02": ("recursos/gabriel/bloquear02.png", 512, 512, 8, 1.0),
-        "muriendo": ("recursos/gabriel/muriendo.png", 512, 512, 6, 1.0),
-        "muerto": ("recursos/gabriel/muerto.png", 512, 512, 1, 1.0),
-        "golpeado": ("recursos/gabriel/golpeado.png", 512, 512, 3, 1.0)
+        "quieto":     ("recursos/gabriel/quieto.png",     512, 512, 12, 1.0),
+        "caminar01":  ("recursos/gabriel/caminar01.png",  512, 512,  8, 1.0),
+        "caminar02":  ("recursos/gabriel/caminar02.png",  512, 512,  8, 1.0),
+        "atacar":     ("recursos/gabriel/atacar.png",     512, 512,  7, 1.0),
+        "bloquear00": ("recursos/gabriel/bloquear00.png", 512, 512,  1, 1.0),
+        "bloquear01": ("recursos/gabriel/bloquear01.png", 512, 512,  8, 1.0),
+        "bloquear02": ("recursos/gabriel/bloquear02.png", 512, 512,  8, 1.0),
+        "muriendo":   ("recursos/gabriel/muriendo.png",   512, 512,  6, 1.0),
+        "muerto":     ("recursos/gabriel/muerto.png",     512, 512,  1, 1.0),
+        "golpeado":   ("recursos/gabriel/golpeado.png",   512, 512,  3, 1.0)
     },
 
     "gabo": {
-        "quieto": ("recursos/gabo/quieto.png", 512, 512, 12, 1.0),
-        "caminar01": ("recursos/gabo/caminar01.png", 512, 512, 8, 1.0),
-        "caminar02": ("recursos/gabo/caminar02.png", 512, 512, 8, 1.0),
-        "atacar": ("recursos/gabo/atacar.png", 512, 512, 8, 1.0),
-        "bloquear00": ("recursos/gabo/bloquear00.png", 512, 512, 1, 1.0),
-        "bloquear01": ("recursos/gabo/bloquear01.png", 512, 512, 8, 1.0),
-        "bloquear02": ("recursos/gabo/bloquear02.png", 512, 512, 8, 1.0),
-        "muriendo": ("recursos/gabo/muriendo.png", 512, 512, 6, 1.0),
-        "muerto": ("recursos/gabo/muerto.png", 512, 512, 1, 1.0),
-        "golpeado": ("recursos/gabo/golpeado.png", 512, 512, 3, 1.0)
+        "quieto":     ("recursos/gabo/quieto.png",     512, 512, 12, 1.0),
+        "caminar01":  ("recursos/gabo/caminar01.png",  512, 512,  8, 1.0),
+        "caminar02":  ("recursos/gabo/caminar02.png",  512, 512,  8, 1.0),
+        "atacar":     ("recursos/gabo/atacar.png",     512, 512,  8, 1.0),
+        "bloquear00": ("recursos/gabo/bloquear00.png", 512, 512,  1, 1.0),
+        "bloquear01": ("recursos/gabo/bloquear01.png", 512, 512,  8, 1.0),
+        "bloquear02": ("recursos/gabo/bloquear02.png", 512, 512,  8, 1.0),
+        "muriendo":   ("recursos/gabo/muriendo.png",   512, 512,  6, 1.0),
+        "muerto":     ("recursos/gabo/muerto.png",     512, 512,  1, 1.0),
+        "golpeado":   ("recursos/gabo/golpeado.png",   512, 512,  3, 1.0)
     },
 
     "yiyo": {
-        "quieto": ("recursos/yiyo/quieto.png", 512, 512, 12, 1.0),
-        "caminar01": ("recursos/yiyo/caminar01.png", 512, 512, 8, 1.0),
-        "caminar02": ("recursos/yiyo/caminar02.png", 512, 512, 8, 1.0),
-        "atacar": ("recursos/yiyo/atacar.png", 512, 512, 7, 1.0),
-        "bloquear00": ("recursos/yiyo/bloquear00.png", 512, 512, 1, 1.0),
-        "bloquear01": ("recursos/yiyo/bloquear01.png", 512, 512, 8, 1.0),
-        "bloquear02": ("recursos/yiyo/bloquear02.png", 512, 512, 8, 1.0),
-        "muriendo": ("recursos/yiyo/muriendo.png", 512, 512, 7, 1.0),
-        "muerto": ("recursos/yiyo/muerto.png", 512, 512, 1, 1.0),
-        "golpeado": ("recursos/yiyo/golpeado.png", 512, 512, 3, 1.0)
+        "quieto":     ("recursos/yiyo/quieto.png",     512, 512, 12, 1.0),
+        "caminar01":  ("recursos/yiyo/caminar01.png",  512, 512,  8, 1.0),
+        "caminar02":  ("recursos/yiyo/caminar02.png",  512, 512,  8, 1.0),
+        "atacar":     ("recursos/yiyo/atacar.png",     512, 512,  7, 1.0),
+        "bloquear00": ("recursos/yiyo/bloquear00.png", 512, 512,  1, 1.0),
+        "bloquear01": ("recursos/yiyo/bloquear01.png", 512, 512,  8, 1.0),
+        "bloquear02": ("recursos/yiyo/bloquear02.png", 512, 512,  8, 1.0),
+        "muriendo":   ("recursos/yiyo/muriendo.png",   512, 512,  7, 1.0),
+        "muerto":     ("recursos/yiyo/muerto.png",     512, 512,  1, 1.0),
+        "golpeado":   ("recursos/yiyo/golpeado.png",   512, 512,  3, 1.0)
+    },
+
+    "profe": {
+        "quieto":     ("recursos/profe/quieto.png",     512, 512, 12, 1.2),
+        "caminar01":  ("recursos/profe/caminar01.png",  512, 512,  8, 1.2),
+        "caminar02":  ("recursos/profe/caminar02.png",  512, 512,  8, 1.2),
+        "atacar":     ("recursos/profe/atacar.png",     512, 512,  7, 1.2),
+        "bloquear00": ("recursos/profe/bloquear00.png", 512, 512,  1, 1.2),
+        "bloquear01": ("recursos/profe/bloquear01.png", 512, 512,  8, 1.2),
+        "bloquear02": ("recursos/profe/bloquear02.png", 512, 512,  8, 1.2),
+        "muriendo":   ("recursos/profe/muriendo.png",   512, 512,  6, 1.2),
+        "muerto":     ("recursos/profe/muerto.png",     512, 512,  1, 1.2),
+        "golpeado":   ("recursos/profe/golpeado.png",   512, 512,  3, 1.2)
     }
 }
-
 
 # -----------------------------
 # CREAR GRÁFICOS
@@ -135,6 +190,9 @@ graficos = []
 for i, jugador in enumerate(jugadores):
 
     x, y = posiciones[i]
+    
+    if jugador.nombre == "profe" : 
+        y -= 20
 
     imagen_derrota = pygame.image.load(
         f"recursos/{jugador.nombre}/derrota.png"
@@ -148,7 +206,6 @@ for i, jugador in enumerate(jugadores):
         imagen_derrota
     )
 
-    # graficos.append(grafico)
     graficos.append(grafico)
 
     # jugador 2 empieza mirando izquierda
@@ -158,46 +215,11 @@ for i, jugador in enumerate(jugadores):
 # -----------------------------
 # CARGAR SPRITES
 # -----------------------------
-# # for grafico, jugador in zip(graficos, jugadores):
-
-# #     animaciones = sprites_config[jugador.nombre]
-
-# #     for tipo_animacion, (
-# #         ruta,
-# #         ancho,
-# #         alto,
-# #         columnas,
-# #         escala
-# #     ) in animaciones.items():
-
-# #         grafico.sprite.cargar_imagenes(
-# #             ruta,
-# #             ancho,
-# #             alto,
-# #             columnas,
-# #             tipo_animacion,
-# #             escala=escala,
-# #             mirar_derecha=(i == 0)
-# #         )
-
-#     if grafico.sprite.quieto:
-#         grafico.sprite.imagen_actual = (
-#             grafico.sprite.quieto[0]
-#         )
-
-for i, (grafico, jugador) in enumerate(
-    zip(graficos, jugadores)
-):
+for i, (grafico, jugador) in enumerate(zip(graficos, jugadores)):
 
     animaciones = sprites_config[jugador.nombre]
 
-    for tipo_animacion, (
-        ruta,
-        ancho,
-        alto,
-        columnas,
-        escala
-    ) in animaciones.items():
+    for tipo_animacion, (ruta, ancho, alto, columnas, escala) in animaciones.items():
 
         grafico.sprite.cargar_imagenes(
             ruta,
@@ -206,44 +228,26 @@ for i, (grafico, jugador) in enumerate(
             columnas,
             tipo_animacion,
             escala=escala,
-
-            # jugador1 mira derecha
-            # jugador2 mira izquierda
             mirar_derecha=(i == 0)
         )
 
     if grafico.sprite.quieto:
-
-        grafico.sprite.imagen_actual = (
-            grafico.sprite.quieto[0]
-        )
-
+        grafico.sprite.imagen_actual = grafico.sprite.quieto[0]
 
 # -----------------------------
 # PAREDES
 # -----------------------------
 paredes = [
-    # pared izquierda
     pygame.Rect(0, 0, 160, ALTO),
-    # pared derecha
     pygame.Rect(ANCHO - 170, 0, 30, ALTO)
 ]
+
 # -----------------------------
 # CONTROLADORES
 # -----------------------------
-controlador_grafico = controladorGrafico(
-    pantalla,
-    fuente
-)
+controlador_grafico = controladorGrafico(pantalla, fuente)
 
-# controlador = Controlador(
-#     graficos[0],
-#     graficos[1],
-#     ANCHO,
-#     ALTO
-# )
-
-#controlador de sonidos
+# Controlador de sonidos ← agregado
 sonidos = ControladorSonido()
 
 controlador = Controlador(
@@ -252,7 +256,7 @@ controlador = Controlador(
     ANCHO,
     ALTO,
     paredes,
-    sonidos  # esto es lo único nuevo acá
+    sonidos  # ← agregado
 )
 
 # -----------------------------
@@ -267,82 +271,106 @@ musica.cambiar(ControladorMusica.PELEA)
 reloj = pygame.time.Clock()
 
 # -----------------------------
+# TRANSICIÓN NIVEL
+# -----------------------------
+esperando_cambio = False
+timer_cambio = 0
+
+# -----------------------------
 # BUCLE PRINCIPAL
 # -----------------------------
 while controlador.corriendo:
 
-    # Eventos
     controlador.procesar_eventos()
-
-    # # Movimiento
-    # controlador.procesar_teclas()
-
-    # Movimiento
     controlador.procesar_teclas()
 
     graficos[0].actualizar_direccion(graficos[1])
     graficos[1].actualizar_direccion(graficos[0])
 
-    # Dibujar
-    controlador_grafico.dibujar(
-        jugadores,
-        graficos,
-        fondo=escenario
-    )
-
-    # Barras de vida
-    controlador_grafico.dibujar_barras_vida(
-        pantalla,
-        jugadores,
-        100
-    )
+    controlador_grafico.dibujar(jugadores, graficos, fondo=escenario)
+    controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
 
     # Actualizar sprites
-    # for grafico in graficos:s
-    #     grafico.sprite.actualizar()
     for grafico in graficos:
-        # grafico.sprite.actualizar(grafico.estado)
-        # termino = grafico.sprite.actualizar(grafico.estado)
-        termino = grafico.sprite.actualizar(
-            grafico.estado,
-            grafico.movimiento
-        )
+        termino = grafico.sprite.actualizar(grafico.estado, grafico.movimiento)
         if termino:
+            if grafico.estado in ("atacar", "bloquear", "golpeado"):
+                grafico.estado = "quieto"
+            elif grafico.estado == "muriendo":
+                grafico.estado = "muerto"
 
-                if grafico.estado == "atacar":
-                    grafico.estado = "quieto"
+    # -----------------------------
+    # VICTORIA / DERROTA
+    # -----------------------------
+    if modo == "historia":
 
-                elif grafico.estado == "bloquear":
-                    grafico.estado = "quieto"
+        if not jugadores[0].estoy_vivo():
+            musica.cambiar(ControladorMusica.DERROTA)
 
-                elif grafico.estado == "golpeado":
-                    grafico.estado = "quieto"
+        elif not jugadores[1].estoy_vivo():
+            if not esperando_cambio:
+                esperando_cambio = True
+                timer_cambio = pygame.time.get_ticks()
 
-                elif grafico.estado == "muriendo":
-                    grafico.estado = "muerto"
+    else:
+        # Modo 1vs1, solo cambia la música
+        if not jugadores[0].estoy_vivo() or not jugadores[1].estoy_vivo():
+            musica.cambiar(ControladorMusica.DERROTA)
 
-    # Música derrota
-    if not jugadores[0].estoy_vivo():
-        musica.cambiar(ControladorMusica.DERROTA)
+    # -----------------------------
+    # CAMBIO DE NIVEL
+    # -----------------------------
+    if esperando_cambio:
 
-    elif not jugadores[1].estoy_vivo():
-        musica.cambiar(ControladorMusica.DERROTA)
+        if pygame.time.get_ticks() - timer_cambio > 1000:
 
+            continuar = controlador_juego.siguiente_nivel()
 
-    # # -----------------------------
-    #     # DIBUJAR PAREDES
-    #     # -----------------------------
-    #     for pared in paredes:
-    #         pygame.draw.rect(
-    #             pantalla,
-    #             (255, 0, 0),
-    #             pared,
-    #             2
-    #         )
+            if continuar:
+
+                jugador2 = controlador_juego.enemigo
+                jugadores[1] = jugador2
+
+                imagen_derrota = pygame.image.load(
+                    f"recursos/{jugador2.nombre}/derrota.png"
+                ).convert_alpha()
+
+                nuevo_grafico = JugadorGrafico(480, 300, AZUL, jugador2, imagen_derrota)
+                nuevo_grafico.direccion_actual = "izquierda"
+
+                animaciones = sprites_config[jugador2.nombre]
+
+                for tipo, (ruta, ancho, alto, columnas, escala) in animaciones.items():
+                    nuevo_grafico.sprite.cargar_imagenes(
+                        ruta, ancho, alto, columnas, tipo,
+                        escala=escala, mirar_derecha=False
+                    )
+
+                nuevo_grafico.sprite.imagen_actual = nuevo_grafico.sprite.quieto[0]
+
+                jugadores[1] = jugador2
+                graficos[1] = nuevo_grafico
+
+                # Al recrear el controlador también pasamos los sonidos ← agregado
+                controlador = Controlador(
+                    graficos[0],
+                    graficos[1],
+                    ANCHO,
+                    ALTO,
+                    paredes,
+                    sonidos  # ← agregado
+                )
+
+                controlador_grafico = controladorGrafico(pantalla, fuente)
+
+            else:
+                print("GANASTE EL JUEGO")
+                controlador.corriendo = False
+
+            esperando_cambio = False
+
     pygame.display.flip()
-
     reloj.tick(60)
 
 pygame.quit()
 sys.exit()
-

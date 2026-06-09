@@ -18,6 +18,7 @@ class ControladorSonido:
             "gabriel": self._cargar_personaje("gabriel"),
             "gabo":    self._cargar_personaje("gabo"),
             "yiyo":    self._cargar_personaje("yiyo"),
+            "profe":    self._cargar_personaje("profe"),
         }
 
     def _cargar(self, ruta):

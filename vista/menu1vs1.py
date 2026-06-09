@@ -2,7 +2,7 @@ import pygame
 import os
 from modelo.Jugador import Jugador
 
-def seleccionar_personajes(pantalla, ancho, alto):
+def menu_1vs1(pantalla, ancho, alto):
 
     fuente = pygame.font.SysFont("Arial", 30)
     blanco = (255, 255, 255)
