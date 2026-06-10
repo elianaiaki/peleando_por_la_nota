@@ -14,8 +14,47 @@ from control.controladorSonido import ControladorSonido  # ← agregado
 from vista.menuPrincipal import menu_principal
 from vista.menuIa import menu_Ia
 from vista.menu1vs1 import menu_1vs1
+from moviepy import VideoFileClip
 
 pygame.init()
+
+# ------------------------------
+# video 
+# -------------------------------
+
+def reproducir_video(ruta_video, pantalla):
+
+    clip = VideoFileClip(ruta_video)
+
+    reloj = pygame.time.Clock()
+
+    for frame in clip.iter_frames(
+        fps=clip.fps,
+        dtype="uint8"
+    ):
+
+        for evento in pygame.event.get():
+
+            if evento.type == pygame.QUIT:
+                clip.close()
+                pygame.quit()
+                sys.exit()
+
+        superficie = pygame.surfarray.make_surface(
+            frame.swapaxes(0, 1)
+        )
+
+        superficie = pygame.transform.scale(
+            superficie,
+            pantalla.get_size()
+        )
+
+        pantalla.blit(superficie, (0, 0))
+        pygame.display.flip()
+
+        reloj.tick(clip.fps)  # <- controla la velocidad
+
+    clip.close()
 
 # -----------------------------
 # CONFIGURACIÓN
@@ -24,6 +63,12 @@ ANCHO, ALTO = 800, 600
 
 pantalla = pygame.display.set_mode((ANCHO, ALTO))
 pygame.display.set_caption("PELEANDO POR LA NOTA")
+
+# reproducir_video
+reproducir_video(
+    "recursos/videos/intro4.mp4",
+    pantalla
+)
 
 ROJO = (255, 0, 0)
 AZUL = (0, 0, 255)
