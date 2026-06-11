@@ -19,58 +19,63 @@ class Controlador:
         self.corriendo = True
         self.paredes = paredes
 
-         # Contador de frames que faltan para aplicar el golpe del jugador 1
-        self.delay_golpe_j1 = 0
-        # Contador de frames que faltan para aplicar el golpe del jugador 2
-        self.delay_golpe_j2 = 0
-        # Cantidad de frames de delay antes de aplicar el golpe (20 frames = ~0.33 segundos a 60fps)
+        self.cola_golpes_j1 = []
+        self.cola_golpes_j2 = []
         self.DELAY = 20
+        self.proximo_ataque_j1 = False  # ataque encolado esperando animación
+        self.proximo_ataque_j2 = False
 
-        # Guardamos el controlador de sonidos para usarlo en los golpes
         self.sonidos = controlador_sonidos
-
 
     def controlar_jugador1(self, teclas):
             
-            if self.jugador1.estado in ["atacar", "golpeado", "muriendo", "muerto"]:
-                return
-            
-            moviendo = False
+        if self.jugador1.estado in ["atacar", "golpeado", "muriendo", "muerto"]:
+            return
+        
+        moviendo = False
 
-            if teclas[pygame.K_e]:
-                self.jugador1.modelo.esta_bloqueando = True
-                self.jugador1.estado = "bloquear"
+        if teclas[pygame.K_e]:
+            self.jugador1.modelo.esta_bloqueando = True
+            self.jugador1.estado = "bloquear"
 
-            else:
-                self.jugador1.modelo.esta_bloqueando = False
-                self.jugador1.estado = "quieto"  # solo resetea si no bloquea
+        else:
+            self.jugador1.modelo.esta_bloqueando = False
+            self.jugador1.estado = "quieto"  # solo resetea si no bloquea
 
-            if teclas[pygame.K_a]:
-                self.jugador1.estado = "caminar"  # sobreescribe "bloquear" visualmente
-                self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto, self.jugador2, self.paredes)
-                moviendo = True
+        if teclas[pygame.K_a]:
+            self.jugador1.estado = "caminar"  # sobreescribe "bloquear" visualmente
+            self.jugador1.mover("izquierda", self.velocidad, self.ancho, self.alto, self.jugador2, self.paredes)
+            moviendo = True
 
 
-            if teclas[pygame.K_d]:
-                self.jugador1.estado = "caminar"
-                self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto, self.jugador2, self.paredes)
-                moviendo = True
+        if teclas[pygame.K_d]:
+            self.jugador1.estado = "caminar"
+            self.jugador1.mover("derecha", self.velocidad, self.ancho, self.alto, self.jugador2, self.paredes)
+            moviendo = True
 
-            if not moviendo and not teclas[pygame.K_e]:
-                self.jugador1.estado = "quieto"
+        if not moviendo and not teclas[pygame.K_e]:
+            self.jugador1.estado = "quieto"
 
 
     def acciones_jugador1(self, evento):
         if evento.key == pygame.K_f:
-            self.jugador1.estado = "atacar"
-            if self.jugador1.obtener_hitbox_ataque().colliderect(self.jugador2.rect):
-                if self.jugador2.estado == "bloquear":
-                    print("ATAQUE BLOQUEADO")
-                else:
-                    # Suena el puñetazo cuando se lanza el golpe
-                    self.sonidos.reproducir_golpe()
-                    # Arranca la cuenta regresiva para aplicar el daño con delay
-                    self.delay_golpe_j1 = self.DELAY
+            if self.jugador1.estado in ["golpeado", "muriendo", "muerto"]:
+                return
+            if self.jugador1.estado == "atacar":
+                if not self.proximo_ataque_j1 and len(self.cola_golpes_j1) == 0:
+                    self.proximo_ataque_j1 = True
+            else:
+                self.jugador1.estado = "atacar"
+                if self.jugador1.obtener_hitbox_ataque().colliderect(self.jugador2.rect):
+                    if self.jugador2.estado == "bloquear":
+                        print("ATAQUE BLOQUEADO")
+                    else:
+                        # Solo agrega si la cola está vacía
+                        if len(self.cola_golpes_j1) == 0:
+                            self.cola_golpes_j1.append(self.DELAY)
+
+
+
 
     def controlar_jugador2(self, teclas):
 
@@ -104,42 +109,67 @@ class Controlador:
         if not moviendo and not teclas[pygame.K_e]:
             self.jugador2.estado = "quieto"
 
+
     def acciones_jugador2(self, evento):
         if evento.key == pygame.K_l:
-            self.jugador2.estado = "atacar"
-            if self.jugador2.obtener_hitbox_ataque().colliderect(self.jugador1.rect):
-                if self.jugador1.estado == "bloquear":
-                    print("ATAQUE BLOQUEADO")
-                else:
-                    # Suena el puñetazo cuando se lanza el golpe
-                    self.sonidos.reproducir_golpe()
-                    # Arranca la cuenta regresiva para aplicar el daño con delay
-                    self.delay_golpe_j2 = self.DELAY
+            if self.jugador2.estado in ["golpeado", "muriendo", "muerto"]:
+                return
+            if self.jugador2.estado == "atacar":
+                if not self.proximo_ataque_j2 and len(self.cola_golpes_j2) == 0:
+                    self.proximo_ataque_j2 = True
+            else:
+                self.jugador2.estado = "atacar"
+                if self.jugador2.obtener_hitbox_ataque().colliderect(self.jugador1.rect):
+                    if self.jugador1.estado == "bloquear":
+                        print("ATAQUE BLOQUEADO")
+                    else:
+                        if len(self.cola_golpes_j2) == 0:
+                            self.cola_golpes_j2.append(self.DELAY)
+
+
 
     def procesar_delays(self):
-        # Jugador 1
-        if self.delay_golpe_j1 > 0:
-            self.delay_golpe_j1 -= 1
-            if self.delay_golpe_j1 == 0:
+        # --- Jugador 1 ---
+        # Procesamos cada golpe pendiente en la cola
+        nueva_cola_j1 = []
+        for contador in self.cola_golpes_j1:
+            contador -= 1
+            # En procesar_delays - reproducir_golpe cuando impacta
+            if contador == 0:
                 self.jugador1.atacar_a(self.jugador2)
-                # Sonido del personaje cuando recibe el golpe
+                self.sonidos.reproducir_golpe()        # ← acá, cuando toca
                 self.sonidos.reproducir_golpeado(self.jugador2.modelo.nombre)
                 self.jugador2.estado = "golpeado"
                 if not self.jugador2.modelo.estoy_vivo():
                     self.jugador2.estado = "muriendo"
+                    self.cola_golpes_j1 = []      # limpia golpes pendientes
+                    self.proximo_ataque_j1 = False
+                    self.sonidos.detener_golpe()
                     self.sonidos.reproducir_muerte(self.jugador2.modelo.nombre)
+            else:
+                # Todavía no impacta, lo mantenemos en la cola
+                nueva_cola_j1.append(contador)
+        self.cola_golpes_j1 = nueva_cola_j1
 
-        #Jugador 2
-        if self.delay_golpe_j2 > 0:
-            self.delay_golpe_j2 -= 1
-            if self.delay_golpe_j2 == 0:
+        # --- Jugador 2 ---
+        nueva_cola_j2 = []
+        for contador in self.cola_golpes_j2:
+            contador -= 1
+            if contador == 0:
                 self.jugador2.atacar_a(self.jugador1)
-                # Sonido del personaje cuando recibe el golpe
+                self.sonidos.reproducir_golpe()
                 self.sonidos.reproducir_golpeado(self.jugador1.modelo.nombre)
                 self.jugador1.estado = "golpeado"
                 if not self.jugador1.modelo.estoy_vivo():
                     self.jugador1.estado = "muriendo"
+                    self.cola_golpes_j2 = []      # limpia golpes pendientes
+                    self.proximo_ataque_j2 = False
+                    self.sonidos.detener_golpe()
                     self.sonidos.reproducir_muerte(self.jugador1.modelo.nombre)
+            else:
+                nueva_cola_j2.append(contador)
+        self.cola_golpes_j2 = nueva_cola_j2
+
 
     # =====================================
     # EVENTOS
@@ -163,6 +193,28 @@ class Controlador:
 
         self.controlar_jugador1(teclas)
         self.controlar_jugador2(teclas)
-        self.procesar_delays()  # ← esto
+        self.procesar_delays()
+        self._procesar_proximos_ataques()
 
-        
+    def _procesar_proximos_ataques(self):
+        # Jugador 1
+        if self.proximo_ataque_j1 and self.jugador1.estado not in ["atacar", "golpeado", "muriendo", "muerto"]:
+            self.proximo_ataque_j1 = False
+            self.jugador1.estado = "atacar"
+            if len(self.cola_golpes_j1) == 0:  # solo agrega si la cola está vacía
+                if self.jugador1.obtener_hitbox_ataque().colliderect(self.jugador2.rect):
+                    if self.jugador2.estado == "bloquear":
+                        print("ATAQUE BLOQUEADO")
+                    else:
+                        self.cola_golpes_j1.append(self.DELAY)
+
+        # Jugador 2
+        if self.proximo_ataque_j2 and self.jugador2.estado not in ["atacar", "golpeado", "muriendo", "muerto"]:
+            self.proximo_ataque_j2 = False
+            self.jugador2.estado = "atacar"
+            if len(self.cola_golpes_j2) == 0:  # solo agrega si la cola está vacía
+                if self.jugador2.obtener_hitbox_ataque().colliderect(self.jugador1.rect):
+                    if self.jugador1.estado == "bloquear":
+                        print("ATAQUE BLOQUEADO")
+                    else:
+                        self.cola_golpes_j2.append(self.DELAY)

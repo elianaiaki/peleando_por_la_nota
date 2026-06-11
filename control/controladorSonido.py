@@ -8,7 +8,7 @@ class ControladorSonido:
         self.volumen = volumen
 
         # Sonido de golpe, compartido por todos los personajes
-        self.sonido_golpe = self._cargar("recursos/sonidos/golpear2.mp3")
+        self.sonido_golpe = self._cargar("recursos/sonidos/golpear2.wav")
 
         # Diccionario con los sonidos de cada personaje
         # Cada personaje tiene su propio sonido al recibir daño y al morir
@@ -41,7 +41,11 @@ class ControladorSonido:
     def reproducir_golpe(self):
         """Reproduce el sonido de puño al atacar, compartido por todos"""
         if self.sonido_golpe:
-            self.sonido_golpe.play()
+            self.canal_golpe = self.sonido_golpe.play()
+
+    def detener_golpe(self):
+        if hasattr(self, 'canal_golpe') and self.canal_golpe:
+            self.canal_golpe.stop()
 
     def reproducir_golpeado(self, nombre_personaje):
         """Reproduce el sonido del personaje cuando recibe un golpe"""
