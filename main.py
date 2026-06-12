@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 
 sys.path.append(".")
 
@@ -25,13 +26,9 @@ pygame.init()
 def reproducir_video(ruta_video, pantalla):
 
     clip = VideoFileClip(ruta_video)
-
     reloj = pygame.time.Clock()
 
-    for frame in clip.iter_frames(
-        fps=clip.fps,
-        dtype="uint8"
-    ):
+    for frame in clip.iter_frames(fps=clip.fps, dtype="uint8"):
 
         for evento in pygame.event.get():
 
@@ -65,10 +62,10 @@ pantalla = pygame.display.set_mode((ANCHO, ALTO))
 pygame.display.set_caption("PELEANDO POR LA NOTA")
 
 # reproducir_video
-reproducir_video(
-    "recursos/videos/intro4.mp4",
-    pantalla
-)
+#reproducir_video(
+#    "recursos/videos/intro4.mp4",
+ #   pantalla
+#)
 
 ROJO = (255, 0, 0)
 AZUL = (0, 0, 255)
@@ -308,7 +305,6 @@ controlador = Controlador(
 # MÚSICA
 # -----------------------------
 musica = ControladorMusica()
-musica.cambiar(ControladorMusica.PELEA)
 
 # -----------------------------
 # RELOJ
@@ -316,10 +312,55 @@ musica.cambiar(ControladorMusica.PELEA)
 reloj = pygame.time.Clock()
 
 # -----------------------------
+# TRANSICIÓN INICIO DE PELEA
+# -----------------------------
+# Reproducir audio sincronizado con el video
+pygame.mixer.music.stop()
+pygame.mixer.music.load("recursos/Sonidos/intro_pelea.wav")
+pygame.mixer.music.play()
+
+# Reproducir video de transición
+reproducir_video("recursos/videos/intro_pelea2.mp4", pantalla)
+
+# Detener audio de intro cuando termina el video
+pygame.mixer.music.stop()
+
+# Dibujar la escena con los personajes ya en pantalla
+controlador_grafico.dibujar(jugadores, graficos, fondo=escenario)
+controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
+pygame.display.flip()
+
+# Reproducir sonido de round según el nivel
+if modo == "historia":
+    nivel = controlador_juego.nivel_actual
+else:
+    nivel = 1
+
+ruta_round = f"recursos/sonidos/round_{nivel}.wav"
+if os.path.isfile(ruta_round):
+    sonido_round = pygame.mixer.Sound(ruta_round)
+    sonido_round.play()
+    # Esperar que termine el sonido de round
+    pygame.time.wait(int(sonido_round.get_length() * 1000))
+
+# Esperar 2 segundos adicionales antes de habilitar los controles
+pygame.time.wait(1000)
+
+# Arrancar música de pelea
+if modo == "historia":
+    musica.cambiar_pelea_nivel(nivel)
+else:
+    musica.cambiar(ControladorMusica.PELEA)
+
+# -----------------------------
 # TRANSICIÓN NIVEL
 # -----------------------------
 esperando_cambio = False
 timer_cambio = 0
+
+# Bloquea los controles hasta que pasen 2 segundos desde que arranca el bucle
+pelea_iniciada = False
+timer_inicio = pygame.time.get_ticks()
 
 # -----------------------------
 # BUCLE PRINCIPAL
@@ -327,7 +368,10 @@ timer_cambio = 0
 while controlador.corriendo:
 
     controlador.procesar_eventos()
-    controlador.procesar_teclas()
+    pelea_iniciada = True
+
+    if pelea_iniciada:
+        controlador.procesar_teclas()
 
     graficos[0].actualizar_direccion(graficos[1])
     graficos[1].actualizar_direccion(graficos[0])
@@ -410,6 +454,35 @@ while controlador.corriendo:
                 imagen_derrota = pygame.image.load(
                     f"recursos/{jugador2.nombre}/derrota.png"
                 ).convert_alpha()
+
+                # Transición del nuevo nivel ------------------------------
+                pygame.mixer.music.stop()
+                pygame.mixer.music.load("recursos/Sonidos/intro_pelea.wav")
+                pygame.mixer.music.play()
+
+                reproducir_video("recursos/videos/intro_pelea2.mp4", pantalla)
+
+                pygame.mixer.music.stop()
+
+                controlador_grafico.dibujar(jugadores, graficos, fondo=escenario)
+                controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
+                pygame.display.flip()
+
+                # Sonido del round correspondiente al nivel
+                ruta_round = f"recursos/Sonidos/round_{controlador_juego.nivel_actual}.wav"
+                if os.path.isfile(ruta_round):
+                    sonido_round = pygame.mixer.Sound(ruta_round)
+                    sonido_round.play()
+                    pygame.time.wait(1000)
+
+                print("NIVEL:", controlador_juego.nivel_actual)
+                musica.cambiar_pelea_nivel(
+                    controlador_juego.nivel_actual
+                )
+
+                # Resetea el timer para bloquear controles unos segundos en el nuevo nivel
+                pelea_iniciada = False
+                timer_inicio = pygame.time.get_ticks()
 
 
             else:

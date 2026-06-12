@@ -46,3 +46,20 @@ class ControladorMusica:
     def detener(self):
         pygame.mixer.music.stop()
         self.estado_actual = None
+
+    def cambiar_pelea_nivel(self, nivel):
+
+        print("ENTRE A CAMBIAR_PELEA_NIVEL", nivel)
+
+        ruta = f"recursos/Musica/niveles/pelea_{nivel}.mp3"
+
+        try:
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load(ruta)
+            pygame.mixer.music.set_volume(self.volumen)
+            pygame.mixer.music.play(-1)
+
+            self.estado_actual = f"pelea_{nivel}"
+
+        except Exception as e:
+            print("ERROR DE MUSICA:", e)

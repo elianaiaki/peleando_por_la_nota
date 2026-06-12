@@ -26,7 +26,6 @@ def menu_1vs1(pantalla, ancho, alto):
     imagenes = {}
 
     for nombre in opciones:
-
         ruta_imagen = os.path.join(
             "recursos",
             "personajes",
@@ -34,9 +33,7 @@ def menu_1vs1(pantalla, ancho, alto):
         )
 
         imagen = pygame.image.load(ruta_imagen).convert_alpha()
-
         imagen = pygame.transform.scale(imagen, (150, 150))
-
         imagenes[nombre] = imagen
 
     seleccionado = []
@@ -45,11 +42,7 @@ def menu_1vs1(pantalla, ancho, alto):
 
     while len(seleccionado) < 2:
         pantalla.blit(fondo, (0, 0))
-        texto = fuente.render(
-            f"Selecciona el personaje para el Jugador {len(seleccionado)+1}",
-            True,
-            blanco
-        )
+        texto = fuente.render(f"Selecciona el personaje para el Jugador {len(seleccionado)+1}", True, blanco)
 
         pantalla.blit(texto, (150, 50))
 
@@ -88,7 +81,7 @@ def menu_1vs1(pantalla, ancho, alto):
         pygame.display.flip()
 
         for event in pygame.event.get():
-
+            
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
