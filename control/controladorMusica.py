@@ -51,7 +51,7 @@ class ControladorMusica:
 
         print("ENTRE A CAMBIAR_PELEA_NIVEL", nivel)
 
-        ruta = f"recursos/Musica/niveles/pelea_{nivel}.mp3"
+        ruta = f"recursos/Musica/niveles/pelea_{nivel}.wav"
 
         try:
             pygame.mixer.music.stop()
