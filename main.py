@@ -311,20 +311,6 @@ musica = ControladorMusica()
 # -----------------------------
 reloj = pygame.time.Clock()
 
-# -----------------------------
-# TRANSICIÓN INICIO DE PELEA
-# -----------------------------
-# Reproducir audio sincronizado con el video
-pygame.mixer.music.stop()
-pygame.mixer.music.load("recursos/Sonidos/intro_pelea.wav")
-pygame.mixer.music.play()
-
-# Reproducir video de transición
-reproducir_video("recursos/videos/intro_pelea2.mp4", pantalla)
-
-# Detener audio de intro cuando termina el video
-pygame.mixer.music.stop()
-
 # Dibujar la escena con los personajes ya en pantalla
 controlador_grafico.dibujar(jugadores, graficos, fondo=escenario)
 controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
@@ -335,6 +321,20 @@ if modo == "historia":
     nivel = controlador_juego.nivel_actual
 else:
     nivel = 1
+
+# -----------------------------
+# TRANSICIÓN INICIO DE PELEA
+# -----------------------------
+# Reproducir audio sincronizado con el video
+pygame.mixer.music.stop()
+pygame.mixer.music.load("recursos/Sonidos/intro_pelea.wav")
+pygame.mixer.music.play()
+
+# Reproducir video de transición
+reproducir_video(f"recursos/videos/intro_{nivel}.mp4", pantalla)
+
+# Detener audio de intro cuando termina el video
+pygame.mixer.music.stop()
 
 ruta_round = f"recursos/sonidos/round_{nivel}.wav"
 if os.path.isfile(ruta_round):
@@ -460,7 +460,7 @@ while controlador.corriendo:
                 pygame.mixer.music.load("recursos/Sonidos/intro_pelea.wav")
                 pygame.mixer.music.play()
 
-                reproducir_video("recursos/videos/intro_pelea2.mp4", pantalla)
+                reproducir_video(f"recursos/videos/intro_{controlador_juego.nivel_actual}.mp4", pantalla)
 
                 pygame.mixer.music.stop()
 
