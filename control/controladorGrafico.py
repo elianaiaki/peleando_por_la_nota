@@ -112,3 +112,37 @@ class controladorGrafico:
             )
 
             pantalla.blit(texto, (x, y + 15))
+            
+
+    def cargar_escenarios(self, ancho, alto, modo="1vs1"):
+        if modo == "historia":
+            self.escenarios = {
+                1: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_1.png").convert(), (ancho, alto)),
+                2: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_2.png").convert(), (ancho, alto)),
+                3: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_3.png").convert(), (ancho, alto)),
+                4: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_4.png").convert(), (ancho, alto)),
+                5: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_5.png").convert(), (ancho, alto)),
+            }
+            
+        else:
+            self.escenarios = {
+                1: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_1vs1.png").convert(), (ancho, alto)),
+            }
+
+    def obtener_escenario(self, nivel):
+        """Devuelve el escenario correspondiente al nivel"""
+        return self.escenarios.get(nivel, self.escenarios[1])
+    
+
+        
+    def resetear_graficos(self, graficos):
+        """Resetea el estado y posición de todos los gráficos al inicio de un nuevo nivel"""
+        posiciones_x = [300, 480]
+        for i, grafico in enumerate(graficos):
+            grafico.estado = "quieto"
+            grafico.movimiento = "adelante"
+            grafico.sprite.indice_frame = 0
+            grafico.sprite.contador_frame = 0
+            grafico.sprite.imagen_actual = grafico.sprite.quieto[0]
+            grafico.rect.x = posiciones_x[i]
+            grafico.col_rect.center = grafico.rect.center

@@ -73,14 +73,14 @@ AZUL = (0, 0, 255)
 # -----------------------------
 # ESCENARIO
 # -----------------------------
-escenario = pygame.image.load(
-    "recursos/escenario_5.png"
-).convert()
+#escenario = pygame.image.load(
+#    "recursos/escenario_1.png"
+#).convert()
 
-escenario = pygame.transform.scale(
-    escenario,
-    (ANCHO, ALTO)
-)
+#escenario = pygame.transform.scale(
+#    escenario,
+#    (ANCHO, ALTO)
+#)
 
 fuente = pygame.font.SysFont(None, 36)
 
@@ -288,6 +288,8 @@ paredes = [
 # CONTROLADORES
 # -----------------------------
 controlador_grafico = controladorGrafico(pantalla, fuente)
+controlador_grafico.cargar_escenarios(ANCHO, ALTO, modo)
+
 
 # Controlador de sonidos ← agregado
 sonidos = ControladorSonido()
@@ -311,10 +313,6 @@ musica = ControladorMusica()
 # -----------------------------
 reloj = pygame.time.Clock()
 
-# Dibujar la escena con los personajes ya en pantalla
-controlador_grafico.dibujar(jugadores, graficos, fondo=escenario)
-controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
-pygame.display.flip()
 
 # Reproducir sonido de round según el nivel
 if modo == "historia":
@@ -322,29 +320,42 @@ if modo == "historia":
 else:
     nivel = 1
 
+# Mostrar escena con personajes y reproducir sonido de round
+escenario_actual = controlador_grafico.obtener_escenario(nivel)
 # -----------------------------
 # TRANSICIÓN INICIO DE PELEA
 # -----------------------------
-# Reproducir audio sincronizado con el video
-pygame.mixer.music.stop()
-pygame.mixer.music.load("recursos/Sonidos/intro_pelea.wav")
-pygame.mixer.music.play()
+if modo == "historia":
+    # Reproducir audio en loop mientras dura el video
+    pygame.mixer.music.stop()
+    pygame.mixer.music.load("recursos/Sonidos/intro_pelea.wav")
+    pygame.mixer.music.play(-1)  # -1 = loop infinito
 
-# Reproducir video de transición
-reproducir_video(f"recursos/videos/intro_{nivel}.mp4", pantalla)
+    # Reproducir video de transición
+    reproducir_video(f"recursos/videos/intro_{nivel}.mp4", pantalla)
 
-# Detener audio de intro cuando termina el video
-pygame.mixer.music.stop()
+    # Detener audio de intro cuando termina el video
+    pygame.mixer.music.stop()
+    # Mostrar escena con personajes y reproducir sonido de round
+    escenario_actual = controlador_grafico.obtener_escenario(nivel)
+    controlador_grafico.dibujar(jugadores, graficos, fondo=escenario_actual)
+    controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
+    pygame.display.flip()
 
-ruta_round = f"recursos/sonidos/round_{nivel}.wav"
-if os.path.isfile(ruta_round):
-    sonido_round = pygame.mixer.Sound(ruta_round)
-    sonido_round.play()
-    # Esperar que termine el sonido de round
-    pygame.time.wait(int(sonido_round.get_length() * 1000))
+    ruta_round = f"recursos/sonidos/round_{nivel}.wav"
+    if os.path.isfile(ruta_round):
+        sonido_round = pygame.mixer.Sound(ruta_round)
+        sonido_round.play()
+        pygame.time.wait(int(sonido_round.get_length() * 1000))
 
-# Esperar 2 segundos adicionales antes de habilitar los controles
-pygame.time.wait(1000)
+    # Esperar 1 segundos adicional antes de habilitar los controles
+    pygame.time.wait(1000)
+
+else:
+    # Mostrar escena con personajes(no tenemos intro de video, ni audio de round)
+    controlador_grafico.dibujar(jugadores, graficos, fondo=escenario_actual)
+    controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
+    pygame.display.flip()
 
 # Arrancar música de pelea
 if modo == "historia":
@@ -358,7 +369,7 @@ else:
 esperando_cambio = False
 timer_cambio = 0
 
-# Bloquea los controles hasta que pasen 2 segundos desde que arranca el bucle
+# Bloquea los controles unos segundos desde que arranca el bucle
 pelea_iniciada = False
 timer_inicio = pygame.time.get_ticks()
 
@@ -376,7 +387,14 @@ while controlador.corriendo:
     graficos[0].actualizar_direccion(graficos[1])
     graficos[1].actualizar_direccion(graficos[0])
 
-    controlador_grafico.dibujar(jugadores, graficos, fondo=escenario)
+    # Actualizar nivel actual para cambiar escenario
+    if modo == "historia":
+        nivel = controlador_juego.nivel_actual
+    else:
+        nivel = 1
+
+    escenario_actual = controlador_grafico.obtener_escenario(nivel)
+    controlador_grafico.dibujar(jugadores, graficos, fondo=escenario_actual)
     controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
 
     # Actualizar sprites
@@ -450,10 +468,16 @@ while controlador.corriendo:
                     sonidos  # ← agregado
                 )
 
-                controlador_grafico = controladorGrafico(pantalla, fuente)
                 imagen_derrota = pygame.image.load(
                     f"recursos/{jugador2.nombre}/derrota.png"
                 ).convert_alpha()
+
+                # Recrear controlador gráfico PRIMERO
+                controlador_grafico = controladorGrafico(pantalla, fuente)
+                controlador_grafico.cargar_escenarios(ANCHO, ALTO, modo)# cambio de escenarios por niveles
+
+                # Resetear estados y posiciones para el nuevo nivel
+                controlador_grafico.resetear_graficos(graficos)
 
                 # Transición del nuevo nivel ------------------------------
                 pygame.mixer.music.stop()
@@ -464,7 +488,8 @@ while controlador.corriendo:
 
                 pygame.mixer.music.stop()
 
-                controlador_grafico.dibujar(jugadores, graficos, fondo=escenario)
+                escenario_actual = controlador_grafico.obtener_escenario(controlador_juego.nivel_actual)
+                controlador_grafico.dibujar(jugadores, graficos, fondo=escenario_actual)
                 controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
                 pygame.display.flip()
 

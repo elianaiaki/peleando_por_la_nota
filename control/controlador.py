@@ -84,8 +84,6 @@ class Controlador:
                             self.cola_golpes_j1.append(self.DELAY)
 
 
-
-
     def controlar_jugador2(self, teclas):
 
         # No procesa movimiento si está en medio de una animación importante
@@ -116,7 +114,7 @@ class Controlador:
             self.jugador2.mover("derecha", self.velocidad, self.ancho, self.alto, self.jugador1, self.paredes)
             moviendo = True
 
-        if not moviendo and not teclas[pygame.K_e]:
+        if not moviendo and not teclas[pygame.K_k]:
             self.jugador2.estado = "quieto"
 
 

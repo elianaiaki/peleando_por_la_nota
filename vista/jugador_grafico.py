@@ -196,3 +196,4 @@ class JugadorGrafico:
                 70,
                 80
             )
+            
