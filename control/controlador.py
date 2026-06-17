@@ -240,3 +240,18 @@ class Controlador:
                         print("ATAQUE BLOQUEADO")
                     else:
                         self.cola_golpes_j2.append(self.DELAY)
+
+
+    def ia_atacar(self):
+        """Ataque de la IA usando el mismo sistema que el jugador humano"""
+        if self.jugador2.estado in ["golpeado", "muriendo", "muerto", "atacar"]:
+            return
+        
+        self.jugador2.estado = "atacar"
+        
+        if self.jugador2.obtener_hitbox_ataque().colliderect(self.jugador1.rect):
+            if self.jugador1.estado == "bloquear":
+                print("ATAQUE BLOQUEADO")
+            else:
+                if len(self.cola_golpes_j2) == 0:
+                    self.cola_golpes_j2.append(self.DELAY)

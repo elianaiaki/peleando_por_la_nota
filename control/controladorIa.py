@@ -1,21 +1,40 @@
 import random
 
-def ia_basica(grafico_ia, grafico_jugador, controlador, ANCHO, ALTO, paredes):
-    """
-    Controla al jugador 2 de forma automática usando lógica básica con ifs.
-    Persigue al jugador 1 si está lejos, y ataca o bloquea aleatoriamente
-    cuando está cerca. No actúa si está en medio de una animación.
-    """
+_cooldown_ia = 0
 
-    # Si la IA está atacando, golpeada, muriendo o muerta, no hace nada
-    if grafico_ia.estado in ["atacar", "golpeado", "muriendo", "muerto"]:
+def ia_basica(grafico_ia, grafico_jugador, controlador_juego, ANCHO, ALTO, paredes, controlador, cooldown_frames=45):
+    global _cooldown_ia
+
+    # No actuar si está en animación
+    if grafico_ia.estado in ["atacar", "bloquear", "golpeado", "muriendo", "muerto"]:
         return
 
-    # Calcula la distancia horizontal entre la IA y el jugador
+    nivel = controlador_juego.nivel_actual
     dx = grafico_jugador.rect.centerx - grafico_ia.rect.centerx
     distancia = abs(dx)
 
-    # Si está lejos, se acerca al jugador
+    # Movimiento sin cooldown
     if distancia > 150:
         if dx > 0:
             grafico_ia.mover("derecha", 3, ANCHO, ALTO, grafico_jugador, paredes)
+        else:
+            grafico_ia.mover("izquierda", 3, ANCHO, ALTO, grafico_jugador, paredes)
+        return
+
+    # Cooldown solo para atacar/bloquear
+    _cooldown_ia += 1
+    if _cooldown_ia < cooldown_frames:
+        return
+
+    probabilidad_actuar = min(0.4 + (nivel - 1) * 0.1, 0.9)
+    if random.random() > probabilidad_actuar:
+        return
+
+    _cooldown_ia = 0
+
+    probabilidad_atacar = min(0.5 + (nivel - 1) * 0.05, 0.85)
+    if random.random() < probabilidad_atacar:
+        controlador.ia_atacar()
+    else:
+        grafico_ia.modelo.esta_bloqueando = True
+        grafico_ia.estado = "bloquear"
