@@ -20,7 +20,6 @@ class ControladorJuego:
         self.id_partida = self.persistencia.guardar_partida(
             self.jugador.nombre,
             self.nivel_actual,
-            self.jugador.vida,
             self.jugador.vida_maxima,
             self.jugador.fuerza,
             self.jugador.ataque
@@ -36,7 +35,6 @@ class ControladorJuego:
         self.persistencia.actualizar_partida(
             self.id_partida,
             self.nivel_actual,
-            self.jugador.vida,
             self.jugador.vida_maxima,
             self.jugador.fuerza,
             self.jugador.ataque
@@ -51,12 +49,12 @@ class ControladorJuego:
         self.id_partida = fila[0]
         self.jugador = Jugador(
             fila[1],
-            fila[4],  # vida_maxima
-            fila[5],  # fuerza
-            fila[6]   # ataque
+            fila[3],  # vida_maxima
+            fila[4],  # fuerza
+            fila[5]   # ataque
         )
 
-        self.jugador.vida = fila[3]
+        #self.jugador.vida = fila[3]
         self.nivel_actual = fila[2]
 
         self.enemigo = FabricaEnemigos.crear_enemigo(self.nivel_actual)
@@ -64,12 +62,12 @@ class ControladorJuego:
     
     def siguiente_nivel(self):
         self.nivel_actual += 1
-
         enemigo = FabricaEnemigos.crear_enemigo(self.nivel_actual)
-
         if enemigo is None:
             return False
-        
+
+        self.jugador.vida = self.jugador.vida_maxima  # ← agregar esta línea
+
         self.enemigo = enemigo
         self.guardar_estado()
         return True

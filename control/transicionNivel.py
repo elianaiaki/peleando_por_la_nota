@@ -1,0 +1,53 @@
+# =====================================================================
+# transicionNivel.py — Ejecuta la transición audiovisual entre niveles
+# Ubicación: control/transicionNivel.py
+# =====================================================================
+
+import os
+import pygame
+
+
+def ejecutar_transicion_nivel(
+    nivel,
+    pantalla,
+    jugadores,
+    graficos,
+    controlador_grafico,
+    escenario,
+    reproducir_video
+):
+    """
+    Reproduce el video y el audio de intro para el nivel dado,
+    luego muestra la escena con los personajes y espera el sonido de round.
+
+    nivel               -- número de nivel actual
+    pantalla            -- superficie de pygame
+    jugadores           -- lista [jugador1, jugador2] (modelos)
+    graficos            -- lista [grafico1, grafico2]
+    controlador_grafico -- instancia de controladorGrafico
+    escenario           -- Surface del escenario actual
+    reproducir_video    -- función reproducir_video(ruta, pantalla)
+    """
+    # Audio de intro en loop mientras dura el video
+    pygame.mixer.music.stop()
+    pygame.mixer.music.load("recursos/Sonidos/intro_pelea.wav")
+    pygame.mixer.music.play(-1)
+
+    reproducir_video(f"recursos/videos/intro_{nivel}.mp4", pantalla)
+
+    pygame.mixer.music.stop()
+
+    # Mostrar escena estática con personajes
+    controlador_grafico.dibujar(jugadores, graficos, fondo=escenario)
+    controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
+    pygame.display.flip()
+
+    # Sonido del round
+    ruta_round = f"recursos/Sonidos/round_{nivel}.wav"
+    if os.path.isfile(ruta_round):
+        sonido_round = pygame.mixer.Sound(ruta_round)
+        sonido_round.play()
+        pygame.time.wait(int(sonido_round.get_length() * 1000))
+
+    # Pausa adicional antes de habilitar controles
+    pygame.time.wait(1000)
