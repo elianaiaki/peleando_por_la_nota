@@ -4,22 +4,23 @@ class ControladorSonido:
     """Maneja todos los efectos de sonido del juego, separado de la música de fondo"""
 
     def __init__(self, volumen=0.5):
-        # Volumen base para todos los efectos
         self.volumen = volumen
+        self.canal_golpe = None  # acá vamos a guardar el canal del último golpe
 
         # Sonido de golpe, compartido por todos los personajes
         self.sonido_golpe = self._cargar("recursos/sonidos/golpear2.wav")
 
-        # Diccionario con los sonidos de cada personaje
-        # Cada personaje tiene su propio sonido al recibir daño y al morir
-        self.sonidos_personajes = {
-            "alan":    self._cargar_personaje("alan"),
-            "eliana":  self._cargar_personaje("eliana"),
-            "gabriel": self._cargar_personaje("gabriel"),
-            "gabo":    self._cargar_personaje("gabo"),
-            "yiyo":    self._cargar_personaje("yiyo"),
-            "profe":    self._cargar_personaje("profe"),
-        }
+        # Nombres de los personajes que tienen sonidos propios
+        nombres_personajes = ["alan", "eliana", "gabriel", "gabo", "yiyo", "profe"]
+
+        # En vez de un diccionario de diccionarios, usamos dos diccionarios planos:
+        # uno para "golpeado" y otro para "muriendo". Misma información, menos anidado.
+        self.sonidos_golpeado = {}
+        self.sonidos_muerte = {}
+
+        for nombre in nombres_personajes:
+            self.sonidos_golpeado[nombre] = self._cargar(f"recursos/sonidos/{nombre}/golpeado.wav")
+            self.sonidos_muerte[nombre] = self._cargar(f"recursos/sonidos/{nombre}/muriendo.wav")
 
     def _cargar(self, ruta):
         """Carga un sonido desde una ruta, devuelve None si no existe"""
@@ -31,30 +32,24 @@ class ControladorSonido:
             print(f"No se pudo cargar el sonido '{ruta}': {e}")
             return None
 
-    def _cargar_personaje(self, nombre):
-        """Carga los sonidos específicos de un personaje"""
-        return {
-            "golpeado": self._cargar(f"recursos/sonidos/{nombre}/golpeado.wav"),
-            "muriendo":   self._cargar(f"recursos/sonidos/{nombre}/muriendo.wav"),
-        }
-
     def reproducir_golpe(self):
         """Reproduce el sonido de puño al atacar, compartido por todos"""
-        if self.sonido_golpe:
+        if self.sonido_golpe is not None:
             self.canal_golpe = self.sonido_golpe.play()
 
     def detener_golpe(self):
-        if hasattr(self, 'canal_golpe') and self.canal_golpe:
+        """Corta el sonido de golpe si está sonando"""
+        if self.canal_golpe is not None:
             self.canal_golpe.stop()
 
     def reproducir_golpeado(self, nombre_personaje):
         """Reproduce el sonido del personaje cuando recibe un golpe"""
-        sonidos = self.sonidos_personajes.get(nombre_personaje)
-        if sonidos and sonidos["golpeado"]:
-            sonidos["golpeado"].play()
+        sonido = self.sonidos_golpeado.get(nombre_personaje)
+        if sonido is not None:
+            sonido.play()
 
     def reproducir_muerte(self, nombre_personaje):
         """Reproduce el sonido del personaje cuando muere"""
-        sonidos = self.sonidos_personajes.get(nombre_personaje)
-        if sonidos and sonidos["muriendo"]:
-            sonidos["muriendo"].play()
+        sonido = self.sonidos_muerte.get(nombre_personaje)
+        if sonido is not None:
+            sonido.play()
