@@ -17,6 +17,7 @@ from control.controlador import Controlador
 from control.controladorGrafico import controladorGrafico
 from control.controladorMusica import ControladorMusica
 from control.controladorSonido import ControladorSonido
+from control.controladorTemp import ControladorTemp #Controlador del temporalizador
 from control.transicionNivel import ejecutar_transicion_nivel
 from control.bucleJuego import ejecutar_juego
 
@@ -80,6 +81,7 @@ def main():
     ctrl_grafico = controladorGrafico(pantalla, fuente)
     ctrl_grafico.cargar_escenarios(ANCHO, ALTO, modo)
     musica = ControladorMusica()
+    temporizador = ControladorTemp(60) #Creacion del temporalizador a 60 segundos
 
     # Transición de inicio y música
     nivel = controlador_juego.nivel_actual if modo == "historia" else 1
@@ -91,11 +93,13 @@ def main():
             ctrl_grafico, escenario_actual, reproducir_video
         )
         musica.cambiar_pelea_nivel(nivel)
+        temporizador.reiniciar() #Cuando termina la intro del juego el temporalizador se reinicia
     else:
         ctrl_grafico.dibujar(jugadores, graficos, fondo=escenario_actual)
         ctrl_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
         pygame.display.flip()
         musica.cambiar(ControladorMusica.PELEA)
+        temporizador.reiniciar() #Reinicia el temporalizador para el modo 1 vs 1
 
     # Bucle principal
     ejecutar_juego(
@@ -107,6 +111,7 @@ def main():
         controlador_juego=controlador_juego,
         musica=musica,
         sonidos=sonidos,
+        temporizador=temporizador,
         paredes=paredes,
         pantalla=pantalla,
         fuente=fuente,

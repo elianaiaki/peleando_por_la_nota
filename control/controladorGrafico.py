@@ -112,7 +112,25 @@ class controladorGrafico:
             )
 
             pantalla.blit(texto, (x, y + 15))
-            
+
+    def dibujar_temporizador(self, pantalla, temporizador):
+
+        tiempo = temporizador.tiempo_restante()
+
+        texto = self.fuente.render(
+            str(tiempo),
+            True,
+            (255,255,255)
+        )
+
+        rect = texto.get_rect(
+            center=(400, 30)
+        )
+
+        pantalla.blit(
+            texto,
+            rect
+        )
 
     def cargar_escenarios(self, ancho, alto, modo="1vs1"):
         if modo == "historia":

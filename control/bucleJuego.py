@@ -22,6 +22,7 @@ def ejecutar_juego(
     controlador_juego,
     musica,
     sonidos,
+    temporizador,
     paredes,
     pantalla,
     fuente,
@@ -58,6 +59,12 @@ def ejecutar_juego(
         controlador.procesar_eventos()
         controlador.procesar_teclas()
 
+        #Actualiza el temporalizador
+        temporizador.actualizar(
+            jugadores[0],
+            jugadores[1]
+        )
+
         # Hace que cada personaje mire hacia el otro (para que el sprite
         # se voltee según donde esté el rival)
         graficos[0].actualizar_direccion(graficos[1])
@@ -78,6 +85,7 @@ def ejecutar_juego(
         # Dibuja el fondo, los personajes y las barras de vida en pantalla
         controlador_grafico.dibujar(jugadores, graficos, fondo=escenario_actual)
         controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
+        controlador_grafico.dibujar_temporizador(pantalla, temporizador) #Dibuja el temporalizador
 
         # Actualiza la animación (sprite) de cada personaje.
         # sprite.actualizar(...) devuelve True cuando la animación actual
@@ -92,6 +100,28 @@ def ejecutar_juego(
                     # Terminó la animación de morir -> queda muerto definitivamente
                     grafico.estado = "muerto"
 
+        #METODO TEMPORALIZADOR
+        if temporizador.resultado == "empate":
+
+            texto = fuente.render("EMPATE", True, (255,255,255))
+            pantalla.blit(texto, (340,250))
+
+            pygame.display.flip()
+            pygame.time.wait(3000)
+            
+            # Restaura la vida de los personajes
+            jugadores[0].vida = 100
+            jugadores[1].vida = 100
+
+            # Reinicia los estados
+            jugadores[0].estado = "quieto"
+            jugadores[1].estado = "quieto"
+
+            # Reinicia los gráficos
+            controlador_grafico.resetear_graficos(graficos)
+
+            # Reinicia el temporizador
+            temporizador.reiniciar()
         # ---------------------------
         # VICTORIA / DERROTA
         # ---------------------------
@@ -135,6 +165,7 @@ def ejecutar_juego(
                     controlador_grafico,
                     musica,
                     sonidos,
+                    temporizador,
                     paredes,
                     pantalla,
                     fuente,
@@ -164,6 +195,7 @@ def _cambiar_nivel(
     controlador_grafico,
     musica,
     sonidos,
+    temporizador,
     paredes,
     pantalla,
     fuente,
@@ -250,6 +282,7 @@ def _cambiar_nivel(
 
     # Cambiamos la música al tema de pelea correspondiente a este nivel
     musica.cambiar_pelea_nivel(nivel)
+    temporizador.reiniciar()
     print("NIVEL:", nivel)
 
     # Devolvemos True (sí hay nivel siguiente) junto con el controlador
