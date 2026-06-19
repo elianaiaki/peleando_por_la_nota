@@ -11,7 +11,7 @@ class ControladorSonido:
         self.sonido_golpe = self._cargar("recursos/sonidos/golpear2.wav")
 
         # Nombres de los personajes que tienen sonidos propios
-        nombres_personajes = ["alan", "eliana", "gabriel", "gabo", "yiyo", "cliver", "profe"]
+        nombres_personajes = ["alan", "eliana", "gabriel", "gabo", "yiyo", "cliver", "profe"] #cami, lean
 
         # En vez de un diccionario de diccionarios, usamos dos diccionarios planos:
         # uno para "golpeado" y otro para "muriendo". Misma información, menos anidado.

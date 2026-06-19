@@ -19,6 +19,8 @@ def menu_1vs1(pantalla, ancho, alto):
         "gabriel": Jugador("gabriel", 100, 12, 4),
         "gabo": Jugador("gabo", 100, 15, 3),
         "yiyo": Jugador("yiyo", 100, 11, 5),
+        #"cami": Jugador("cami", 100, 11, 5)
+        #"lean": Jugador("lean", 100, 11, 5)
         "cliver": Jugador("cliver", 100, 11, 5)
         #"profe": Jugador("profe", 100, 11, 5)
     }
