@@ -57,27 +57,33 @@ def crear_graficos(jugadores, indices=None):
 
     return graficos
 
-
-def cargar_sprites(graficos, jugadores, indices=None):
+def cargar_sprites(graficos, jugadores, indices=None, indices_festejo=None):
     """
-    Carga las animaciones de cada jugador en su gráfico correspondiente.
-
-    graficos  -- lista de graficos
-    jugadores -- lista de jugadores
-    indices   -- lista de índices reales (0=j1, 1=j2). Por defecto [0, 1].
+    ...
+    indices_festejo -- lista de índices (0=j1, 1=j2) a los que SÍ hay que
+                        cargarles el festejo. Por defecto None significa
+                        "a todos" (caso normal del 1vs1, donde cualquiera
+                        de los dos puede ganar y festejar).
     """
-    # Mismo razonamiento que en crear_graficos: si no me dicen los índices,
-    # asumo que es el caso normal de dos jugadores en orden.
     if indices is None:
         indices = list(range(len(jugadores)))
 
-    # zip de TRES listas a la vez: cada vuelta del for me da un grafico,
-    # su jugador correspondiente, y el índice real de ese jugador.
-    # Las tres listas tienen que tener el mismo largo y estar en el mismo orden.
+    # Si no nos dicen lo contrario, cargamos festejo para todos los índices
+    if indices_festejo is None:
+        indices_festejo = indices
+
     for grafico, jugador, i in zip(graficos, jugadores, indices):
         animaciones = SPRITES_CONFIG[jugador.nombre]
-
         for tipo_animacion, (ruta, ancho, alto, columnas, escala) in animaciones.items():
+
+            # NUEVO: si esta animación es el festejo y este personaje (índice i)
+            # no está en la lista de los que necesitan festejo, nos la saltamos.
+            # Así evitamos cargar spritesheets de festejo rotos/incompletos
+            # de personajes que nunca van a festejar (los enemigos de la IA).
+            if tipo_animacion == "festejo01" and i not in indices_festejo:
+                print(f"SALTEANDO festejo de {jugador.nombre} (i={i}, indices_festejo={indices_festejo})")
+                continue
+
             grafico.sprite.cargar_imagenes(
                 ruta,
                 ancho,
@@ -85,13 +91,7 @@ def cargar_sprites(graficos, jugadores, indices=None):
                 columnas,
                 tipo_animacion,
                 escala=escala,
-                # Esto es lo que antes fallaba: antes usaba la posición
-                # dentro de la lista (que siempre era 0 si la lista tenía
-                # un solo elemento). Ahora uso "i", el índice real del
-                # jugador, así jugador2 siempre se carga con
-                # mirar_derecha=False sin importar en qué lista venga.
                 mirar_derecha=(i == 0)
             )
-
-        if grafico.sprite.quieto:
-            grafico.sprite.imagen_actual = grafico.sprite.quieto[0]
+            if grafico.sprite.quieto:
+                grafico.sprite.imagen_actual = grafico.sprite.quieto[0]

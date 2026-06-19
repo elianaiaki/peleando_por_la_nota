@@ -17,9 +17,16 @@ class controladorGrafico:
         self.fase_festejo = False
         self.ganador_grafico = None   # JugadorGrafico del ganador
         self.perdedor_grafico = None  # JugadorGrafico del perdedor
-        
+        self.mostrar_festejo = True
+        self.contador_festejo = 0
+        self.duracion_festejo = 380  # cuántos frames dura el festejo en pantalla (90 ≈ 1.5 seg a 60fps). Ajustalo a gusto.
+        self.fondo_actual = None   # acá guardamos el último fondo que se dibujó, para poder reusarlo en el festejo
+        self.festejo_termino = False  # para saber si ya pasamos por el festejo (y no repetirlo)
+        self.solo_jugador1_festeja = False  # en 1vs1 cualquiera de los dos puede festejar
+
 
     def dibujar(self, jugadores, graficos, fondo=None):
+        self.fondo_actual = fondo   # nuevo: lo guardamos para usarlo después en el festejo
         # Fondo: color negro si no hay imagen
         if fondo is not None:
             self.pantalla.blit(fondo, (0, 0))
@@ -33,58 +40,92 @@ class controladorGrafico:
         # ------------------------------------------------------------------------------------------------------
         # Animación de muerte
         self.animacion_de_muerte(jugadores, graficos)
-    
-    def animacion_de_muerte(self, jugadores, graficos):
 
-        # Detectar muerte
-        for jugador in jugadores:
-            if jugador.vida <= 0:
+
+    def animacion_de_muerte(self, jugadores, graficos):
+        # Detectamos que la animación de "muriendo" ya terminó de verdad
+        for grafico in graficos:
+            if grafico.estado == "muerto":
                 self.animacion_muerte = True
 
-        # Fade a negro
-        if self.animacion_muerte:
+        if not self.animacion_muerte:
+            return
 
-            self.alpha += 3
-
-            if self.alpha > 255:
-                self.alpha = 255
-
-            self.superficie_negra.set_alpha(self.alpha)
-            self.pantalla.blit(self.superficie_negra, (0, 0))
-
-        # Pantalla negra completa
-        if self.alpha >= 255:
-
-            imagen = None
-
-            # Buscar quién murió
+        # Identificamos ganador y perdedor UNA sola vez, apenas arranca todo esto
+        if self.ganador_grafico is None and self.perdedor_grafico is None:
             for jugador, grafico in zip(jugadores, graficos):
+                if jugador.estoy_vivo():
+                    self.ganador_grafico = grafico
+                else:
+                    self.perdedor_grafico = grafico
 
-                if jugador.estado == "muerto":
-                    imagen = grafico.imagen_derrota
-                    break
+            #este modo solo permite que festeje jugadores[0] (Alan)
+            # y quien ganó no es jugadores[0], cancelamos el festejo de esta pelea
+            if self.solo_jugador1_festeja and self.ganador_grafico is not graficos[0]:
+                self.mostrar_festejo = False
 
-            if imagen is None:
-                return
+        # ------------------------------------------------------------
+        # FASE 1: festejo del ganador, ANTES de que se ponga todo negro.
+        # El escenario sigue visible de fondo, igual que durante la pelea.
+        # ------------------------------------------------------------
+        if self.mostrar_festejo and not self.festejo_termino:
+            self.fase_festejo = True
+            self.ganador_grafico.estado = "festejo"
 
-            # Zoom
-            ancho = int(800 * self.zoom)
-            alto = int(600 * self.zoom)
+            if self.fondo_actual is not None:
+                self.pantalla.blit(self.fondo_actual, (0, 0))
+            else:
+                self.pantalla.fill((0, 0, 0))
+            self.perdedor_grafico.dibujar(self.pantalla)
+            self.ganador_grafico.dibujar(self.pantalla)
 
-            imagen_escalada = pygame.transform.scale(
-                imagen,
-                (ancho, alto)
-            )
+            self.contador_festejo += 1
+            if self.contador_festejo >= self.duracion_festejo:
+                self.festejo_termino = True
+                self.fase_festejo = False  # el festejo ya terminó, ahora arranca el fundido
+            return
 
-            x = (800 - ancho) // 2
-            y = (600 - alto) // 2
+        # ------------------------------------------------------------
+        # FASE 2: fundido a negro y, recién cuando ya está todo tapado,
+        # la imagen de derrota (con su zoom).
+        # Esto se repite TODOS los frames para que el negro se mantenga
+        # sólido detrás de la imagen de derrota (si no, se vería el
+        # escenario por los bordes).
+        # ------------------------------------------------------------
+        self.alpha += 3
+        if self.alpha > 255:
+            self.alpha = 255
+        self.superficie_negra.set_alpha(self.alpha)
+        self.pantalla.blit(self.superficie_negra, (0, 0))
 
-            self.pantalla.blit(imagen_escalada, (x, y))
+        if self.alpha >= 255:
+            self._mostrar_imagen_derrota(jugadores, graficos)
 
-            # Alejar cámara
-            if self.zoom > 1:
-                self.zoom -= 0.002
 
+
+    def _mostrar_imagen_derrota(self, jugadores, graficos):
+        # Buscamos cuál de los dos personajes está en estado "muerto"
+        # para usar SU imagen de derrota (cada personaje tiene la suya).
+        imagen = None
+        for jugador, grafico in zip(jugadores, graficos):
+            if jugador.estado == "muerto":
+                imagen = grafico.imagen_derrota
+                break
+        if imagen is None:
+            return  # por si todavía no hay nadie marcado como "muerto"
+
+        # Hacemos zoom: agrandamos la imagen según self.zoom y la centramos.
+        ancho = int(800 * self.zoom)
+        alto = int(600 * self.zoom)
+        imagen_escalada = pygame.transform.scale(imagen, (ancho, alto))
+        x = (800 - ancho) // 2
+        y = (600 - alto) // 2
+        self.pantalla.blit(imagen_escalada, (x, y))
+
+        # Cada frame el zoom se va achicando un poquito, dando el efecto
+        # de que la cámara se va alejando de la imagen.
+        if self.zoom > 1:
+            self.zoom -= 0.002
     
     def dibujar_barras_vida(self, pantalla, jugadores, vida_maxima):
 
@@ -140,6 +181,11 @@ class controladorGrafico:
                 3: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_3.png").convert(), (ancho, alto)),
                 4: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_4.png").convert(), (ancho, alto)),
                 5: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_5.png").convert(), (ancho, alto)),
+                6: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_6.png").convert(), (ancho, alto)),
+                7: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_6.png").convert(), (ancho, alto)),
+                8: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_6.png").convert(), (ancho, alto)),
+                9: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_6.png").convert(), (ancho, alto)),
+                
             }
             
         else:
@@ -151,7 +197,6 @@ class controladorGrafico:
         """Devuelve el escenario correspondiente al nivel"""
         return self.escenarios.get(nivel, self.escenarios[1])
     
-
         
     def resetear_graficos(self, graficos):
         """Resetea el estado y posición de todos los gráficos al inicio de un nuevo nivel"""

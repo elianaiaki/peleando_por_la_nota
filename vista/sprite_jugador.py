@@ -24,6 +24,7 @@ class SpriteJugador(pygame.sprite.Sprite):
         self.muerto = []
 
         self.golpeado = []
+        self.festejo01 = []
 
         # -------------------------
         # CONFIG
@@ -125,6 +126,9 @@ class SpriteJugador(pygame.sprite.Sprite):
             elif tipo_animacion == "golpeado":
                 self.golpeado.append(frame)
 
+            elif tipo_animacion == "festejo01":          # nuevo
+                self.festejo01.append(frame)
+
     # ======================================================
     # ACTUALIZAR ANIMACIÓN
     # ======================================================
@@ -186,6 +190,8 @@ class SpriteJugador(pygame.sprite.Sprite):
         elif estado == "golpeado":
             lista = self.golpeado
 
+        elif estado == "festejo":
+            lista = self.festejo01
         else:
             lista = self.quieto
 

@@ -73,7 +73,7 @@ SPRITES_CONFIG = {
         "muriendo":   ("recursos/gabo/muriendo.png",   512, 512,  6, 1.0),
         "muerto":     ("recursos/gabo/muerto.png",     512, 512,  1, 1.0),
         "golpeado":   ("recursos/gabo/golpeado.png",   512, 512,  3, 1.0),
-        "festejo01":  ("recursos/gabo/festejo01.png",  512, 512, 14, 1.0)
+        "festejo01":  ("recursos/gabo/festejo01.png",  512, 512, 12, 1.0)
     },
 
     "yiyo": {

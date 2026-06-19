@@ -12,7 +12,7 @@ class ControladorMusica:
     CANCIONES = {
         "menu":     "recursos/Musica/Cancion.de.Menu.mp3",
         "pelea":    "recursos/Musica/Cancion.de.Pelea.mp3",
-        "victoria": "recursos/Musica/Cancion.de.Victoria.mp3",
+        "victoria": "recursos/Musica/Cancion.de.Victoria.wav",
         "derrota":  "recursos/Musica/Cancion.de.Derrota.mp3",
     }
 

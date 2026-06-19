@@ -171,7 +171,8 @@ class JugadorGrafico:
                 "bloquear02",
                 "muriendo",
                 "muerto",
-                "golpeado"
+                "golpeado",
+                "festejo01"
             ]:
                 lista = getattr(self.sprite, lista_nombre)
                 for i in range(len(lista)):

@@ -67,7 +67,14 @@ def main():
 
     # Crear gráficos
     graficos = crear_graficos(jugadores)
-    cargar_sprites(graficos, jugadores)
+    graficos = crear_graficos(jugadores)
+
+    # En historia solo Alan (índice 0) puede festejar; en 1vs1 cualquiera de los dos
+    if modo == "historia":
+        cargar_sprites(graficos, jugadores, indices_festejo=[0])
+    else:
+        cargar_sprites(graficos, jugadores)
+
 
     # Paredes
     paredes = [
@@ -80,6 +87,13 @@ def main():
     controlador = Controlador(graficos[0], graficos[1], ANCHO, ALTO, paredes, sonidos)
     ctrl_grafico = controladorGrafico(pantalla, fuente)
     ctrl_grafico.cargar_escenarios(ANCHO, ALTO, modo)
+    # Si el modo NO es historia (o sea, es 1vs1), siempre hay festejo.
+    # Si es historia, solo hay festejo cuando el rival es "profe"
+    # (porque profe es el último nivel del modo historia).
+    ctrl_grafico.mostrar_festejo = (modo != "historia") or (jugadores[1].nombre == "profe")
+    ctrl_grafico.solo_jugador1_festeja = (modo == "historia")
+
+
     musica = ControladorMusica()
     temporizador = ControladorTemp(60) #Creacion del temporalizador a 60 segundos
 

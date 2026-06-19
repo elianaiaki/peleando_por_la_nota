@@ -34,8 +34,8 @@ class Controlador:
 
     def controlar_jugador1(self, teclas):
 
-        # No procesa movimiento si está en medio de una animación importante    
-        if self.jugador1.estado in ["atacar", "golpeado", "muriendo", "muerto"]:
+        # No procesa movimiento si está en medio de una animación importante 
+        if self.jugador1.estado in ["atacar", "golpeado", "muriendo", "muerto", "festejo"]:
             return
         
         moviendo = False
@@ -68,6 +68,10 @@ class Controlador:
             # No ataca si está golpeado, muriendo o muerto
             if self.jugador1.estado in ["golpeado", "muriendo", "muerto"]:
                 return
+            # tampoco ataca si el rival ya está muriendo/muerto
+            if self.jugador2.estado in ["muriendo", "muerto"]:
+                return
+
             if self.jugador1.estado == "atacar":
                 # Si ya está atacando, guarda el próximo para ejecutarlo cuando termine la animación
                 # Evita acumular más de un golpe pendiente para que los sonidos no se pisen
@@ -87,7 +91,7 @@ class Controlador:
     def controlar_jugador2(self, teclas):
 
         # No procesa movimiento si está en medio de una animación importante
-        if self.jugador2.estado in ["atacar", "golpeado", "muriendo", "muerto"]:
+        if self.jugador2.estado in ["atacar", "golpeado", "muriendo", "muerto", "festejo"]:
             return
         
         moviendo = False
@@ -123,6 +127,10 @@ class Controlador:
             # No ataca si está golpeado, muriendo o muerto
             if self.jugador2.estado in ["golpeado", "muriendo", "muerto"]:
                 return
+            # tampoco ataca si el rival ya está muriendo/muerto
+            if self.jugador1.estado in ["muriendo", "muerto"]:
+                return
+        
             if self.jugador2.estado == "atacar":
                 # Si ya está atacando, guarda el próximo para ejecutarlo cuando termine la animación
                 # Evita acumular más de un golpe pendiente para que los sonidos no se pisen
