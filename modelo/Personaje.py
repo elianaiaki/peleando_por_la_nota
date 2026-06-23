@@ -21,22 +21,23 @@ class Personaje:
         self.ataque = ataque
         self.esta_atacando = False
         self.esta_bloqueando = False
+        self.ataque_cancelado = False
         self.estado = "vivo"
         #self.ulti = ulti
 
     def recibir_danio(self, danio):
-        """Reduce la vida del personaje según el daño recibido"""
-        if danio < 0 : 
-            raise ValueError("El daño no puede ser negativo")
-    
-        if self.esta_bloqueando:
-        #     self.esta_bloqueando = False   // Esto hacia que el boton bloquear se seleccionara una sola vez.
-            return 0
-        
-        self.vida = self.vida - danio
-        if self.vida < 0:
-                self.vida = 0
 
+        if danio < 0:
+            raise ValueError("El daño no puede ser negativo")
+        if self.esta_bloqueando:
+            return 0
+        # NUEVO
+        if self.esta_atacando:
+            self.esta_atacando = False
+            self.ataque_cancelado = True
+        self.vida -= danio
+        if self.vida < 0:
+            self.vida = 0
         if self.vida == 0:
             self.morir()
         return danio

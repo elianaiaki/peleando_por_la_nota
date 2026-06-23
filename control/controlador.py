@@ -78,6 +78,8 @@ class Controlador:
                 if not self.proximo_ataque_j1 and len(self.cola_golpes_j1) == 0:
                     self.proximo_ataque_j1 = True
             else:
+                # Si empieza ataque, deja de bloquear
+                self.jugador1.modelo.esta_bloqueando = False
                 self.jugador1.estado = "atacar"
                 if self.jugador1.obtener_hitbox_ataque().colliderect(self.jugador2.rect):
                     if self.jugador2.estado == "bloquear":
@@ -137,6 +139,8 @@ class Controlador:
                 if not self.proximo_ataque_j2 and len(self.cola_golpes_j2) == 0:
                     self.proximo_ataque_j2 = True
             else:
+                # Si empieza ataque, deja de bloquear
+                self.jugador2.modelo.esta_bloqueando = False
                 self.jugador2.estado = "atacar"
                 if self.jugador2.obtener_hitbox_ataque().colliderect(self.jugador1.rect):
                     if self.jugador1.estado == "bloquear":
@@ -150,48 +154,68 @@ class Controlador:
 
     def procesar_delays(self):
         # --- Jugador 1 ---
-        # Procesamos cada golpe pendiente en la cola
         nueva_cola_j1 = []
         for contador in self.cola_golpes_j1:
             contador -= 1
-            # En procesar_delays - reproducir_golpe cuando impacta
             if contador == 0:
-                # El golpe impacta: aplica daño y reproduce ambos sonidos juntos
+                # NUEVO:
+                # Si jugador 1 fue golpeado antes de impactar,
+                # cancela su golpe
+                if self.jugador1.modelo.ataque_cancelado:
+                    self.jugador1.modelo.ataque_cancelado = False
+                    continue
+                # Si el jugador 2 estaba atacando,
+                # cancelo su golpe pendiente
+                if self.jugador2.estado == "atacar":
+                    self.cola_golpes_j2.clear()
+                    self.proximo_ataque_j2 = False
                 self.jugador1.atacar_a(self.jugador2)
-                self.sonidos.reproducir_golpe()        # ← acá, cuando toca
-                self.sonidos.reproducir_golpeado(self.jugador2.modelo.nombre)
+                self.sonidos.reproducir_golpe()
+                self.sonidos.reproducir_golpeado(
+                    self.jugador2.modelo.nombre
+                )
                 self.jugador2.estado = "golpeado"
                 if not self.jugador2.modelo.estoy_vivo():
                     self.jugador2.estado = "muriendo"
-                     # Cancela golpes pendientes para que no se procesen después de muerto
                     self.cola_golpes_j1 = []
-                    # Cancela el ataque encolado también
                     self.proximo_ataque_j1 = False
                     self.sonidos.detener_golpe()
-                    self.sonidos.reproducir_muerte(self.jugador2.modelo.nombre)
+                    self.sonidos.reproducir_muerte(
+                        self.jugador2.modelo.nombre
+                    )
             else:
-                 # Todavía no impacta, lo mantenemos en la cola
                 nueva_cola_j1.append(contador)
         self.cola_golpes_j1 = nueva_cola_j1
-
         # --- Jugador 2 ---
         nueva_cola_j2 = []
         for contador in self.cola_golpes_j2:
             contador -= 1
             if contador == 0:
-                # El golpe impacta: aplica daño y reproduce ambos sonidos juntos
+                # NUEVO:
+                # Si jugador 2 fue golpeado antes de impactar,
+                # cancela su golpe
+                if self.jugador2.modelo.ataque_cancelado:
+                    self.jugador2.modelo.ataque_cancelado = False
+                    continue
+                # Si jugador 1 estaba atacando,
+                # cancelo su golpe pendiente
+                if self.jugador1.estado == "atacar":
+                    self.cola_golpes_j1.clear()
+                    self.proximo_ataque_j1 = False
                 self.jugador2.atacar_a(self.jugador1)
                 self.sonidos.reproducir_golpe()
-                self.sonidos.reproducir_golpeado(self.jugador1.modelo.nombre)
+                self.sonidos.reproducir_golpeado(
+                    self.jugador1.modelo.nombre
+                )
                 self.jugador1.estado = "golpeado"
                 if not self.jugador1.modelo.estoy_vivo():
                     self.jugador1.estado = "muriendo"
-                    # Cancela golpes pendientes para que no se procesen después de muerto
                     self.cola_golpes_j2 = []
-                    # Cancela el ataque encolado también
                     self.proximo_ataque_j2 = False
                     self.sonidos.detener_golpe()
-                    self.sonidos.reproducir_muerte(self.jugador1.modelo.nombre)
+                    self.sonidos.reproducir_muerte(
+                        self.jugador1.modelo.nombre
+                    )
             else:
                 nueva_cola_j2.append(contador)
         self.cola_golpes_j2 = nueva_cola_j2
