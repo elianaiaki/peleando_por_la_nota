@@ -103,12 +103,23 @@ SPRITES_CONFIG = {
         "muerto":     ("recursos/cliver/muerto.png",     512, 512,  1, 1.0),
         "golpeado":   ("recursos/cliver/golpeado.png",   512, 512,  3, 1.0),
         # -remplazar cuando este el de yiyo----------------------------
-        "festejo01":  ("recursos/alan/festejo01.png",  512, 512, 14, 1.0)
+        "festejo01":  ("recursos/cliver/festejo01.png",  512, 512, 26, 1.0)
     },
 
-
-
-
+    "cami": {
+        "quieto":     ("recursos/cami/quieto.png",     512, 512, 12, 1.0),
+        "caminar01":  ("recursos/cami/caminar01.png",  512, 512,  8, 1.0),
+        "caminar02":  ("recursos/cami/caminar02.png",  512, 512,  8, 1.0),
+        "atacar":     ("recursos/cami/atacar.png",     512, 512,  7, 1.0),
+        "bloquear00": ("recursos/cami/bloquear00.png", 512, 512,  1, 1.0),
+        "bloquear01": ("recursos/cami/bloquear01.png", 512, 512,  8, 1.0),
+        "bloquear02": ("recursos/cami/bloquear02.png", 512, 512,  8, 1.0),
+        "muriendo":   ("recursos/cami/muriendo.png",   512, 512,  6, 1.0),
+        "muerto":     ("recursos/cami/muerto.png",     512, 512,  1, 1.0),
+        "golpeado":   ("recursos/cami/golpeado.png",   512, 512,  3, 1.0),
+        # -remplazar cuando este el de cami----------------------------
+        "festejo01":  ("recursos/gabo/festejo01.png",  512, 512, 12, 1.0)
+    },
 
 
     "profe": {

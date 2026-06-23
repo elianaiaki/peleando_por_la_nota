@@ -4,6 +4,7 @@
 # =====================================================================
 
 import pygame
+import os
 from vista.jugador_grafico import JugadorGrafico
 from config import SPRITES_CONFIG, ROJO, AZUL
 
@@ -45,9 +46,17 @@ def crear_graficos(jugadores, indices=None):
             f"recursos/{jugador.nombre}/derrota.png"
         ).convert_alpha()
 
+        # NUEVO: imagen especial que solo tiene el profe (la nota aprobada).
+        # Si el archivo no existe, dejamos None y no pasa nada para los demás.
+        ruta_nota = f"recursos/{jugador.nombre}/nota_final.png"
+        if os.path.isfile(ruta_nota):
+            imagen_nota = pygame.image.load(ruta_nota).convert_alpha()
+        else:
+            imagen_nota = None
+
         # colores[i] también usa el índice real, así jugador2 siempre
         # es AZUL aunque venga solo en una lista de un elemento.
-        grafico = JugadorGrafico(x, y, colores[i], jugador, imagen_derrota)
+        grafico = JugadorGrafico(x, y, colores[i], jugador, imagen_derrota, imagen_nota)
         graficos.append(grafico)
 
         # Si el índice real es 1 (jugador2), arranca mirando a la izquierda.

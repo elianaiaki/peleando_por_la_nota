@@ -15,12 +15,18 @@ class controladorGrafico:
 
         # FASE FESTEJO
         self.fase_festejo = False
+        self.contador_nota = 0
+        self.duracion_nota = 180  # cuánto se queda en pantalla la nota (180 ≈ 3 segundos)
+
         self.ganador_grafico = None   # JugadorGrafico del ganador
         self.perdedor_grafico = None  # JugadorGrafico del perdedor
+
         self.mostrar_festejo = True
         self.contador_festejo = 0
         self.duracion_festejo = 380  # cuántos frames dura el festejo en pantalla (90 ≈ 1.5 seg a 60fps). Ajustalo a gusto.
+
         self.fondo_actual = None   # acá guardamos el último fondo que se dibujó, para poder reusarlo en el festejo
+
         self.festejo_termino = False  # para saber si ya pasamos por el festejo (y no repetirlo)
         self.solo_jugador1_festeja = False  # en 1vs1 cualquiera de los dos puede festejar
 
@@ -104,17 +110,21 @@ class controladorGrafico:
 
 
     def _mostrar_imagen_derrota(self, jugadores, graficos):
-        # Buscamos cuál de los dos personajes está en estado "muerto"
-        # para usar SU imagen de derrota (cada personaje tiene la suya).
-        imagen = None
+        grafico_muerto = None
         for jugador, grafico in zip(jugadores, graficos):
             if jugador.estado == "muerto":
-                imagen = grafico.imagen_derrota
+                grafico_muerto = grafico
                 break
-        if imagen is None:
-            return  # por si todavía no hay nadie marcado como "muerto"
+        if grafico_muerto is None:
+            return
 
-        # Hacemos zoom: agrandamos la imagen según self.zoom y la centramos.
+        # Si ya estamos en la fase de la nota, dibujamos esa imagen en vez
+        # de la de derrota normal, y no hacemos nada más en este método.
+        if self.fase_nota:
+            self._mostrar_imagen_nota(grafico_muerto)
+            return
+
+        imagen = grafico_muerto.imagen_derrota
         ancho = int(800 * self.zoom)
         alto = int(600 * self.zoom)
         imagen_escalada = pygame.transform.scale(imagen, (ancho, alto))
@@ -122,10 +132,22 @@ class controladorGrafico:
         y = (600 - alto) // 2
         self.pantalla.blit(imagen_escalada, (x, y))
 
-        # Cada frame el zoom se va achicando un poquito, dando el efecto
-        # de que la cámara se va alejando de la imagen.
         if self.zoom > 1:
             self.zoom -= 0.002
+
+        self.contador_derrota += 1
+
+        # NUEVO: cuando ya se mostró la derrota el tiempo mínimo Y el que
+        # perdió tiene imagen de nota (o sea, es el profe), pasamos a esa fase.
+        if self.contador_derrota >= self.duracion_derrota and grafico_muerto.imagen_nota is not None:
+            self.fase_nota = True
+
+    def _mostrar_imagen_nota(self, grafico_muerto):
+        """Muestra la imagen especial de 'nota aprobada' (solo existe para el profe)."""
+        self.pantalla.fill((0, 0, 0))
+        imagen = pygame.transform.scale(grafico_muerto.imagen_nota, (800, 600))
+        self.pantalla.blit(imagen, (0, 0))
+        self.contador_nota += 1
     
     def dibujar_barras_vida(self, pantalla, jugadores, vida_maxima):
 
@@ -182,10 +204,8 @@ class controladorGrafico:
                 4: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_4.png").convert(), (ancho, alto)),
                 5: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_5.png").convert(), (ancho, alto)),
                 6: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_6.png").convert(), (ancho, alto)),
-                7: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_6.png").convert(), (ancho, alto)),
-                8: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_6.png").convert(), (ancho, alto)),
-                9: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_6.png").convert(), (ancho, alto)),
-                
+                7: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_7.png").convert(), (ancho, alto)),
+                8: pygame.transform.scale(pygame.image.load("recursos/escenarios/escenario_8.png").convert(), (ancho, alto))
             }
             
         else:
@@ -196,7 +216,6 @@ class controladorGrafico:
     def obtener_escenario(self, nivel):
         """Devuelve el escenario correspondiente al nivel"""
         return self.escenarios.get(nivel, self.escenarios[1])
-    
         
     def resetear_graficos(self, graficos):
         """Resetea el estado y posición de todos los gráficos al inicio de un nuevo nivel"""

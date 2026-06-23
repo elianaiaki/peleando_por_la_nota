@@ -3,7 +3,7 @@ from vista.sprite_jugador import SpriteJugador
 
 
 class JugadorGrafico:
-    def __init__(self, x, y, color, modelo, imagen_derrota):
+    def __init__(self, x, y, color, modelo, imagen_derrota, imagen_nota=None):
         """ Inicializa el jugador gráfico. """
         # self.rect = pygame.Rect(x, y, 60,60)
         self.rect = pygame.Rect(x, y, 60, 60)
@@ -24,6 +24,7 @@ class JugadorGrafico:
         self.direccion_actual = "derecha"  # Por defecto mirando a la derecha
         self.modelo.esta_caminando = False  # Agregamos atributo para saber si camina
         self.imagen_derrota = imagen_derrota
+        self.imagen_nota = imagen_nota  # NUEVO: imagen especial (solo la tiene el profe)
         self.sprite = SpriteJugador(250, 250)
         # ALTURA_PISO representa el nivel del suelo (ALTO - 110)
         ALTURA_PISO = y  # y será el valor del suelo al inicializar

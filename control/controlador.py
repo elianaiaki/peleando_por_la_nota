@@ -35,7 +35,7 @@ class Controlador:
     def controlar_jugador1(self, teclas):
 
         # No procesa movimiento si está en medio de una animación importante 
-        if self.jugador1.estado in ["atacar", "golpeado", "muriendo", "muerto", "festejo"]:
+        if self.jugador1.estado in ["atacar", "golpeado", "muriendo", "muerto", "bloquear", "festejo"]:
             return
         
         moviendo = False
@@ -91,7 +91,7 @@ class Controlador:
     def controlar_jugador2(self, teclas):
 
         # No procesa movimiento si está en medio de una animación importante
-        if self.jugador2.estado in ["atacar", "golpeado", "muriendo", "muerto", "festejo"]:
+        if self.jugador2.estado in ["atacar", "golpeado", "muriendo", "muerto", "bloquear", "festejo"]:
             return
         
         moviendo = False
