@@ -22,7 +22,6 @@ def menu_1vs1(pantalla, ancho, alto):
         "cliver": Jugador("cliver", 100, 11, 5),
         "cami": Jugador("cami", 100, 11, 5),
         "lean": Jugador("lean", 100, 11, 5)
-        #"profe": Jugador("profe", 100, 11, 5)
     }
 
     # Cargar imágenes
@@ -50,17 +49,21 @@ def menu_1vs1(pantalla, ancho, alto):
         pantalla.blit(texto, (150, 50))
 
         botones = []
+        columnas = 4
+        espacio_x = 200
+        espacio_y = 220
+
+        ancho_grilla = columnas * espacio_x
+        inicio_x = (ancho - ancho_grilla) // 2 + (espacio_x - 150) // 2
+        inicio_y = 150
+
         for i, personaje in enumerate(opciones.values()):
 
-            # FILA DE ARRIBA (3 personajes)
-            if i < 3:
-                x = 120 + i * 220
-                y = 150
+            fila = i // columnas
+            col = i % columnas
 
-            # FILA DE ABAJO (2 personajes)
-            else:
-                x = 230 + (i - 3) * 220
-                y = 350
+            x = inicio_x + col * espacio_x
+            y = inicio_y + fila * espacio_y
 
             rect = pygame.Rect(x, y, 150, 150)
             botones.append((rect, personaje))

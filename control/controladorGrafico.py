@@ -39,7 +39,7 @@ class controladorGrafico:
 
         self.mostrar_festejo = True
         self.contador_festejo = 0
-        self.duracion_festejo = 380  # cuántos frames dura el festejo en pantalla (90 ≈ 1.5 seg a 60fps). Ajustalo a gusto.
+        self.duracion_festejo = 580  # cuántos frames dura el festejo en pantalla
 
         self.fondo_actual = None   # acá guardamos el último fondo que se dibujó, para poder reusarlo en el festejo
 
