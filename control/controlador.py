@@ -24,7 +24,7 @@ class Controlador:
         self.cola_golpes_j2 = []
 
         # Frames antes de aplicar el daño (~0.33s a 60fps), sincroniza el daño con la animación
-        self.DELAY = 20
+        self.DELAY = 10
 
         # Guarda si hay un ataque encolado esperando que termine la animación actual
         self.proximo_ataque_j1 = False

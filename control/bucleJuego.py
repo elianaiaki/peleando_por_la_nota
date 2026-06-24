@@ -91,9 +91,6 @@ def ejecutar_juego(
         if controlador_grafico.fase_festejo:
             musica.cambiar(ControladorMusica.VICTORIA)
 
-        controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
-        controlador_grafico.dibujar_temporizador(pantalla, temporizador) #Dibuja el temporalizador
-
         # Actualiza la animación (sprite) de cada personaje.
         # sprite.actualizar(...) devuelve True cuando la animación actual
         # ya terminó de reproducirse, y ahí decidimos a qué estado pasar.

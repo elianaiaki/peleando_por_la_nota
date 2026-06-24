@@ -6,17 +6,33 @@ class controladorGrafico:
         self.pantalla = pantalla
         self.fuente = fuente
 
+        # HUD
+        self.imagen_barra_vida = pygame.image.load("recursos/barraVida.png").convert_alpha()
+        self.imagen_barra_vida = pygame.transform.scale(self.imagen_barra_vida,(300,40))
+        self.imagen_barra_llena = pygame.image.load("recursos/barraVidallena.png").convert_alpha()
+        self.imagen_barra_llena = pygame.transform.scale(self.imagen_barra_llena,(300,40))
+        self.imagen_barra_vacia = pygame.image.load("recursos/barraVidavacia.png").convert_alpha()
+        self.imagen_barra_vacia = pygame.transform.scale(self.imagen_barra_vacia,(300,40))
+        # NUMEROS DEL TEMPORIZADOR
+        self.sprite_numeros = pygame.image.load("recursos/tempo-sheet.png").convert_alpha()
+        self.tamaño_numero = 64
+
         # ANIMACIÓN MUERTE
         self.animacion_muerte = False
         self.alpha = 0
         self.zoom = 2.0
         self.superficie_negra = pygame.Surface((800, 600))
         self.superficie_negra.fill((0, 0, 0))
+        self.contador_derrota = 0
+        self.duracion_derrota = 180
 
         # FASE FESTEJO
         self.fase_festejo = False
         self.contador_nota = 0
         self.duracion_nota = 180  # cuánto se queda en pantalla la nota (180 ≈ 3 segundos)
+
+        # FASE NOTA
+        self.fase_nota = False
 
         self.ganador_grafico = None   # JugadorGrafico del ganador
         self.perdedor_grafico = None  # JugadorGrafico del perdedor
@@ -31,17 +47,33 @@ class controladorGrafico:
         self.solo_jugador1_festeja = False  # en 1vs1 cualquiera de los dos puede festejar
 
 
-    def dibujar(self, jugadores, graficos, fondo=None):
-        self.fondo_actual = fondo   # nuevo: lo guardamos para usarlo después en el festejo
-        # Fondo: color negro si no hay imagen
-        if fondo is not None:
-            self.pantalla.blit(fondo, (0, 0))
-        else:
-            self.pantalla.fill((0, 0, 0))
+    #def dibujar(self, jugadores, graficos, fondo=None):
+     #   self.fondo_actual = fondo   # nuevo: lo guardamos para usarlo después en el festejo
+      #  # Fondo: color negro si no hay imagen
+       # if fondo is not None:
+        #    self.pantalla.blit(fondo, (0, 0))
+        #else:
+         #   self.pantalla.fill((0, 0, 0))
 
+        #for grafico in graficos:
+         #   grafico.dibujar(self.pantalla)
+
+    def dibujar(self, jugadores, graficos, fondo=None):
+
+        self.fondo_actual = fondo
+        if fondo is not None:
+            self.pantalla.blit(fondo,(0,0))
+        else:
+            self.pantalla.fill((0,0,0))
+
+        # personajes
         for grafico in graficos:
             grafico.dibujar(self.pantalla)
-      
+
+        # HUD
+        self.dibujar_barra_sprite(self.pantalla,jugadores[0],30,25,False)
+        self.dibujar_barra_sprite(self.pantalla,jugadores[1],470,25,True)
+        self.animacion_de_muerte(jugadores,graficos)
 
         # ------------------------------------------------------------------------------------------------------
         # Animación de muerte
@@ -175,25 +207,34 @@ class controladorGrafico:
             )
 
             pantalla.blit(texto, (x, y + 15))
+    
+    def dibujar_barra_sprite(self, pantalla, jugador, x, y, invertida=False):
+        porcentaje = max(0, jugador.vida / jugador.vida_maxima)
+        pantalla.blit(self.imagen_barra_vacia,(x,y))
+        ancho = int(self.imagen_barra_llena.get_width() * porcentaje)
+        if invertida:
+            barra = self.imagen_barra_llena.subsurface((self.imagen_barra_llena.get_width() - ancho,0,ancho,self.imagen_barra_llena.get_height()))
+            pantalla.blit(barra,(x + self.imagen_barra_llena.get_width() - ancho,y))
+        else:
+            barra = self.imagen_barra_llena.subsurface((0,0,ancho,self.imagen_barra_llena.get_height()))
+            pantalla.blit(barra,(x,y))
+        pantalla.blit(self.imagen_barra_vida,(x,y))
+        # Nombre de los jugadores
+        texto = self.fuente.render(jugador.nombre,True,(255,255,255))
+        rect = texto.get_rect(center=(x + self.imagen_barra_vida.get_width()/2,y + 55))
+        pantalla.blit(texto,rect)
 
-    def dibujar_temporizador(self, pantalla, temporizador):
+    def dibujar_temporizador_sprite(self,pantalla,temporizador):
+        tiempo = str(temporizador.tiempo_restante())
+        x = 385
+        for digito in tiempo:
+            imagen = self.obtener_numero(int(digito))
+            pantalla.blit(imagen,(x,30))
+            x += self.tamaño_numero
 
-        tiempo = temporizador.tiempo_restante()
-
-        texto = self.fuente.render(
-            str(tiempo),
-            True,
-            (255,255,255)
-        )
-
-        rect = texto.get_rect(
-            center=(400, 30)
-        )
-
-        pantalla.blit(
-            texto,
-            rect
-        )
+    def obtener_numero(self, numero):
+        x = numero * self.tamaño_numero
+        return self.sprite_numeros.subsurface((x,0,self.tamaño_numero,self.sprite_numeros.get_height()))
 
     def cargar_escenarios(self, ancho, alto, modo="1vs1"):
         if modo == "historia":
