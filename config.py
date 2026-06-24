@@ -121,6 +121,21 @@ SPRITES_CONFIG = {
         "festejo01":  ("recursos/gabo/festejo01.png",  512, 512, 12, 1.0)
     },
 
+    "lean": {
+        "quieto":     ("recursos/alan/quieto.png",     512, 512, 12, 1.0),
+        "caminar01":  ("recursos/lean/caminar01.png",  512, 512,  8, 1.0),
+        "caminar02":  ("recursos/lean/caminar02.png",  512, 512,  8, 1.0),
+        "atacar":     ("recursos/lean/atacar.png",     512, 512,  6, 1.0),
+        "bloquear00": ("recursos/lean/bloquear00.png", 512, 512,  1, 1.0),
+        "bloquear01": ("recursos/lean/bloquear01.png", 512, 512,  8, 1.0),
+        "bloquear02": ("recursos/lean/bloquear02.png", 512, 512,  8, 1.0),
+        "muriendo":   ("recursos/lean/muriendo.png",   512, 512,  6, 1.0),
+        "muerto":     ("recursos/lean/muerto.png",     512, 512,  1, 1.0),
+        "golpeado":   ("recursos/lean/golpeado.png",   512, 512,  3, 1.0),
+        # -remplazar cuando este el de lean----------------------------
+        "festejo01":  ("recursos/gabo/festejo01.png",  512, 512, 12, 1.0)
+    },
+
 
     "profe": {
         "quieto":     ("recursos/profe/quieto.png",     512, 512, 12, 1.2),

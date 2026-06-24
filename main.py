@@ -44,7 +44,6 @@ def reproducir_video(ruta_video, pantalla):
     clip.close()
 
 
-# -----------------------------
 # INICIO
 # -----------------------------
 
