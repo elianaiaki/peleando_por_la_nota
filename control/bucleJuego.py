@@ -174,8 +174,8 @@ def ejecutar_juego(
                     controlador_grafico = nuevo_controlador_grafico
 
         # Cuando el festejo del profe termina, cerramos el juego
-        if juego_ganado and controlador_grafico.festejo_termino:
-            controlador.corriendo = False
+        #if juego_ganado and controlador_grafico.festejo_termino:
+        #    controlador.corriendo = False
 
         pygame.display.flip()
         reloj.tick(60)

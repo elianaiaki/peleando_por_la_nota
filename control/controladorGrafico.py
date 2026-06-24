@@ -28,11 +28,6 @@ class controladorGrafico:
 
         # FASE FESTEJO
         self.fase_festejo = False
-        self.contador_nota = 0
-        self.duracion_nota = 180  # cuánto se queda en pantalla la nota (180 ≈ 3 segundos)
-
-        # FASE NOTA
-        self.fase_nota = False
 
         self.ganador_grafico = None   # JugadorGrafico del ganador
         self.perdedor_grafico = None  # JugadorGrafico del perdedor
@@ -150,12 +145,6 @@ class controladorGrafico:
         if grafico_muerto is None:
             return
 
-        # Si ya estamos en la fase de la nota, dibujamos esa imagen en vez
-        # de la de derrota normal, y no hacemos nada más en este método.
-        if self.fase_nota:
-            self._mostrar_imagen_nota(grafico_muerto)
-            return
-
         imagen = grafico_muerto.imagen_derrota
         ancho = int(800 * self.zoom)
         alto = int(600 * self.zoom)
@@ -169,17 +158,6 @@ class controladorGrafico:
 
         self.contador_derrota += 1
 
-        # NUEVO: cuando ya se mostró la derrota el tiempo mínimo Y el que
-        # perdió tiene imagen de nota (o sea, es el profe), pasamos a esa fase.
-        if self.contador_derrota >= self.duracion_derrota and grafico_muerto.imagen_nota is not None:
-            self.fase_nota = True
-
-    def _mostrar_imagen_nota(self, grafico_muerto):
-        """Muestra la imagen especial de 'nota aprobada' (solo existe para el profe)."""
-        self.pantalla.fill((0, 0, 0))
-        imagen = pygame.transform.scale(grafico_muerto.imagen_nota, (800, 600))
-        self.pantalla.blit(imagen, (0, 0))
-        self.contador_nota += 1
     
     def dibujar_barras_vida(self, pantalla, jugadores, vida_maxima):
 
