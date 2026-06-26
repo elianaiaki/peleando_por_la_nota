@@ -99,9 +99,7 @@ def ia_basica(grafico_ia, grafico_jugador, controlador_juego, ANCHO, ALTO, pared
 
     _cooldown_ia = 0  # reinicia el cooldown porque ya va a actuar
 
-    # -------------------------
     # ATAQUE O BLOQUEO
-    # -------------------------
     # Probabilidad de atacar vs bloquear, escalada por nivel
     probabilidad_atacar = min(0.5 + (nivel - 1) * 0.05, 0.85)
 
