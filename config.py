@@ -122,7 +122,7 @@ SPRITES_CONFIG = {
     },
 
     "lean": {
-        "quieto":     ("recursos/alan/quieto.png",     512, 512, 12, 1.0),
+        "quieto":     ("recursos/lean/quieto.png",     512, 512, 12, 1.0),
         "caminar01":  ("recursos/lean/caminar01.png",  512, 512,  8, 1.0),
         "caminar02":  ("recursos/lean/caminar02.png",  512, 512,  8, 1.0),
         "atacar":     ("recursos/lean/atacar.png",     512, 512,  6, 1.0),
