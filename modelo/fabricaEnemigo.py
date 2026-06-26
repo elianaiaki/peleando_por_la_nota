@@ -13,7 +13,7 @@ class FabricaEnemigos:
             5: Jugador("cami", 100, 12, 4),
             6: Jugador("gabriel", 100, 12, 4),
             7: Jugador("cliver", 100, 12, 4),
-            8: Jugador("profe", 100, 12, 4)
+            8: Jugador("profe", 200, 12, 4)
         }
 
         return enemigos.get(nivel)

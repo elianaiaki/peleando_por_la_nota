@@ -72,19 +72,3 @@ class ControladorJuego:
         self.guardar_estado()
         return True
 
-    
-    #def siguiente_nivel(self):
-        #self.nivel_actual += 1
-        #enemigo = FabricaEnemigos.crear_enemigo(self.nivel_actual)
-        #if enemigo is None:
-        #    return False
-        #self.enemigo = enemigo
-        #self.persistencia.actualizar_partida(
-         #   self.id_partida,
-          #  self.nivel_actual,
-           # self.jugador.vida,
-            #self.jugador.vida_maxima,
-            #self.jugador.fuerza,
-            #self.jugador.ataque
-        #)
-        #return True

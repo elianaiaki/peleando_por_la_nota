@@ -74,7 +74,7 @@ def menu_1vs1(pantalla, ancho, alto):
                 imagen_oscura = imagenes[personaje.nombre].copy()
                 imagen_oscura.set_alpha(80)  # ← transparencia para que se vea gris
                 pantalla.blit(imagen_oscura, (rect.x, rect.y))
-                texto_bloqueado = fuente.render("Ya seleccionado.", True, (255, 0, 0))
+                texto_bloqueado = fuente.render("Seleccionado", True, (255, 0, 0))
                 pantalla.blit(texto_bloqueado, (rect.x + 20, rect.y + 60))
             else:
                 # Si no está bloqueado, se dibuja normal
