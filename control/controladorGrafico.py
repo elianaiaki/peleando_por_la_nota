@@ -16,6 +16,10 @@ class controladorGrafico:
         # NUMEROS DEL TEMPORIZADOR
         self.sprite_numeros = pygame.image.load("recursos/tempo-sheet.png").convert_alpha()
         self.tamaño_numero = 64
+        # LETRAS DE LOS NOMBRES
+        self.sprite_letras = pygame.image.load("recursos/letras.png").convert_alpha()
+        self.tamaño_letra = 64
+        self.escala_letra = 0.35
 
         # ANIMACIÓN MUERTE
         self.animacion_muerte = False
@@ -53,7 +57,7 @@ class controladorGrafico:
         #for grafico in graficos:
          #   grafico.dibujar(self.pantalla)
 
-    def dibujar(self, jugadores, graficos, fondo=None):
+    def dibujar(self, jugadores, graficos, temporizador=None, fondo=None):
 
         self.fondo_actual = fondo
         if fondo is not None:
@@ -61,17 +65,22 @@ class controladorGrafico:
         else:
             self.pantalla.fill((0,0,0))
 
-        # personajes
+        # Dibuja los personajes en pantalla
         for grafico in graficos:
             grafico.dibujar(self.pantalla)
 
         # HUD
+        # Dibuja las barras de vida y los nombres
         self.dibujar_barra_sprite(self.pantalla,jugadores[0],30,25,False)
         self.dibujar_barra_sprite(self.pantalla,jugadores[1],470,25,True)
-        self.animacion_de_muerte(jugadores,graficos)
+
+        # TEMPORIZADOR
+        # Solo dibuja el temporizador si fue enviado
+        if temporizador is not None:
+            self.dibujar_temporizador_sprite(self.pantalla, temporizador)
 
         # ------------------------------------------------------------------------------------------------------
-        # Animación de muerte
+        # Animación de muerte, solo se ejecuta cuando corresponde.
         self.animacion_de_muerte(jugadores, graficos)
 
 
@@ -161,58 +170,76 @@ class controladorGrafico:
     
     def dibujar_barras_vida(self, pantalla, jugadores, vida_maxima):
 
-        posiciones = [
-            (20, 20),
-            (630, 20),
-            (20, 60),
-            (630, 60),
-            (325, 20)
-        ]
-
+        posiciones = [(20, 20),(630, 20),(20, 60),(630, 60),(325, 20)]
         for jugador, (x, y) in zip(jugadores, posiciones):
-
-            porcentaje = max(0, jugador.vida / vida_maxima)
+            porcentaje = max(0, jugador.vida / vida_maxima) # Calcula el porcentaje de vida restante
             ancho_vida = int(100 * porcentaje)
-
             pygame.draw.rect(pantalla, (0,0,0), (x-1, y-1, 102, 12))
             pygame.draw.rect(pantalla, (255,0,0), (x, y, 100, 10))
             pygame.draw.rect(pantalla, (0,255,0), (x, y, ancho_vida, 10))
-
-            texto = self.fuente.render(
-                f"{jugador.nombre}: {jugador.vida}",
-                True,
-                (255,255,255)
-            )
-
+            texto = self.fuente.render(f"{jugador.nombre}: {jugador.vida}",True,(255,255,255))
             pantalla.blit(texto, (x, y + 15))
     
     def dibujar_barra_sprite(self, pantalla, jugador, x, y, invertida=False):
         porcentaje = max(0, jugador.vida / jugador.vida_maxima)
         pantalla.blit(self.imagen_barra_vacia,(x,y))
-        ancho = int(self.imagen_barra_llena.get_width() * porcentaje)
-        if invertida:
+        ancho = int(self.imagen_barra_llena.get_width() * porcentaje) # Calcula el ancho visible de la barra de vida
+        if invertida: # Permite que la barra derecha se vacíe hacia la izquierda
             barra = self.imagen_barra_llena.subsurface((self.imagen_barra_llena.get_width() - ancho,0,ancho,self.imagen_barra_llena.get_height()))
             pantalla.blit(barra,(x + self.imagen_barra_llena.get_width() - ancho,y))
         else:
             barra = self.imagen_barra_llena.subsurface((0,0,ancho,self.imagen_barra_llena.get_height()))
-            pantalla.blit(barra,(x,y))
+            pantalla.blit(barra,(x,y)) # Dibuja el marco de la barra
         pantalla.blit(self.imagen_barra_vida,(x,y))
-        # Nombre de los jugadores
-        texto = self.fuente.render(jugador.nombre,True,(255,255,255))
-        rect = texto.get_rect(center=(x + self.imagen_barra_vida.get_width()/2,y + 55))
-        pantalla.blit(texto,rect)
+        # Dibuja el nombre del jugador
+        nombre = jugador.nombre.lower()
+        ancho_real = len(nombre) * (self.tamaño_letra * self.escala_letra)
+        nombre_x = x + self.imagen_barra_vida.get_width()/2 - ancho_real/2
+        self.dibujar_nombre_sprite(pantalla, nombre, nombre_x, y + 45)
 
     def dibujar_temporizador_sprite(self,pantalla,temporizador):
-        tiempo = str(temporizador.tiempo_restante())
-        x = 385
+        tiempo = str(temporizador.tiempo_restante())    # Obtiene el tiempo restante del combate
+        ancho_total = len(tiempo) * self.tamaño_numero  # Calcula el ancho total del número
+        # Centra el temporizador entre ambas barras
+        x = (400 - ancho_total // 2)
+        # Dibuja cada dígito usando el spritesheet
         for digito in tiempo:
             imagen = self.obtener_numero(int(digito))
-            pantalla.blit(imagen,(x,30))
+            pantalla.blit(imagen,(x,25))
             x += self.tamaño_numero
 
+    # Muestra los numeros nuevos en pantalla llamando a los sprites
     def obtener_numero(self, numero):
+        # Obtiene el sprite correspondiente al número solicitado
         x = numero * self.tamaño_numero
         return self.sprite_numeros.subsurface((x,0,self.tamaño_numero,self.sprite_numeros.get_height()))
+    
+    #  llama a los sprites letras
+    def obtener_letra(self, letra):
+        letra = letra.lower() # Convierte la letra a minúscula
+        # Calcula la posición de la letra en el spritesheet
+        indice = ord(letra) - ord('a')
+        x = indice * self.tamaño_letra
+        imagen = self.sprite_letras.subsurface((x, 0, self.tamaño_letra, self.tamaño_letra))
+        # Escala la letra al tamaño deseado
+        nuevo_tam = int(self.tamaño_letra * self.escala_letra)
+        return pygame.transform.scale( imagen, (nuevo_tam, nuevo_tam))
+    
+    # Muestra en pantalla las nuevas letras
+    def dibujar_nombre_sprite(self,pantalla,nombre,x,y):
+        # Convierte el nombre a minúsculas
+        nombre = nombre.lower()
+        pos_x = x
+        # Dibuja cada letra utilizando el spritesheet
+        for letra in nombre:
+            # Agrega un espacio cuando corresponde
+            if letra == " ":
+                pos_x += self.tamaño_letra
+                continue
+            imagen = self.obtener_letra(letra)
+            pantalla.blit(imagen,(pos_x, y))
+            # Avanza a la siguiente posición
+            pos_x += int(self.tamaño_letra * self.escala_letra)
 
     def cargar_escenarios(self, ancho, alto, modo="1vs1"):
         if modo == "historia":

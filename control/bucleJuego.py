@@ -60,11 +60,19 @@ def ejecutar_juego(
         controlador.procesar_eventos()
         controlador.procesar_teclas()
 
-        #Actualiza el temporalizador
-        temporizador.actualizar(
-            jugadores[0],
-            jugadores[1]
-        )
+        # Actualiza el estado del temporizador durante la pelea
+        temporizador.actualizar(jugadores[0], jugadores[1])
+
+        # Sincronizar muerte del modelo con el gráfico
+        if jugadores[0].estado == "muerto" and graficos[0].estado not in ["muriendo", "muerto"]:
+            graficos[0].estado = "muriendo"
+
+        if jugadores[1].estado == "muerto" and graficos[1].estado not in ["muriendo", "muerto"]:
+            graficos[1].estado = "muriendo"
+
+        # Hace que cada personaje mire hacia el otro
+        graficos[0].actualizar_direccion(graficos[1])
+        graficos[1].actualizar_direccion(graficos[0])
 
         # Hace que cada personaje mire hacia el otro (para que el sprite
         # se voltee según donde esté el rival)
@@ -85,7 +93,7 @@ def ejecutar_juego(
             escenario_actual = controlador_grafico.obtener_escenario(nivel)
 
         # Dibuja el fondo, los personajes y las barras de vida en pantalla
-        controlador_grafico.dibujar(jugadores, graficos, fondo=escenario_actual)
+        controlador_grafico.dibujar(jugadores, graficos, temporizador, fondo=escenario_actual)
 
         # musica.cambiar() ya se encarga de no repetir la canción si ya está sonando
         if controlador_grafico.fase_festejo:
@@ -105,7 +113,7 @@ def ejecutar_juego(
                     grafico.estado = "muerto"
 
         #METODO TEMPORALIZADOR
-        if temporizador.resultado == "empate":
+        if temporizador.resultado == "empate":  # Si el tiempo terminó en empate, reinicia la pelea.
 
             texto = fuente.render("EMPATE", True, (255,255,255))
             pantalla.blit(texto, (340,250))
@@ -113,18 +121,18 @@ def ejecutar_juego(
             pygame.display.flip()
             pygame.time.wait(3000)
             
-            # Restaura la vida de los personajes
+            # Restaura la vida de ambos jugadores
             jugadores[0].vida = 100
             jugadores[1].vida = 100
 
-            # Reinicia los estados
+            # Reinicia los estados de los personajes
             jugadores[0].estado = "quieto"
             jugadores[1].estado = "quieto"
 
-            # Reinicia los gráficos
+            # Reinicia los gráficos de los personajes
             controlador_grafico.resetear_graficos(graficos)
 
-            # Reinicia el temporizador
+            # Reinicia el temporizador para una nueva ronda
             temporizador.reiniciar()
         # ---------------------------
         # VICTORIA / DERROTA
@@ -234,11 +242,12 @@ def _cambiar_nivel(
         graficos,
         nuevo_controlador_grafico,
         escenario,
+        temporizador,
         reproducir_video
     )
 
     musica.cambiar_pelea_nivel(nivel)
-    temporizador.reiniciar()
+    temporizador.reiniciar() # Reinicia el temporizador al comenzar un nuevo nivel
     print("NIVEL:", nivel)
 
     return True, nuevo_controlador_grafico

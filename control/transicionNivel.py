@@ -14,6 +14,7 @@ def ejecutar_transicion_nivel(
     graficos,
     controlador_grafico,
     escenario,
+    temporizador,
     reproducir_video
 ):
     """
@@ -37,8 +38,8 @@ def ejecutar_transicion_nivel(
 
     pygame.mixer.music.stop()
 
-    # Mostrar escena estática con personajes
-    controlador_grafico.dibujar(jugadores, graficos, fondo=escenario)
+    # Muestra el escenario con el HUD antes de comenzar la pelea
+    controlador_grafico.dibujar(jugadores, graficos, temporizador, fondo=escenario)
     controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
     pygame.display.flip()
 

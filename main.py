@@ -17,7 +17,7 @@ from control.controlador import Controlador
 from control.controladorGrafico import controladorGrafico
 from control.controladorMusica import ControladorMusica
 from control.controladorSonido import ControladorSonido
-from control.controladorTemp import ControladorTemp #Controlador del temporalizador
+from control.controladorTemp import ControladorTemp #Controlador del temporalizador de la partida
 from control.transicionNivel import ejecutar_transicion_nivel
 from control.bucleJuego import ejecutar_juego
 
@@ -94,25 +94,22 @@ def main():
 
 
     musica = ControladorMusica()
-    temporizador = ControladorTemp(60) #Creacion del temporalizador a 60 segundos
+    temporizador = ControladorTemp(60) # Crea el temporizador con una duración de 60 segundos
 
     # Transición de inicio y música
     nivel = controlador_juego.nivel_actual if modo == "historia" else 1
     escenario_actual = ctrl_grafico.obtener_escenario(nivel)
 
     if modo == "historia":
-        ejecutar_transicion_nivel(
-            nivel, pantalla, jugadores, graficos,
-            ctrl_grafico, escenario_actual, reproducir_video
-        )
+        ejecutar_transicion_nivel(nivel, pantalla, jugadores, graficos, ctrl_grafico, escenario_actual, temporizador, reproducir_video)
         musica.cambiar_pelea_nivel(nivel)
-        temporizador.reiniciar() #Cuando termina la intro del juego el temporalizador se reinicia
+        temporizador.reiniciar() # Reinicia el temporizador al terminar la introducción del nivel
     else:
-        ctrl_grafico.dibujar(jugadores, graficos, fondo=escenario_actual)
+        ctrl_grafico.dibujar(jugadores, graficos, fondo=escenario_actual,  temporizador=temporizador)
         ctrl_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
         pygame.display.flip()
         musica.cambiar(ControladorMusica.PELEA)
-        temporizador.reiniciar() #Reinicia el temporalizador para el modo 1 vs 1
+        temporizador.reiniciar() # Reinicia el temporizador al comenzar una partida 1 vs 1
 
     # Bucle principal
     ejecutar_juego(
