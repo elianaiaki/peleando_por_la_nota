@@ -4,7 +4,7 @@ class ControladorTemp:
 
     def __init__(self, duracion=60):
         self.duracion = duracion # Tiempo máximo de la pelea en segundos
-        self.inicio = pygame.time.get_ticks() # Guarda el instante en que comienza el conteo
+        self.inicio = None # Guarda el instante en que comienza el conteo
         self.terminado = False  # Indica si el tiempo ya terminó
         self.resultado = None   # Guarda el resultado cuando termina el tiempo
 
@@ -16,6 +16,8 @@ class ControladorTemp:
 
     def tiempo_restante(self):
         # Calcula cuántos segundos pasaron
+        if self.inicio is None:
+            return self.duracion
         transcurrido = (pygame.time.get_ticks() - self.inicio) // 1000
         return max(0,self.duracion - transcurrido) # Devuelve el tiempo restante
 

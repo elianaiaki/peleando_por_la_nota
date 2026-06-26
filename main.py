@@ -106,7 +106,6 @@ def main():
         temporizador.reiniciar() # Reinicia el temporizador al terminar la introducción del nivel
     else:
         ctrl_grafico.dibujar(jugadores, graficos, fondo=escenario_actual,  temporizador=temporizador)
-        ctrl_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
         pygame.display.flip()
         musica.cambiar(ControladorMusica.PELEA)
         temporizador.reiniciar() # Reinicia el temporizador al comenzar una partida 1 vs 1
