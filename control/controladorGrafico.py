@@ -8,18 +8,20 @@ class controladorGrafico:
 
         # HUD
         self.imagen_barra_vida = pygame.image.load("recursos/barraVida.png").convert_alpha()
-        self.imagen_barra_vida = pygame.transform.scale(self.imagen_barra_vida,(300,40))
+        self.imagen_barra_vida = pygame.transform.scale(self.imagen_barra_vida,(340,45))
         self.imagen_barra_llena = pygame.image.load("recursos/barraVidallena.png").convert_alpha()
-        self.imagen_barra_llena = pygame.transform.scale(self.imagen_barra_llena,(300,40))
+        self.imagen_barra_llena = pygame.transform.scale(self.imagen_barra_llena,(330,45))
         self.imagen_barra_vacia = pygame.image.load("recursos/barraVidavacia.png").convert_alpha()
-        self.imagen_barra_vacia = pygame.transform.scale(self.imagen_barra_vacia,(300,40))
+        self.imagen_barra_vacia = pygame.transform.scale(self.imagen_barra_vacia,(340,45))
+        # Marco invertido para el jugador derecho
+        self.imagen_barra_vida_invertida = pygame.transform.flip(self.imagen_barra_vida, True, False)
         # NUMEROS DEL TEMPORIZADOR
         self.sprite_numeros = pygame.image.load("recursos/tempo-sheet.png").convert_alpha()
         self.tamaño_numero = 64
         # LETRAS DE LOS NOMBRES
         self.sprite_letras = pygame.image.load("recursos/letras.png").convert_alpha()
-        self.tamaño_letra = 64
-        self.escala_letra = 0.35
+        self.tamaño_letra = 65
+        self.escala_letra = 0.28
 
         # ANIMACIÓN MUERTE
         self.animacion_muerte = False
@@ -71,8 +73,8 @@ class controladorGrafico:
 
         # HUD
         # Dibuja las barras de vida y los nombres
-        self.dibujar_barra_sprite(self.pantalla,jugadores[0],30,25,False)
-        self.dibujar_barra_sprite(self.pantalla,jugadores[1],470,25,True)
+        self.dibujar_barra_sprite(self.pantalla,jugadores[0],15,20,False)
+        self.dibujar_barra_sprite(self.pantalla,jugadores[1],445,20,True)
 
         # TEMPORIZADOR
         # Solo dibuja el temporizador si fue enviado
@@ -182,20 +184,31 @@ class controladorGrafico:
     
     def dibujar_barra_sprite(self, pantalla, jugador, x, y, invertida=False):
         porcentaje = max(0, jugador.vida / jugador.vida_maxima)
+        #DESPLAZAMIENTO DE LAS BARRAS DE VIDA LLENA, CADA UNA ESTA INVERTIDA ASI QUE CREE DOS OFFSETS PARA CADA UNA.
+        # ASI ES MAS FACIL MANEJARLAS Y DEJARLAS MAS PROLIJAS
+        # Desplazamiento de la barra llena izquierda
+        offset_x_izq = 2  # derecha (+) / izquierda (-)
+        offset_y_izq = 0  # abajo (+) / arriba (-)
+        # Desplazamiento de la barra llena izquierda
+        offset_x_der = 5 # derecha (+) / izquierda (-)
+        offset_y_der = 0  # abajo (+) / arriba (-)
         pantalla.blit(self.imagen_barra_vacia,(x,y))
         ancho = int(self.imagen_barra_llena.get_width() * porcentaje) # Calcula el ancho visible de la barra de vida
         if invertida: # Permite que la barra derecha se vacíe hacia la izquierda
             barra = self.imagen_barra_llena.subsurface((self.imagen_barra_llena.get_width() - ancho,0,ancho,self.imagen_barra_llena.get_height()))
-            pantalla.blit(barra,(x + self.imagen_barra_llena.get_width() - ancho,y))
+            pantalla.blit(barra,(x + self.imagen_barra_llena.get_width() - ancho + offset_x_izq, y + offset_y_izq))
         else:
             barra = self.imagen_barra_llena.subsurface((0,0,ancho,self.imagen_barra_llena.get_height()))
-            pantalla.blit(barra,(x,y)) # Dibuja el marco de la barra
-        pantalla.blit(self.imagen_barra_vida,(x,y))
+            pantalla.blit(barra,(x + offset_x_der,y + offset_y_der)) # Dibuja el marco de la barra
+        if invertida:
+            pantalla.blit(self.imagen_barra_vida_invertida, (x, y))
+        else:
+            pantalla.blit(self.imagen_barra_vida, (x, y))
         # Dibuja el nombre del jugador
         nombre = jugador.nombre.lower()
         ancho_real = len(nombre) * (self.tamaño_letra * self.escala_letra)
         nombre_x = x + self.imagen_barra_vida.get_width()/2 - ancho_real/2
-        self.dibujar_nombre_sprite(pantalla, nombre, nombre_x, y + 45)
+        self.dibujar_nombre_sprite(pantalla, nombre, nombre_x, y + 20)
 
     def dibujar_temporizador_sprite(self,pantalla,temporizador):
         tiempo = str(temporizador.tiempo_restante())    # Obtiene el tiempo restante del combate
