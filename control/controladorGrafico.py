@@ -72,14 +72,16 @@ class controladorGrafico:
             grafico.dibujar(self.pantalla)
 
         # HUD
-        # Dibuja las barras de vida y los nombres
-        self.dibujar_barra_sprite(self.pantalla,jugadores[0],15,20,False)
-        self.dibujar_barra_sprite(self.pantalla,jugadores[1],445,20,True)
+        # Solo se muestra mientras la pelea sigue activa.
+        if not self.animacion_muerte:
+            # Dibuja las barras de vida y los nombres
+            self.dibujar_barra_sprite(self.pantalla,jugadores[0],15,20,False)
+            self.dibujar_barra_sprite(self.pantalla,jugadores[1],445,20,True)
 
-        # TEMPORIZADOR
-        # Solo dibuja el temporizador si fue enviado
-        if temporizador is not None:
-            self.dibujar_temporizador_sprite(self.pantalla, temporizador)
+            # TEMPORIZADOR
+            # Solo dibuja el temporizador si fue enviado
+            if temporizador is not None:
+                self.dibujar_temporizador_sprite(self.pantalla, temporizador)
 
         # ------------------------------------------------------------------------------------------------------
         # Animación de muerte, solo se ejecuta cuando corresponde.

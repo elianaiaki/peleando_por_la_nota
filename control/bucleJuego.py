@@ -145,6 +145,7 @@ def ejecutar_juego(
                 if not controlador_grafico.fase_festejo:
                     musica.cambiar(ControladorMusica.DERROTA)
             elif not jugadores[1].estoy_vivo() and not esperando_cambio:
+                temporizador.detener()
                 # Si muere el enemigo (jugadores[1]), arrancamos el temporizador
                 # para pasar al siguiente nivel después de un segundo
                 esperando_cambio = True
@@ -152,6 +153,7 @@ def ejecutar_juego(
         else:
             # En 1vs1 no importa cuál de los dos pierde, el resultado es el mismo
             if not jugadores[0].estoy_vivo() or not jugadores[1].estoy_vivo():
+                temporizador.detener()
                 # Mismo cuidado: no pisar la música de victoria mientras dura el festejo
                 if not controlador_grafico.fase_festejo:
                     musica.cambiar(ControladorMusica.DERROTA)
@@ -235,6 +237,7 @@ def _cambiar_nivel(
 
     nivel = controlador_juego.nivel_actual
     escenario = nuevo_controlador_grafico.obtener_escenario(nivel)
+    temporizador.detener()   # Oculta el conteo y muestra 60 durante la intro
     ejecutar_transicion_nivel(
         nivel,
         pantalla,

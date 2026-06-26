@@ -40,7 +40,6 @@ def ejecutar_transicion_nivel(
 
     # Muestra el escenario con el HUD antes de comenzar la pelea
     controlador_grafico.dibujar(jugadores, graficos, temporizador, fondo=escenario)
-    controlador_grafico.dibujar_barras_vida(pantalla, jugadores, 100)
     pygame.display.flip()
 
     # Sonido del round

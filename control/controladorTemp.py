@@ -14,6 +14,12 @@ class ControladorTemp:
         self.terminado = False
         self.resultado = None
 
+    def detener(self):
+        # Detiene el temporizador y vuelve a mostrar el tiempo inicial
+        self.inicio = None
+        self.terminado = False
+        self.resultado = None
+
     def tiempo_restante(self):
         # Calcula cuántos segundos pasaron
         if self.inicio is None:
