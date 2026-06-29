@@ -44,10 +44,20 @@ def ejecutar_transicion_nivel(
 
     # Sonido del round
     ruta_round = f"recursos/Sonidos/round_{nivel}.wav"
+    ruta_round_img = f"recursos/rounds/round_{nivel}.png"
+
+    if os.path.isfile(ruta_round_img):
+        img_round = pygame.image.load(ruta_round_img).convert_alpha()
+        img_round = pygame.transform.scale(img_round, (400, 100))
+        controlador_grafico.dibujar(jugadores, graficos, temporizador, fondo=escenario)
+        pantalla.blit(img_round, (800//2 - 200, 600//2 - 50))
+        pygame.display.flip()
+
     if os.path.isfile(ruta_round):
         sonido_round = pygame.mixer.Sound(ruta_round)
         sonido_round.play()
         pygame.time.wait(int(sonido_round.get_length() * 1000))
+
 
     # Pausa adicional antes de habilitar controles
     pygame.time.wait(1000)
