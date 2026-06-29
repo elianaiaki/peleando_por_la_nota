@@ -88,7 +88,7 @@ SPRITES_CONFIG = {
         "muerto":     ("recursos/yiyo/muerto.png",     512, 512,  1, 1.0),
         "golpeado":   ("recursos/yiyo/golpeado.png",   512, 512,  3, 1.0),
         # -remplazar cuando este el de yiyo----------------------------
-        "festejo01":  ("recursos/alan/festejo01.png",  512, 512, 14, 1.0)
+        "festejo01":  ("recursos/yiyo/festejo01.png",  512, 512, 14, 1.0)
     },
 
     "cliver": {
@@ -118,7 +118,7 @@ SPRITES_CONFIG = {
         "muerto":     ("recursos/cami/muerto.png",     512, 512,  1, 1.0),
         "golpeado":   ("recursos/cami/golpeado.png",   512, 512,  3, 1.0),
         # -remplazar cuando este el de cami----------------------------
-        "festejo01":  ("recursos/gabo/festejo01.png",  512, 512, 12, 1.0)
+        "festejo01":  ("recursos/cami/festejo01.png",  512, 512, 40, 1.0)
     },
 
     "lean": {
@@ -133,7 +133,7 @@ SPRITES_CONFIG = {
         "muerto":     ("recursos/lean/muerto.png",     512, 512,  1, 1.0),
         "golpeado":   ("recursos/lean/golpeado.png",   512, 512,  3, 1.0),
         # -remplazar cuando este el de lean----------------------------
-        "festejo01":  ("recursos/gabo/festejo01.png",  512, 512, 12, 1.0)
+        "festejo01":  ("recursos/lean/festejo01.png",  512, 512, 19, 1.0)
     },
 
 
