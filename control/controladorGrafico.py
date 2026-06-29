@@ -23,6 +23,9 @@ class controladorGrafico:
         self.tamaño_letra = 65
         self.escala_letra = 0.28
 
+        self.imagen_victoria = pygame.image.load("recursos/victoria.png").convert_alpha()
+        self.imagen_derrota_texto = pygame.image.load("recursos/game_over.png").convert_alpha()
+
         # ANIMACIÓN MUERTE
         self.animacion_muerte = False
         self.alpha = 0
@@ -125,6 +128,10 @@ class controladorGrafico:
             self.perdedor_grafico.dibujar(self.pantalla)
             self.ganador_grafico.dibujar(self.pantalla)
 
+            # Imagen de victoria centrada
+            img_vic = pygame.transform.scale(self.imagen_victoria, (400, 100))
+            self.pantalla.blit(img_vic, (800//2 - 400//2, 10))
+
             self.contador_festejo += 1
             if self.contador_festejo >= self.duracion_festejo:
                 self.festejo_termino = True
@@ -165,6 +172,9 @@ class controladorGrafico:
         x = (800 - ancho) // 2
         y = (600 - alto) // 2
         self.pantalla.blit(imagen_escalada, (x, y))
+
+        img_der = pygame.transform.scale(self.imagen_derrota_texto, (400, 100))
+        self.pantalla.blit(img_der, (800//2 - 400//2, 10))  # = (200, 10)
 
         if self.zoom > 1:
             self.zoom -= 0.002

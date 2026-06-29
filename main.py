@@ -53,6 +53,9 @@ def main():
     pygame.display.set_caption("PELEANDO POR LA NOTA")
     fuente = pygame.font.SysFont(None, 36)
 
+    musica = ControladorMusica()  # ← mover acá arriba
+    musica.cambiar(ControladorMusica.MENU)  # ← arranca música de menú
+
     # Menú principal
     modo = menu_principal(pantalla, ANCHO, ALTO)
 
@@ -60,9 +63,8 @@ def main():
     jugadores, controlador_juego = inicializar_modo(modo, pantalla, ANCHO, ALTO)
 
     if jugadores is None:
-        # El usuario eligió "volver" desde el menú de historia
-        pygame.quit()
-        sys.exit()
+        main()  # ← vuelve a empezar
+        return
 
     # Crear gráficos
     graficos = crear_graficos(jugadores)
@@ -93,7 +95,6 @@ def main():
     ctrl_grafico.solo_jugador1_festeja = (modo == "historia")
 
 
-    musica = ControladorMusica()
     temporizador = ControladorTemp(60) # Crea el temporizador con una duración de 60 segundos
 
     # Transición de inicio y música

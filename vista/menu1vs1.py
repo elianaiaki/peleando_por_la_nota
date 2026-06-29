@@ -41,6 +41,9 @@ def menu_1vs1(pantalla, ancho, alto):
     seleccionado = []
     # Lista de personajes bloqueados, se llena cuando el jugador 1 elige
     bloqueados = []
+    img_volver = pygame.image.load("recursos/volver.png").convert_alpha()
+    img_volver = pygame.transform.scale(img_volver, (190, 40))
+    rect_volver = pygame.Rect(10, 520, 200, 50)
 
     while len(seleccionado) < 2:
         pantalla.blit(fondo, (0, 0))
@@ -67,6 +70,7 @@ def menu_1vs1(pantalla, ancho, alto):
 
             rect = pygame.Rect(x, y, 150, 150)
             botones.append((rect, personaje))
+            pantalla.blit(img_volver, (rect_volver.x, rect_volver.y))
 
 
             if personaje.nombre in bloqueados:
@@ -94,6 +98,8 @@ def menu_1vs1(pantalla, ancho, alto):
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
+                if rect_volver.collidepoint(pos):
+                    return None, None
                 for rect, personaje in botones:
                 # Solo permite seleccionar si no está bloqueado
                     if rect.collidepoint(pos) and personaje.nombre not in bloqueados:

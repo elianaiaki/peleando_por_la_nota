@@ -36,7 +36,10 @@ def inicializar_modo(modo, pantalla, ancho, alto):
 
 def _inicializar_1vs1(pantalla, ancho, alto):
     """Deja que los dos jugadores elijan su personaje y retorna la lista."""
-    jugador1, jugador2 = menu_1vs1(pantalla, ancho, alto)
+    resultado = menu_1vs1(pantalla, ancho, alto)
+    if resultado == (None, None):
+        return None, None
+    jugador1, jugador2 = resultado
     return [jugador1, jugador2], None
 
 
