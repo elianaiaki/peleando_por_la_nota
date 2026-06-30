@@ -48,85 +48,98 @@ def reproducir_video(ruta_video, pantalla):
 # -----------------------------
 
 def main():
-    pygame.init()
-    pantalla = pygame.display.set_mode((ANCHO, ALTO))
-    pygame.display.set_caption("PELEANDO POR LA NOTA")
-    fuente = pygame.font.SysFont(None, 36)
 
-    musica = ControladorMusica()  # ← mover acá arriba
-    musica.cambiar(ControladorMusica.MENU)  # ← arranca música de menú
+    while True:
 
-    # Menú principal
-    modo = menu_principal(pantalla, ANCHO, ALTO)
+        pygame.init()
+        pantalla = pygame.display.set_mode((ANCHO, ALTO))
+        pygame.display.set_caption("PELEANDO POR LA NOTA")
+        fuente = pygame.font.SysFont(None, 36)
 
-    # Inicializar jugadores según el modo elegido
-    jugadores, controlador_juego = inicializar_modo(modo, pantalla, ANCHO, ALTO)
+        musica = ControladorMusica()  # ← mover acá arriba
+        musica.cambiar(ControladorMusica.MENU)  # ← arranca música de menú
 
-    if jugadores is None:
-        main()  # ← vuelve a empezar
-        return
+        # Menú principal
+        modo = menu_principal(pantalla, ANCHO, ALTO)
 
-    # Crear gráficos
-    graficos = crear_graficos(jugadores)
-    graficos = crear_graficos(jugadores)
+        # Inicializar jugadores según el modo elegido
+        jugadores, controlador_juego = inicializar_modo(modo, pantalla, ANCHO, ALTO)
 
-    # En historia solo Alan (índice 0) puede festejar; en 1vs1 cualquiera de los dos
-    if modo == "historia":
-        cargar_sprites(graficos, jugadores, indices_festejo=[0])
-    else:
-        cargar_sprites(graficos, jugadores)
+        if jugadores is None:
+        #========================================================
+        # ESTO ES PARA EL MENU DE PAUSA ASI QUE SE DESHABILITO EN VEZ DE BORRARSE
+        #========================================================
+        #    main()  # ← vuelve a empezar
+        #    return
+        #========================================================
+        # NUEVO SISTEMA PARA VOLVER AL MENU PRINCIPAL
+            continue # Si el menú indicó volver atrás, vuelve a mostrarse el menú principal.
 
+        # Crear gráficos
+        graficos = crear_graficos(jugadores)
 
-    # Paredes
-    paredes = [
-        pygame.Rect(0, 0, 160, ALTO),
-        pygame.Rect(ANCHO - 170, 0, 30, ALTO),
-    ]
-
-    # Controladores
-    sonidos = ControladorSonido()
-    controlador = Controlador(graficos[0], graficos[1], ANCHO, ALTO, paredes, sonidos)
-    ctrl_grafico = controladorGrafico(pantalla, fuente)
-    ctrl_grafico.cargar_escenarios(ANCHO, ALTO, modo)
-    # Si el modo NO es historia (o sea, es 1vs1), siempre hay festejo.
-    # Si es historia, solo hay festejo cuando el rival es "profe"
-    # (porque profe es el último nivel del modo historia).
-    ctrl_grafico.mostrar_festejo = (modo != "historia") or (jugadores[1].nombre == "profe")
-    ctrl_grafico.solo_jugador1_festeja = (modo == "historia")
+        # En historia solo Alan (índice 0) puede festejar; en 1vs1 cualquiera de los dos
+        if modo == "historia":
+            cargar_sprites(graficos, jugadores, indices_festejo=[0])
+        else:
+            cargar_sprites(graficos, jugadores)
 
 
-    temporizador = ControladorTemp(60) # Crea el temporizador con una duración de 60 segundos
+        # Paredes
+        paredes = [
+            pygame.Rect(0, 0, 160, ALTO),
+            pygame.Rect(ANCHO - 170, 0, 30, ALTO),
+        ]
 
-    # Transición de inicio y música
-    nivel = controlador_juego.nivel_actual if modo == "historia" else 1
-    escenario_actual = ctrl_grafico.obtener_escenario(nivel)
+        # Controladores
+        sonidos = ControladorSonido()
+        controlador = Controlador(graficos[0], graficos[1], ANCHO, ALTO, paredes, sonidos)
+        ctrl_grafico = controladorGrafico(pantalla, fuente)
+        ctrl_grafico.cargar_escenarios(ANCHO, ALTO, modo)
+        # Si el modo NO es historia (o sea, es 1vs1), siempre hay festejo.
+        # Si es historia, solo hay festejo cuando el rival es "profe"
+        # (porque profe es el último nivel del modo historia).
+        ctrl_grafico.mostrar_festejo = (modo != "historia") or (jugadores[1].nombre == "profe")
+        ctrl_grafico.solo_jugador1_festeja = (modo == "historia")
 
-    if modo == "historia":
-        ejecutar_transicion_nivel(nivel, pantalla, jugadores, graficos, ctrl_grafico, escenario_actual, temporizador, reproducir_video)
-        musica.cambiar_pelea_nivel(nivel)
-        temporizador.reiniciar() # Reinicia el temporizador al terminar la introducción del nivel
-    else:
-        ctrl_grafico.dibujar(jugadores, graficos, fondo=escenario_actual,  temporizador=temporizador)
-        pygame.display.flip()
-        musica.cambiar(ControladorMusica.PELEA)
-        temporizador.reiniciar() # Reinicia el temporizador al comenzar una partida 1 vs 1
 
-    # Bucle principal
-    ejecutar_juego(
-        modo=modo,
-        jugadores=jugadores,
-        graficos=graficos,
-        controlador=controlador,
-        controlador_grafico=ctrl_grafico,
-        controlador_juego=controlador_juego,
-        musica=musica,
-        sonidos=sonidos,
-        temporizador=temporizador,
-        paredes=paredes,
-        pantalla=pantalla,
-        fuente=fuente,
-        reproducir_video=reproducir_video,
-    )
+        temporizador = ControladorTemp(60) # Crea el temporizador con una duración de 60 segundos
+
+        # Transición de inicio y música
+        nivel = controlador_juego.nivel_actual if modo == "historia" else 1
+        escenario_actual = ctrl_grafico.obtener_escenario(nivel)
+
+        if modo == "historia":
+            ejecutar_transicion_nivel(nivel, pantalla, jugadores, graficos, ctrl_grafico, escenario_actual, temporizador, reproducir_video)
+            musica.cambiar_pelea_nivel(nivel)
+            temporizador.reiniciar() # Reinicia el temporizador al terminar la introducción del nivel
+        else:
+            ctrl_grafico.dibujar(jugadores, graficos, fondo=escenario_actual,  temporizador=temporizador)
+            pygame.display.flip()
+            musica.cambiar(ControladorMusica.PELEA)
+            temporizador.reiniciar() # Reinicia el temporizador al comenzar una partida 1 vs 1
+
+        # Bucle principal
+        resultado = ejecutar_juego(  # Guarda el resultado que devuelve el bucle principal cuando termina la partida.
+            modo=modo,
+            jugadores=jugadores,
+            graficos=graficos,
+            controlador=controlador,
+            controlador_grafico=ctrl_grafico,
+            controlador_juego=controlador_juego,
+            musica=musica,
+            sonidos=sonidos,
+            temporizador=temporizador,
+            paredes=paredes,
+            pantalla=pantalla,
+            fuente=fuente,
+            reproducir_video=reproducir_video,
+        )
+
+        if resultado == "menu":       # Si el jugador eligió volver al menú principal...
+            continue                  # ...reinicia el while principal y vuelve a mostrar el menú.
+
+        break                         # Si no volvió al menú (por ejemplo eligió salir), termina el while principal.
 
     pygame.quit()
     sys.exit()

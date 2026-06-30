@@ -221,18 +221,19 @@ class Controlador:
         self.cola_golpes_j2 = nueva_cola_j2
 
 
-    # =====================================
-    # EVENTOS
-    def procesar_eventos(self):
-        for evento in pygame.event.get():
+    # ===============================================
+    # EVENTOS (SISTEMA PARA VOLVER AL MENU PRINCIPAL)
+    # ===============================================
+    def procesar_eventos(self, eventos):   # Ahora recibe la lista de eventos obtenida por el bucle principal.
+        for evento in eventos:             # Recorre todos los eventos recibidos sin volver a leer pygame.event.get().
 
             if evento.type == pygame.QUIT:
-                self.corriendo = False
+                self.corriendo = False     # Si el jugador cierra la ventana, finaliza el bucle principal.
 
-            if evento.type == pygame.KEYDOWN:
+            if evento.type == pygame.KEYDOWN:       # Si se presionó una tecla, procesa las acciones de ambos jugadores.
 
-                self.acciones_jugador1(evento)
-                self.acciones_jugador2(evento)
+                self.acciones_jugador1(evento) # Ejecuta las acciones correspondientes al jugador 1.
+                self.acciones_jugador2(evento) # Ejecuta las acciones correspondientes al jugador 2.
 
     # =====================================
     # TECLAS

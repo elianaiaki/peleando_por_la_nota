@@ -45,7 +45,7 @@ def ejecutar_juego(
     reproducir_video   -- función reproducir_video(ruta, pantalla)
     """
     reloj = pygame.time.Clock()
-
+    
     # Estado de la transición de nivel (solo se usa en modo historia)
     esperando_cambio = False
     timer_cambio = 0
@@ -56,8 +56,29 @@ def ejecutar_juego(
     # pierde, gana, o cierra la ventana.
     while controlador.corriendo:
 
-        # Lee el teclado y los eventos de pygame (cerrar ventana, etc.)
-        controlador.procesar_eventos()
+        # SISTEMA PARA VOLVER AL MENU PRINCIPAL
+        # Lee todos los eventos ocurridos durante este frame.
+        # La lista se reutiliza para el menú y para el controlador,
+        # evitando leer pygame.event.get() más de una vez.
+        eventos = pygame.event.get()  # Lee todos los eventos del juego una sola vez al comienzo de cada frame.
+
+        # --------------------------------------------------------
+        # Detecta teclas especiales
+        # --------------------------------------------------------
+        for evento in eventos:
+
+            if evento.type == pygame.KEYDOWN:
+
+                # ESC = volver al menú principal
+                if evento.key == pygame.K_ESCAPE:
+                    return "menu"
+
+                # F1 = salir del juego
+                elif evento.key == pygame.K_F1:
+                    controlador.corriendo = False
+                    return "salir"
+
+        controlador.procesar_eventos(eventos)
         controlador.procesar_teclas()
 
         # Actualiza el estado del temporizador durante la pelea

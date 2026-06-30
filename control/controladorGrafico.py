@@ -86,6 +86,13 @@ class controladorGrafico:
             if temporizador is not None:
                 self.dibujar_temporizador_sprite(self.pantalla, temporizador)
 
+        # MENSAJE DE AYUDA PARA SALIR O VOLVER AL MENU PRINCIPAL 
+        texto1 = self.fuente.render("ESC: Menú", True, (0, 0, 0))
+        texto2 = self.fuente.render("F1: Salir", True, (0, 0, 0))
+        margen = 15
+        self.pantalla.blit(texto1,(self.pantalla.get_width() - texto1.get_width() - margen, self.pantalla.get_height() - texto1.get_height() * 2 - margen))
+        self.pantalla.blit(texto2,(self.pantalla.get_width() - texto2.get_width() - margen, self.pantalla.get_height() - texto2.get_height() - margen))
+
         # ------------------------------------------------------------------------------------------------------
         # Animación de muerte, solo se ejecuta cuando corresponde.
         self.animacion_de_muerte(jugadores, graficos)
