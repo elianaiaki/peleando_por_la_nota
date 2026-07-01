@@ -83,6 +83,7 @@ def ejecutar_juego(
 
         # Actualiza el estado del temporizador durante la pelea
         temporizador.actualizar(jugadores[0], jugadores[1])
+        print(controlador_juego.nivel_actual if controlador_juego else 1, jugadores[0].estado, jugadores[1].estado, graficos[0].estado, graficos[1].estado)
 
         # Sincronizar muerte del modelo con el gráfico
         if jugadores[0].estado == "muerto" and graficos[0].estado not in ["muriendo", "muerto"]:

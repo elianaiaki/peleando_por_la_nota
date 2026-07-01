@@ -34,15 +34,21 @@ class ControladorTemp:
         # Espera hasta que el tiempo llegue a cero
         if self.tiempo_restante() > 0:
             return
+        
+        print("¡¡EL TIEMPO LLEGÓ A CERO!!")
+
+
         # Marca el temporizador como finalizado
         self.terminado = True
          # Gana quien tenga más vida restante
         vida1 = jugador1.vida
         vida2 = jugador2.vida
+        # Gana el jugador que tenga más vida cuando el tiempo llega a cero.
+        # Se ignora el bloqueo para que perder por tiempo no pueda evitarse bloqueando.
         if vida1 > vida2:
-            jugador2.recibir_danio(9999)
+            jugador2.recibir_danio(9999, ignorar_bloqueo=True)
         elif vida2 > vida1:
-            jugador1.recibir_danio(9999)
+            jugador1.recibir_danio(9999, ignorar_bloqueo=True)
         # Si ambos tienen la misma vida se declara empate
         else:
             self.resultado = "empate"

@@ -25,19 +25,21 @@ class Personaje:
         self.estado = "vivo"
         #self.ulti = ulti
 
-    def recibir_danio(self, danio):
-
+    def recibir_danio(self, danio, ignorar_bloqueo=False):
         if danio < 0:
             raise ValueError("El daño no puede ser negativo")
-        if self.esta_bloqueando:
+        # Si el personaje está bloqueando, solo recibe daño cuando
+        # se indicó explícitamente ignorar el bloqueo (ej.: fin del tiempo).
+        if self.esta_bloqueando and not ignorar_bloqueo:
             return 0
-        # NUEVO
+        # Si estaba atacando, el golpe recibido cancela el ataque pendiente.
         if self.esta_atacando:
             self.esta_atacando = False
             self.ataque_cancelado = True
         self.vida -= danio
         if self.vida < 0:
             self.vida = 0
+        # Cuando la vida llega a cero se ejecuta la lógica de muerte.
         if self.vida == 0:
             self.morir()
         return danio
