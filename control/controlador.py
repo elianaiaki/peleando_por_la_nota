@@ -164,6 +164,10 @@ class Controlador:
                 if self.jugador1.modelo.ataque_cancelado:
                     self.jugador1.modelo.ataque_cancelado = False
                     continue
+
+                if not self.jugador2.modelo.estoy_vivo():
+                    continue
+
                 # Si el jugador 2 estaba atacando,
                 # cancelo su golpe pendiente
                 if self.jugador2.estado == "atacar":
@@ -186,17 +190,23 @@ class Controlador:
             else:
                 nueva_cola_j1.append(contador)
         self.cola_golpes_j1 = nueva_cola_j1
+
         # --- Jugador 2 ---
         nueva_cola_j2 = []
         for contador in self.cola_golpes_j2:
             contador -= 1
             if contador == 0:
+
                 # NUEVO:
                 # Si jugador 2 fue golpeado antes de impactar,
                 # cancela su golpe
                 if self.jugador2.modelo.ataque_cancelado:
                     self.jugador2.modelo.ataque_cancelado = False
                     continue
+
+                if not self.jugador1.modelo.estoy_vivo():
+                    continue
+
                 # Si jugador 1 estaba atacando,
                 # cancelo su golpe pendiente
                 if self.jugador1.estado == "atacar":
