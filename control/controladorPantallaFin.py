@@ -37,4 +37,5 @@ class PantallaFinControlador:
                     rect = pygame.Rect(100, 480 + i * 50, 240, 40)
                     if rect.collidepoint(pos):
                         return "menu" if i == 0 else "salir"
-                    
+
+

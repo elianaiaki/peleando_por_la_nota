@@ -164,6 +164,11 @@ class Controlador:
                 if self.jugador1.modelo.ataque_cancelado:
                     self.jugador1.modelo.ataque_cancelado = False
                     continue
+
+                # ← AGREGAR ACÁ
+                if not self.jugador2.modelo.estoy_vivo():
+                    continue
+   
                 # Si el jugador 2 estaba atacando,
                 # cancelo su golpe pendiente
                 if self.jugador2.estado == "atacar":
@@ -197,6 +202,10 @@ class Controlador:
                 if self.jugador2.modelo.ataque_cancelado:
                     self.jugador2.modelo.ataque_cancelado = False
                     continue
+
+                if not self.jugador1.modelo.estoy_vivo():
+                    continue
+
                 # Si jugador 1 estaba atacando,
                 # cancelo su golpe pendiente
                 if self.jugador1.estado == "atacar":
