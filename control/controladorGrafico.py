@@ -180,12 +180,17 @@ class controladorGrafico:
         y = (600 - alto) // 2
         self.pantalla.blit(imagen_escalada, (x, y))
 
-        img_der = pygame.transform.scale(self.imagen_derrota_texto, (400, 100))
-        self.pantalla.blit(img_der, (800//2 - 400//2, 10))  # = (200, 10)
+        # NUEVO: si el que murió fue el rival (graficos[1]), vos ganaste,
+        # así que mostramos el cartel de VICTORIA en vez de GAME OVER.
+        if grafico_muerto is graficos[0]:
+            banner = self.imagen_derrota_texto
+        else:
+            banner = self.imagen_victoria
 
+        img_der = pygame.transform.scale(banner, (400, 100))
+        self.pantalla.blit(img_der, (800//2 - 400//2, 10))
         if self.zoom > 1:
             self.zoom -= 0.002
-
         self.contador_derrota += 1
 
     
